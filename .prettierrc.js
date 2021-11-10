@@ -1,0 +1,30 @@
+module.exports = {
+  arrowParens: "avoid",
+  bracketSpacing: true,
+  insertPragma: false,
+  jsxBracketSameLine: false,
+  parser: "typescript",
+  printWidth: 80,
+  proseWrap: "preserve",
+  requirePragma: false,
+  semi: true,
+  singleQuote: true,
+  tabWidth: 2,
+  trailingComma: "es5",
+  useTabs: false,
+  overrides: [
+    {
+      files: "*.sol",
+      options: {
+        bracketSpacing: true,
+        printWidth: 80,
+        proseWrap: "preserve",
+        semi: true,
+        singleQuote: false,
+        tabWidth: 2,
+        trailingComma: "es5",
+        useTabs: false,
+      },
+    },
+  ],
+};

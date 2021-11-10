@@ -28,3 +28,6 @@ factories
 typechain
 
 .env
+
+# editor
+.idea
