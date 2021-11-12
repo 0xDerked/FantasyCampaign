@@ -119,25 +119,25 @@ it("Mints a Shaman and reads the proper values initialized from the manager and 
 	expect(await FantasyCharacterContract.currentTokenId()).to.equal(4);
 });
 
-it("Mints a Rogue and reads the proper values initialized from the manager and NFT ownership", async () => {
+it("Mints a Cleric and reads the proper values initialized from the manager and NFT ownership", async () => {
 	await FantasyCharacterContract.connect(user5).createCharacter(4);
 	expect(await FantasyCharacterContract.ownerOf(4)).to.equal(user5.address);
-	const RogueAttributes = await FantasyAttributesManagerContract.s_CharacterAttributes(4);
-	expect(RogueAttributes.experience).to.equal(0);
-	expect(RogueAttributes.health).to.equal(120);
-	expect(RogueAttributes.strength).to.equal(5);
-	expect(RogueAttributes.armor).to.equal(10);
-	expect(RogueAttributes.physicalblock).to.equal(5);
-	expect(RogueAttributes.agility).to.equal(5);
-	expect(RogueAttributes.spellpower).to.equal(10);
-	expect(RogueAttributes.spellresistance).to.equal(30);
-	expect(RogueAttributes.healingpower).to.equal(30);
-	expect(RogueAttributes.class).to.equal(4);
-	const RogueAbilities = await FantasyAttributesManagerContract.getAbilities(4);
-	expect(RogueAbilities[0].abilityType).to.equal(4);
-	expect(RogueAbilities[0].name).to.equal("Smite");
-	expect(RogueAbilities[1].abilityType).to.equal(6);
-	expect(RogueAbilities[1].name).to.equal("Angel's Blessing");
+	const ClericAttributes = await FantasyAttributesManagerContract.s_CharacterAttributes(4);
+	expect(ClericAttributes.experience).to.equal(0);
+	expect(ClericAttributes.health).to.equal(120);
+	expect(ClericAttributes.strength).to.equal(5);
+	expect(ClericAttributes.armor).to.equal(10);
+	expect(ClericAttributes.physicalblock).to.equal(5);
+	expect(ClericAttributes.agility).to.equal(5);
+	expect(ClericAttributes.spellpower).to.equal(10);
+	expect(ClericAttributes.spellresistance).to.equal(30);
+	expect(ClericAttributes.healingpower).to.equal(30);
+	expect(ClericAttributes.class).to.equal(4);
+	const ClericAbilities = await FantasyAttributesManagerContract.getAbilities(4);
+	expect(ClericAbilities[0].abilityType).to.equal(4);
+	expect(ClericAbilities[0].name).to.equal("Smite");
+	expect(ClericAbilities[1].abilityType).to.equal(6);
+	expect(ClericAbilities[1].name).to.equal("Angel's Blessing");
 	expect(await FantasyCharacterContract.currentTokenId()).to.equal(5);
 });
 
@@ -161,7 +161,7 @@ it("Mints another Knight and reads the proper values initialized from the manage
 	expect(await FantasyCharacterContract.currentTokenId()).to.equal(6);
 });
 
-it("Mints another Rogue and reads the proper values initialized from the manager and NFT ownership", async () => {
+it("Mints a Rogue and reads the proper values initialized from the manager and NFT ownership", async () => {
 	await FantasyCharacterContract.connect(user4).createCharacter(5);
 	expect(await FantasyCharacterContract.ownerOf(6)).to.equal(user4.address);
 	const RogueAttributes = await FantasyAttributesManagerContract.s_CharacterAttributes(6);
