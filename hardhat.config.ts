@@ -1,28 +1,25 @@
-import * as dotenv from "dotenv";
+import { config as dotenvConfig } from 'dotenv';
+import { resolve } from 'path';
+dotenvConfig({ path: resolve(__dirname, './.env') });
 
-import { HardhatUserConfig } from "hardhat/types";
-import { NetworkUserConfig } from "hardhat/types";
+import { HardhatUserConfig } from 'hardhat/types';
+import { NetworkUserConfig } from 'hardhat/types';
 
-import "@nomiclabs/hardhat-etherscan";
-import "@nomiclabs/hardhat-waffle";
-import "@typechain/hardhat";
-import "hardhat-gas-reporter";
-import "solidity-coverage";
-
-dotenv.config();
+import '@nomiclabs/hardhat-waffle';
+import '@typechain/hardhat';
 
 const config: HardhatUserConfig = {
-  defaultNetwork: "hardhat",
-  solidity: "0.8.0",
+  defaultNetwork: 'hardhat',
+  solidity: '0.8.0',
   networks: {
     mumbai: {
       url: process.env.MUMBAI_RPC_URL,
-      accounts: [process.env.PRIVATE_KEY || ""],
+      accounts: [process.env.PRIVATE_KEY || ''],
     },
   },
   typechain: {
-    outDir: "typechain",
-    target: "ethers-v5",
+    outDir: 'typechain',
+    target: 'ethers-v5',
   },
 };
 

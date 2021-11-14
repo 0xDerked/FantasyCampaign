@@ -1,156 +1,75 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
+pragma experimental ABIEncoderV2;
 
-import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+
+import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
+import "./FantasyThings.sol";
 
 //This contract manages/stores the attributes tied to the ERC721 character tokens
 contract FantasyAttributesManager {
 
-	IERC721 public s_fantasyCharacters;
+	IERC721Metadata public s_fantasyCharacters;
 	address immutable public s_fantasyCharactersAddress;
 
-	enum CharacterClass {
-			Knight,
-			Warlord,
-			Wizard,
-			Shaman,
-			Cleric,
-			Rogue,
-			Ranger
-	}
-
-	enum AbilityType {
-		Strength,
-		Armor,
-		PhysicalBlock,
-		Agility,
-		Spellpower,
-		Spellresistance,
-		HealingPower
-	}
-
-	struct CharacterAbility {
-		AbilityType abilityType;
-		string name;
-	}
-
-	//try to think about packing here
-	struct CharacterAttributes {
-		uint256 experience;
-		uint16 health;
-		uint8 strength;
-		uint8 armor;
-		uint8 physicalblock;
-		uint8 agility;
-		uint8 spellpower;
-		uint8 spellresistance;
-		uint8 healingpower;
-		CharacterClass class;
-		CharacterAbility[] abilities;
-	}
-
-
-	mapping(uint256 => CharacterAttributes) public s_CharacterAttributes; //tokenID to character attributes
-	mapping(uint256 => CharacterAttributes) public s_StartingAttributes;
+	mapping(uint256 => FantasyThings.CharacterAttributes) public s_CharacterAttributes; //tokenID to character attributes
+	mapping(FantasyThings.CharacterClass => FantasyThings.CharacterAttributes) public s_StartingAttributes;
 
 	constructor(address _fantasyCharacters) {
-		s_fantasyCharacters = IERC721(_fantasyCharacters);
+		s_fantasyCharacters = IERC721Metadata(_fantasyCharacters);
 		s_fantasyCharactersAddress = _fantasyCharacters;
 
 		//Create Starting Character Templates
-		//experience,health,strength,armor,physicalblock,agility,spellpower,spellresistance,healingpower,class
-		CharacterAttributes storage Knight = s_StartingAttributes[0];
-		Knight.health = 100;
-		Knight.strength = 20;
-		Knight.armor = 30;
-		Knight.physicalblock = 25;
-		Knight.agility = 15;
-		//spellpower, already 0 for knight
-		Knight.spellresistance = 5;
-		//healing already 0 for knight
-		Knight.class = CharacterClass.Knight;
-		Knight.abilities.push(CharacterAbility(AbilityType.Strength,"Strike"));
+		FantasyThings.Ability[] memory knightAbilities = new FantasyThings.Ability[](1);
+		knightAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Strength,"Strike");
+		_setStartingCharacter(100, [20,30,25,15,0,5,0], FantasyThings.CharacterClass.Knight, knightAbilities);
 
-		CharacterAttributes storage Warlord = s_StartingAttributes[1];
-		Warlord.health = 100;
-		Warlord.strength = 30;
-		Warlord.armor = 20;
-		Warlord.physicalblock = 20;
-		Warlord.agility = 20;
-		//spellpower already 0 for warlord
-		Warlord.spellresistance = 5;
-		//healing already 0 for warlord
-		Warlord.class = CharacterClass.Warlord;
-		Warlord.abilities.push(CharacterAbility(AbilityType.Strength,"Strike"));
+		FantasyThings.Ability[] memory warlordAbilities = new FantasyThings.Ability[](1);
+		warlordAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Strength, "Strike");
+		_setStartingCharacter(100, [30,20,20,20,0,5,0], FantasyThings.CharacterClass.Warlord, warlordAbilities);
 
-		CharacterAttributes storage Wizard = s_StartingAttributes[2];
-		Wizard.health = 90;
-		Wizard.strength = 5;
-		Wizard.armor = 10;
-		Wizard.physicalblock = 5;
-		Wizard.agility = 5;
-		Wizard.spellpower = 30;
-		Wizard.spellresistance = 20;
-		//healing already 0 for Wizard
-		Wizard.class = CharacterClass.Wizard;
-		Wizard.abilities.push(CharacterAbility(AbilityType.Spellpower,"Fireball"));
+		FantasyThings.Ability[] memory wizardAbilities = new FantasyThings.Ability[](1);
+		wizardAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Spellpower, "Fireball");
+		_setStartingCharacter(90, [5,10,5,5,30,20,0], FantasyThings.CharacterClass.Wizard, wizardAbilities);
 
-		CharacterAttributes storage Shaman = s_StartingAttributes[3];
-		Shaman.health = 90;
-		Shaman.strength = 10;
-		Shaman.armor = 15;
-		Shaman.physicalblock = 10;
-		Shaman.agility = 10;
-		Shaman.spellpower = 20;
-		Shaman.spellresistance = 15;
-		Shaman.healingpower = 10;
-		Shaman.class = CharacterClass.Shaman;
-		Shaman.abilities.push(CharacterAbility(AbilityType.Spellpower,"Lightning Bolt"));
-		Shaman.abilities.push(CharacterAbility(AbilityType.HealingPower,"Nature Heal"));
+		FantasyThings.Ability[] memory shamanAbilities = new FantasyThings.Ability[](2);
+		shamanAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Spellpower,"Lightning Bolt");
+		shamanAbilities[1] = FantasyThings.Ability(FantasyThings.AbilityType.HealingPower,"Nature Heal");
+		_setStartingCharacter(90, [10,15,10,10,20,15,10], FantasyThings.CharacterClass.Shaman, shamanAbilities);
 
-		
-		CharacterAttributes storage Cleric = s_StartingAttributes[4];
-		Cleric.health = 120;
-		Cleric.strength = 5;
-		Cleric.armor = 10;
-		Cleric.physicalblock = 5;
-		Cleric.agility = 5;
-		Cleric.spellpower = 10;
-		Cleric.spellresistance = 30;
-		Cleric.healingpower = 30;
-		Cleric.class = CharacterClass.Cleric;
-		Cleric.abilities.push(CharacterAbility(AbilityType.Spellpower,"Smite"));
-		Cleric.abilities.push(CharacterAbility(AbilityType.HealingPower,"Angel's Blessing"));
+		FantasyThings.Ability[] memory clericAbilities = new FantasyThings.Ability[](2);
+		clericAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Spellpower,"Smite");
+		clericAbilities[1] = FantasyThings.Ability(FantasyThings.AbilityType.HealingPower,"Angel's Blessing");
+		_setStartingCharacter(120, [5,10,5,5,10,30,30],FantasyThings.CharacterClass.Cleric, clericAbilities);
 
-		CharacterAttributes storage Rogue = s_StartingAttributes[5];
-		Rogue.health = 100;
-		Rogue.strength = 15;
-		Rogue.armor = 15;
-		Rogue.physicalblock = 15;
-		Rogue.agility = 30;
-		//spellpower 0 for rogue
-		Rogue.spellresistance = 5;
-		//healing power 0 for rogue 
-		Rogue.class = CharacterClass.Rogue;
-		Rogue.abilities.push(CharacterAbility(AbilityType.Agility,"Stab"));
+		FantasyThings.Ability[] memory rogueAbilities = new FantasyThings.Ability[](1);
+		rogueAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Agility,"Stab");
+		_setStartingCharacter(100, [15,15,15,30,0,5,0], FantasyThings.CharacterClass.Rogue, rogueAbilities);
 
-		
-		CharacterAttributes storage Ranger = s_StartingAttributes[6];
-		Ranger.health = 100;
-		Ranger.strength = 10;
-		Ranger.armor = 15;
-		Ranger.physicalblock = 10;
-		Ranger.agility = 35;
-		//spellpower 0 for Ranger
-		Ranger.spellresistance = 5;
-		//healing power 0 for Ranger 
-		Ranger.class = CharacterClass.Ranger;
-		Ranger.abilities.push(CharacterAbility(AbilityType.Agility,"Fire Bow"));
+		FantasyThings.Ability[] memory rangerAbilities = new FantasyThings.Ability[](1);
+		rangerAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Agility,"Fire Bow");
+		_setStartingCharacter(100, [10,15,10,35,0,5,0], FantasyThings.CharacterClass.Ranger, rangerAbilities);
 	}
 
-  function registerNewCharacter(uint256 _tokenId, uint256 _charClass) external {
+	function _setStartingCharacter(uint16 _health, uint8[7] memory _stats, FantasyThings.CharacterClass _charClass, FantasyThings.Ability[] memory _abilities) internal {
+		FantasyThings.CharacterAttributes storage character = s_StartingAttributes[_charClass];
+		character.health = _health;
+		character.strength = _stats[0];
+		character.armor = _stats[1];
+		character.physicalblock = _stats[2];
+		character.agility = _stats[3];
+		character.spellpower = _stats[4];
+		character.spellresistance = _stats[5];
+		character.healingpower = _stats[6];
+		character.class = _charClass;
+		for(uint i = 0; i < _abilities.length; i++) {
+			character.abilities.push(_abilities[i]);
+		}
+	}
+
+  function registerNewCharacter(uint256 _tokenId, FantasyThings.CharacterClass _charClass) external {
 	  require(msg.sender == s_fantasyCharactersAddress, "Only the NFT contract can register a character");
-	  CharacterAttributes storage newChar = s_CharacterAttributes[_tokenId];
+	  FantasyThings.CharacterAttributes storage newChar = s_CharacterAttributes[_tokenId];
 	  newChar.abilities = s_StartingAttributes[_charClass].abilities;
 	  newChar.health = s_StartingAttributes[_charClass].health;
 	  newChar.strength = s_StartingAttributes[_charClass].strength;
@@ -163,9 +82,49 @@ contract FantasyAttributesManager {
 	  newChar.class = s_StartingAttributes[_charClass].class;
   }
 
-  function getAbilities(uint256 _tokenId) public view returns(CharacterAbility[] memory) {
-	  return s_CharacterAttributes[_tokenId].abilities;
+  function getPlayer(uint256 _tokenId) external view returns(FantasyThings.CharacterAttributes memory) {
+	  return s_CharacterAttributes[_tokenId];
   }
+
+//   function getHealth(uint256 _tokenId) public view returns(uint16) {
+// 	  return s_CharacterAttributes[_tokenId].health;
+//   }
+
+//   function getStrength(uint256 _tokenId) public view returns(uint8) {
+// 	  return s_CharacterAttributes[_tokenId].strength;
+//   }
+
+//   function getArmor(uint256 _tokenId) public view returns(uint8) {
+// 	  return s_CharacterAttributes[_tokenId].armor;
+//   }
+
+//   function getBlock(uint256 _tokenId) public view returns(uint8) {
+// 	  return s_CharacterAttributes[_tokenId].physicalblock;
+//   }
+  
+//   function getAgility(uint256 _tokenId) public view returns(uint8) {
+// 	  return s_CharacterAttributes[_tokenId].agility;
+//   }
+
+//   function getSpellpower(uint256 _tokenId) public view returns(uint8) {
+// 	  return s_CharacterAttributes[_tokenId].spellpower;
+//   }
+
+//   function getSpellresistance(uint256 _tokenId) public view returns(uint8) {
+// 	  return s_CharacterAttributes[_tokenId].spellresistance;
+//   }
+
+//   function getHealingpower(uint256 _tokenId) public view returns(uint8) {
+// 	  return s_CharacterAttributes[_tokenId].spellresistance;
+//   }
+
+//   function getCharClass(uint256 _tokenId) public view returns(FantasyThings.CharacterClass) {
+// 	  return s_CharacterAttributes[_tokenId].class;
+//   }
+
+//   function getAbilities(uint256 _tokenId) public view returns(FantasyThings.Ability[] memory) {
+// 	  return s_CharacterAttributes[_tokenId].abilities;
+//   }
 
   function _gainExperience(uint256 _xpEarned, uint256 _tokenId) internal {
 	  s_CharacterAttributes[_tokenId].experience += _xpEarned;
