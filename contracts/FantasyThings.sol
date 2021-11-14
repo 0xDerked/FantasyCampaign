@@ -71,10 +71,10 @@ library FantasyThings {
 	}
 
 	struct CampaignEvent {
-		uint8 eventType; //0 is no information, 1 is combat, 2 is loot, 3 is puzzl
+		uint8 eventType; //0 is no information, 1 is combat, 2 is loot, 3 is puzzle
 		uint256 eventId; //can map the eventId to the info about the event
 		string eventName;
-	}
+	} 
 
 
 }
