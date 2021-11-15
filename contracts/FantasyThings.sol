@@ -23,8 +23,16 @@ library FantasyThings {
 		HealingPower
 	}
 
+	enum TurnType {
+		NotSet,
+		Combat, 
+		Loot,
+		Puzzle
+	}
+
 	struct Ability {
 		AbilityType abilityType;
+		uint8 action; //1 is attack, 2 is heal, 3 is defend
 		string name;
 	}
 
@@ -69,12 +77,5 @@ library FantasyThings {
 		CharacterClass class;
 		Ability[] abilities;
 	}
-
-	struct CampaignEvent {
-		uint8 eventType; //0 is no information, 1 is combat, 2 is loot, 3 is puzzle
-		uint256 eventId; //can map the eventId to the info about the event
-		string eventName;
-	} 
-
 
 }

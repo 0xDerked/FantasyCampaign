@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 import "./FantasyThings.sol";
 
 //This contract manages/stores the attributes tied to the ERC721 character tokens
+//Maybe this goes straight into the ERC721 itself
 contract FantasyAttributesManager {
 
 	IERC721Metadata public s_fantasyCharacters;
@@ -21,33 +22,33 @@ contract FantasyAttributesManager {
 
 		//Create Starting Character Templates
 		FantasyThings.Ability[] memory knightAbilities = new FantasyThings.Ability[](1);
-		knightAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Strength,"Strike");
+		knightAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Strength,1,"Strike");
 		_setStartingCharacter(100, [20,30,25,15,0,5,0], FantasyThings.CharacterClass.Knight, knightAbilities);
 
 		FantasyThings.Ability[] memory warlordAbilities = new FantasyThings.Ability[](1);
-		warlordAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Strength, "Strike");
+		warlordAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Strength,1, "Strike");
 		_setStartingCharacter(100, [30,20,20,20,0,5,0], FantasyThings.CharacterClass.Warlord, warlordAbilities);
 
 		FantasyThings.Ability[] memory wizardAbilities = new FantasyThings.Ability[](1);
-		wizardAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Spellpower, "Fireball");
+		wizardAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Spellpower, 1,"Fireball");
 		_setStartingCharacter(90, [5,10,5,5,30,20,0], FantasyThings.CharacterClass.Wizard, wizardAbilities);
 
 		FantasyThings.Ability[] memory shamanAbilities = new FantasyThings.Ability[](2);
-		shamanAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Spellpower,"Lightning Bolt");
-		shamanAbilities[1] = FantasyThings.Ability(FantasyThings.AbilityType.HealingPower,"Nature Heal");
+		shamanAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Spellpower,1,"Lightning Bolt");
+		shamanAbilities[1] = FantasyThings.Ability(FantasyThings.AbilityType.HealingPower,2,"Nature Heal");
 		_setStartingCharacter(90, [10,15,10,10,20,15,10], FantasyThings.CharacterClass.Shaman, shamanAbilities);
 
 		FantasyThings.Ability[] memory clericAbilities = new FantasyThings.Ability[](2);
-		clericAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Spellpower,"Smite");
-		clericAbilities[1] = FantasyThings.Ability(FantasyThings.AbilityType.HealingPower,"Angel's Blessing");
+		clericAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Spellpower,1,"Smite");
+		clericAbilities[1] = FantasyThings.Ability(FantasyThings.AbilityType.HealingPower,2,"Angel's Blessing");
 		_setStartingCharacter(120, [5,10,5,5,10,30,30],FantasyThings.CharacterClass.Cleric, clericAbilities);
 
 		FantasyThings.Ability[] memory rogueAbilities = new FantasyThings.Ability[](1);
-		rogueAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Agility,"Stab");
+		rogueAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Agility,1,"Stab");
 		_setStartingCharacter(100, [15,15,15,30,0,5,0], FantasyThings.CharacterClass.Rogue, rogueAbilities);
 
 		FantasyThings.Ability[] memory rangerAbilities = new FantasyThings.Ability[](1);
-		rangerAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Agility,"Fire Bow");
+		rangerAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Agility,1,"Fire Bow");
 		_setStartingCharacter(100, [10,15,10,35,0,5,0], FantasyThings.CharacterClass.Ranger, rangerAbilities);
 	}
 
@@ -86,45 +87,9 @@ contract FantasyAttributesManager {
 	  return s_CharacterAttributes[_tokenId];
   }
 
-//   function getHealth(uint256 _tokenId) public view returns(uint16) {
-// 	  return s_CharacterAttributes[_tokenId].health;
-//   }
-
-//   function getStrength(uint256 _tokenId) public view returns(uint8) {
-// 	  return s_CharacterAttributes[_tokenId].strength;
-//   }
-
-//   function getArmor(uint256 _tokenId) public view returns(uint8) {
-// 	  return s_CharacterAttributes[_tokenId].armor;
-//   }
-
-//   function getBlock(uint256 _tokenId) public view returns(uint8) {
-// 	  return s_CharacterAttributes[_tokenId].physicalblock;
-//   }
-  
-//   function getAgility(uint256 _tokenId) public view returns(uint8) {
-// 	  return s_CharacterAttributes[_tokenId].agility;
-//   }
-
-//   function getSpellpower(uint256 _tokenId) public view returns(uint8) {
-// 	  return s_CharacterAttributes[_tokenId].spellpower;
-//   }
-
-//   function getSpellresistance(uint256 _tokenId) public view returns(uint8) {
-// 	  return s_CharacterAttributes[_tokenId].spellresistance;
-//   }
-
-//   function getHealingpower(uint256 _tokenId) public view returns(uint8) {
-// 	  return s_CharacterAttributes[_tokenId].spellresistance;
-//   }
-
-//   function getCharClass(uint256 _tokenId) public view returns(FantasyThings.CharacterClass) {
-// 	  return s_CharacterAttributes[_tokenId].class;
-//   }
-
-//   function getAbilities(uint256 _tokenId) public view returns(FantasyThings.Ability[] memory) {
-// 	  return s_CharacterAttributes[_tokenId].abilities;
-//   }
+  function getStartingAttrtibutes(FantasyThings.CharacterClass _charClass) external view returns(FantasyThings.CharacterAttributes memory) {
+	  return s_StartingAttributes[_charClass];
+  }
 
   function _gainExperience(uint256 _xpEarned, uint256 _tokenId) internal {
 	  s_CharacterAttributes[_tokenId].experience += _xpEarned;

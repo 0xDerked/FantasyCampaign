@@ -19,7 +19,7 @@ let user7:SignerWithAddress;
 let FantasyCharacterContract:FantasyCharacter;
 let FantasyAttributesManagerContract:FantasyAttributesManager;
 let CastleCampaignContract:CastleCampaign;
-let MockVRFContract:MockVRF;
+let MockVRFContract:MockVRF; 
 
 describe("Basic deploy test, create and read some values", function () {
   before(async function () {
