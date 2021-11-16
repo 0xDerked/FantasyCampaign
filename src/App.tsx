@@ -1,23 +1,26 @@
 import * as React from "react";
 import "./App.css";
+import styled from "styled-components";
+import { PositionProvider } from "./providers/Position";
+import { WallMap } from "./Maze/WallMap";
+import { ViewPortWalls } from "./ViewPort/ViewPort2";
+
+const Container = styled.div`
+  display: flex;
+  flex: 1;
+  background-color: #282c34;
+  align-items: center;
+  justify-content: center;
+`;
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <PositionProvider>
+      <Container>
+        <ViewPortWalls />
+        <WallMap rotateMap={false} />
+      </Container>
+    </PositionProvider>
   );
 }
 
