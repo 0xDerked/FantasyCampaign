@@ -3,7 +3,6 @@ pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
-import "./FantasyAttributesManager.sol";
 import "./FantasyThings.sol";
 import "./CampaignPlaymaster.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
@@ -17,18 +16,17 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 	bytes32 public keyHash;
 	uint256 public fee;
 
-	FantasyAttributesManager attributesManager;
+
 	IMockVRF mockVRF;
 
-	constructor(address _fantasyCharacters, address _mockVRF, address _attributesManager) VRFConsumerBase(
+	constructor(address _fantasyCharacters, address _mockVRF, address _attributesManager, uint256 _numTurns) VRFConsumerBase(
 		0x8C7382F9D8f56b33781fE506E897a4F1e2d17255, //vrfCoordinator
       0x326C977E6efc84E512bB9C30f76E30c160eD06FB //LINK token
-	) CampaignPlaymaster(10, _fantasyCharacters) {
+	) CampaignPlaymaster(_numTurns, _fantasyCharacters, _attributesManager) {
 		keyHash = 0x6e75b569a01ef56d18cab6a8e71e6600d6ce853834d4a5748b720d06f878b3a4; //oracle keyhash;
       fee = 0.0001 * 10**18; //0.0001 LINK //link token fee; 
 
 		mockVRF = IMockVRF(_mockVRF);
-		attributesManager = FantasyAttributesManager(_attributesManager);
 
 		//set up some mobs
 		FantasyThings.Ability[] memory henchmanAbilities = new FantasyThings.Ability[](1);
@@ -41,19 +39,22 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 		_setMob(200, [20,15,10,10,15,15,0,100], "Draco", bigBossDragonAbilities, 1);
 
 		//set up some guaranteed events with the mobs/puzzles/loot and turn types
-		turnGuaranteedTypes[10] = FantasyThings.TurnType.Combat;
-
+		turnGuaranteedTypes[_numTurns] = FantasyThings.TurnType.Combat;
+		uint256[] memory mobIdsForLast = new uint256[](1);
+		mobIdsForLast[0] = 1; //1 corresponds to Draco Id
+		combatGuaranteedMobIds[_numTurns] = mobIdsForLast;
 	}
 
 	function enterCampaign(uint256 _tokenId) external override controlsCharacter(_tokenId) {
 
-		require(playerTurn[_tokenId] == 0, "You are already in this campaign!");
+		require(playerTurn[_tokenId] == 0, "Campaign Previously Started");
 		FantasyThings.CharacterAttributes memory playerCopy = attributesManager.getPlayer(_tokenId);
-		FantasyThings.CampaignAttributes storage campaignPlayer = playerStatus[_tokenId];
+		FantasyThings.CampaignAttributes storage campaignPlayer = playerStatus[_tokenId][playerNonce[_tokenId]];
 		
 		//update the campaign attributes and character power
 
 		campaignPlayer.health = playerCopy.health;
+		baseHealth = playerCopy.health;
 
 		campaignPlayer.strength = playerCopy.strength;
 		characterPower[_tokenId][FantasyThings.AbilityType.Strength] = playerCopy.strength;
@@ -85,17 +86,9 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 		emit CampaignStarted(msg.sender, address(this), _tokenId);
 	}
 
-	function _endCampaign(address _user,uint256 _tokenId) internal override {
-
-		playerTurn[_tokenId] = 0;
-		turnInProgress[_tokenId] = false;
-		emit CampaignFailed(_user, address(this), _tokenId);
-		//it really doesn't matter if "old" data persists in the mapping because it will be overwritten by turn generation down the line
-	}
-
 	function generateTurn(uint256 _tokenId) external override controlsCharacter(_tokenId) {
-		require(playerTurn[_tokenId] > 0, "You must enter the campaign first!");
-		require(!turnInProgress[_tokenId], "You must complete the current turn before progressing");
+		require(playerTurn[_tokenId] > 0, "Enter Campaign First");
+		require(!turnInProgress[_tokenId], "Turn in progress");
 
 		//generate the turn if it's not a guaranteed turn type
 		//start the turn for both guaranteed and generated turns
@@ -107,8 +100,9 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 				uint256[] memory mobIdsForTurn = new uint256[](2);
 				mobIdsForTurn[0] = 0;
 				mobIdsForTurn[1] = 0;
-				_setMobsForTurn(_tokenId,mobIdsForTurn);
+				_setMobsForTurn(_tokenId,mobIdsForTurn,playerTurn[_tokenId]);
 				turnTypes[_tokenId][playerTurn[_tokenId]] = FantasyThings.TurnType.Combat;
+				turnNumMobsAlive[_tokenId][playerTurn[_tokenId]] = 2;
 			} else if(rng % 100 < 95) {
 				turnTypes[_tokenId][playerTurn[_tokenId]] = FantasyThings.TurnType.Loot;
 			} else {
@@ -116,8 +110,12 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 			}
 		} else {
 			turnTypes[_tokenId][playerTurn[_tokenId]]  = turnGuaranteedTypes[playerTurn[_tokenId]];
+			if(turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.Combat) {
+				_setMobsForTurn(_tokenId, combatGuaranteedMobIds[playerTurn[_tokenId]], playerTurn[_tokenId]);
+			}
 		}
 		turnInProgress[_tokenId] = true;
+		emit TurnStarted(msg.sender, address(this), _tokenId, playerTurn[_tokenId], turnTypes[_tokenId][playerTurn[_tokenId]]);
 	}
 
 	function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
@@ -125,43 +123,9 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 		//can we use some sort of mapping combined with the requestId to do multiple things?!
 	}
 
-	function attackWithAbility (
-		uint256 _tokenId, FantasyThings.Ability calldata _userAbility, uint256 _target) 
-		external override controlsCharacter(_tokenId) isCombatTurn(_tokenId) isCombatAbility(_userAbility) turnActive(_tokenId) {
-
-		require(combatTurnToMobs[_tokenId][playerTurn[_tokenId]][_target].health > 0, "Can't attack a dead mob");
-		uint8 damage = characterPower[_tokenId][_userAbility.abilityType];
-
-		if(damage >= combatTurnToMobs[_tokenId][playerTurn[_tokenId]][_target].health) {
-			combatTurnToMobs[_tokenId][playerTurn[_tokenId]][_target].health = 0;
-			turnNumMobsAlive[_tokenId][playerTurn[_tokenId]]--;
-			if(turnNumMobsAlive[_tokenId][playerTurn[_tokenId]] == 0) {
-				turnInProgress[_tokenId] = false;
-				playerTurn[_tokenId]++;
-				//emit events
-				emit TurnCompleted(msg.sender, address(this),_tokenId, playerTurn[_tokenId], 0, 1, "");
-			}
-			//mob dead event
-			emit AttackedMob(msg.sender, address(this), _tokenId, uint256(damage), _userAbility.name,0,false);
-		} else {
-			combatTurnToMobs[_tokenId][playerTurn[_tokenId]][_target].health-=uint16(damage);
-			emit AttackedMob(msg.sender, address(this), _tokenId, uint256(damage), _userAbility.name,0,false);
-			//mob retaliates, update player campaign stats
-			_mobAttackPlayer(_tokenId, _target);
-			//check for player death
-			if(playerStatus[_tokenId].health == 0) {
-				_endCampaign(msg.sender, _tokenId);
-			}
-			//emit the mobAttacked player event
-		}
-	}
-
   function attackWithItem(uint256 _tokenId, uint256 _itemId, uint256 _target) external override controlsCharacter(_tokenId) isCombatTurn(_tokenId) {
 
    }
   
-  function _mobAttackPlayer(uint256 _tokenId, uint256 _mobIndex) internal override {
-
-  }
 
 }

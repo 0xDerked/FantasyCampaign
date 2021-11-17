@@ -7,6 +7,7 @@ import "@nomiclabs/hardhat-waffle";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { FantasyCharacter,FantasyAttributesManager, FantasyCharacter__factory, FantasyAttributesManager__factory, CastleCampaign, 
 	CastleCampaign__factory, MockVRF__factory, MockVRF} from "../typechain";
+import { AbilityStruct } from "../typechain/CampaignPlaymaster";
 
 let owner:SignerWithAddress;
 let user1:SignerWithAddress;
@@ -63,7 +64,9 @@ describe("Deploy contracts, mint character, progress through campaign", function
 	});
 
 	it("Enter campaign and correctly updates state", async() => {
-		await CastleCampaignContract.connect(user1).enterCampaign(0);
+		await expect(CastleCampaignContract.connect(user1).enterCampaign(0))
+			.to.emit(CastleCampaignContract, "CampaignStarted")
+			.withArgs(user1.address,CastleCampaignContract.address,0);
 		expect(await CastleCampaignContract.playerTurn(0)).to.equal(1);
 		expect(await CastleCampaignContract.turnInProgress(0)).to.equal(false);
 		expect(await CastleCampaignContract.turnTypes(0,1)).to.equal(0);
@@ -72,10 +75,30 @@ describe("Deploy contracts, mint character, progress through campaign", function
 	});
 
 	it("Generates a turn, changes state, creates expected values", async() => {
-		await CastleCampaignContract.connect(user1).generateTurn(0);
+		await expect(CastleCampaignContract.connect(user1).generateTurn(0))
+			.to.emit(CastleCampaignContract, "TurnStarted")
+			.withArgs(user1.address,CastleCampaignContract.address,0,1,1);
 		expect(await CastleCampaignContract.turnInProgress(0)).to.equal(true);
-		expect(await CastleCampaignContract.turnTypes(0,1,)).to.equal(1);
+		expect(await CastleCampaignContract.turnTypes(0,1)).to.equal(1);
+		const mobs = await CastleCampaignContract.getMobsForTurn(0,1);
+		expect(mobs.length).to.equal(2);
+		expect(mobs[0].strength).to.equal(5);
+		expect(mobs[0].health).to.equal(100);
+		expect(mobs[1].strength).to.equal(5);
+		expect(mobs[1].health).to.equal(100);
+		expect(CastleCampaignContract.connect(user1).generateTurn(0)).to.be.reverted;
 	});
 
-	//interact with turn
+	it("Casts Fireball on first mob, state updates properly and emits event", async() => {
+		expect(await CastleCampaignContract.characterPower(0,4)).to.equal(30);
+		const mobsBefore = await CastleCampaignContract.getMobsForTurn(0,1);
+		expect(mobsBefore[0].health).to.equal(100);
+		expect(mobsBefore[1].health).to.equal(100);
+		await expect(CastleCampaignContract.connect(user1).attackWithAbility(0,0,0))
+			.to.emit(CastleCampaignContract,"AttackedMob")
+			.withArgs(user1.address,CastleCampaignContract.address,0,30,"Fireball",70,true);
+		const mobsAfter = await CastleCampaignContract.getMobsForTurn(0,1);
+		expect(mobsAfter[0].health).to.equal(70);
+		expect(mobsAfter[1].health).to.equal(100);
+	});
 });

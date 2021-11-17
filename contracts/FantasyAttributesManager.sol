@@ -87,6 +87,14 @@ contract FantasyAttributesManager {
 	  return s_CharacterAttributes[_tokenId];
   }
 
+  function getPlayerAbilities(uint256 _tokenId) external view returns(FantasyThings.Ability[] memory) {
+	  return s_CharacterAttributes[_tokenId].abilities;
+  }
+
+  function getPlayerAbility(uint256 _tokenId, uint256 _abilityIndex) external view returns(FantasyThings.Ability memory) {
+	  return s_CharacterAttributes[_tokenId].abilities[_abilityIndex];
+  }
+
   function getStartingAttrtibutes(FantasyThings.CharacterClass _charClass) external view returns(FantasyThings.CharacterAttributes memory) {
 	  return s_StartingAttributes[_charClass];
   }
