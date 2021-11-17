@@ -8,7 +8,7 @@ import "./CampaignPlaymaster.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 
 interface IMockVRF {
-	function requestRandomness(uint256 _num, string calldata _letters) external view returns(uint256);
+	function requestRandomness(uint256 _num, string calldata _letters, bytes32 _requestId) external;
 }
 
 contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
@@ -16,6 +16,8 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 	bytes32 public keyHash;
 	uint256 public fee;
 
+	mapping(bytes32 => uint256) private requestToTokenId;
+	mapping(uint256 => uint256) internal currentRandomSeed;
 
 	IMockVRF mockVRF;
 
@@ -90,39 +92,53 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 		require(playerTurn[_tokenId] > 0, "Enter Campaign First");
 		require(!turnInProgress[_tokenId], "Turn in progress");
 
+		turnInProgress[_tokenId] = true;
+
 		//generate the turn if it's not a guaranteed turn type
 		//start the turn for both guaranteed and generated turns
 		if(turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.NotSet) {
-
-			//request and fulfillRandomness here
-			//if combat, set combatTurnToMobs, turnNumMobsAlive
-			uint256 rng = mockVRF.requestRandomness(5, "abc");
-			//make always combat for testing
-			if(rng % 100 < 101) {
-				uint256[] memory mobIdsForTurn = new uint256[](2);
-				mobIdsForTurn[0] = 0;
-				mobIdsForTurn[1] = 0;
-				_setMobsForTurn(_tokenId,mobIdsForTurn,playerTurn[_tokenId]);
-				turnTypes[_tokenId][playerTurn[_tokenId]] = FantasyThings.TurnType.Combat;
-				turnNumMobsAlive[_tokenId][playerTurn[_tokenId]] = 2;
-			} else if(rng % 100 < 95) {
-				turnTypes[_tokenId][playerTurn[_tokenId]] = FantasyThings.TurnType.Loot;
-			} else {
-				turnTypes[_tokenId][playerTurn[_tokenId]] = FantasyThings.TurnType.Puzzle;
-			}
+			//In the real VRF, the request Id is returned from the request and we pass different params to request randomness
+			bytes32 requestId = keccak256(abi.encodePacked(msg.sender, _tokenId, playerTurn[_tokenId], playerNonce[_tokenId]));
+		   //bytes32 requestId = requestRandomness(keyHash, fee);
+			requestToTokenId[requestId] = _tokenId;
+			mockVRF.requestRandomness(5,"abc",requestId);
 		} else {
 			turnTypes[_tokenId][playerTurn[_tokenId]]  = turnGuaranteedTypes[playerTurn[_tokenId]];
 			if(turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.Combat) {
 				_setMobsForTurn(_tokenId, combatGuaranteedMobIds[playerTurn[_tokenId]], playerTurn[_tokenId]);
 			}
+			emit TurnStarted(address(this), _tokenId, playerTurn[_tokenId], turnTypes[_tokenId][playerTurn[_tokenId]]);
+			emit TurnSet(_tokenId, playerTurn[_tokenId]);
 		}
-		turnInProgress[_tokenId] = true;
-		emit TurnStarted(msg.sender, address(this), _tokenId, playerTurn[_tokenId], turnTypes[_tokenId][playerTurn[_tokenId]]);
 	}
 
 	function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
 		//later for use with the chainlinkVRF
 		//can we use some sort of mapping combined with the requestId to do multiple things?!
+	}
+
+	//to expose a mock callback for testing VRF process
+	function mockFulfillRandomness(bytes32 requestId, uint256 randomness) external {
+		uint256 tokenId = requestToTokenId[requestId];
+		currentRandomSeed[tokenId] = randomness;
+
+		if(randomness % 100 < 101) {
+			//set up combat turn
+			uint256[] memory mobIdsForTurn = new uint256[](2);
+			mobIdsForTurn[0] = 0;
+			mobIdsForTurn[1] = 0;
+			_setMobsForTurn(tokenId,mobIdsForTurn,playerTurn[tokenId]);
+			turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Combat;
+			turnNumMobsAlive[tokenId][playerTurn[tokenId]] = 2;
+			} else if(randomness % 100 < 95) {
+				//set up looting turn
+				turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Loot;
+			} else {
+				//set up puzzle turn
+				turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Puzzle;
+			}
+		emit TurnStarted(address(this), tokenId, playerTurn[tokenId], turnTypes[tokenId][playerTurn[tokenId]]);
+		emit TurnSet(tokenId, playerTurn[tokenId]);
 	}
 
   function attackWithItem(uint256 _tokenId, uint256 _itemId, uint256 _target) external override controlsCharacter(_tokenId) isCombatTurn(_tokenId) {

@@ -39,10 +39,10 @@ describe("Deploy contracts, mint character, progress through campaign", function
 	  CastleCampaignContract = await CastleCampaignFactory.deploy(FantasyCharacterContract.address, MockVRFContract.address, FantasyAttributesManagerContract.address, 5);
 	  await CastleCampaignContract.deployed();
 	
-	  //mint a wizard for use in campaign
 	  await FantasyCharacterContract.connect(user1).createCharacter(1);
 
- 
+	  await MockVRFContract.setCampaignAddress(CastleCampaignContract.address);
+		
 	});
 	
 	it("Reads and confirms basic values from the Castle Campagin", async() => {
@@ -78,7 +78,7 @@ describe("Deploy contracts, mint character, progress through campaign", function
 	it("Generates a turn, changes state, creates expected values", async() => {
 		await expect(CastleCampaignContract.connect(user1).generateTurn(0))
 			.to.emit(CastleCampaignContract, "TurnStarted")
-			.withArgs(user1.address,CastleCampaignContract.address,0,1,1);
+			.withArgs(CastleCampaignContract.address,0,1,1);
 		expect(await CastleCampaignContract.turnInProgress(0)).to.equal(true);
 		expect(await CastleCampaignContract.turnTypes(0,1)).to.equal(1);
 		const mobs = await CastleCampaignContract.getMobsForTurn(0,1);
@@ -138,7 +138,7 @@ describe("Deploy contracts, mint character, progress through campaign", function
 		expect(userCampaignStatusAfter.health).to.equal(91);
 	});
 
-	it("Strikes the first mob twice, state updates properly and emits events --- mob should die", async() => {
+	it("Strikes the first mob twice, state updates properly --- mob should die", async() => {
 		const playerTurn = await CastleCampaignContract.playerTurn(0);
 
 		expect(await CastleCampaignContract.turnNumMobsAlive(0,playerTurn)).to.equal(2);
@@ -198,7 +198,7 @@ describe("Deploy contracts, mint character, progress through campaign", function
 		
 		await expect(CastleCampaignContract.connect(user1).generateTurn(0))
 		.to.emit(CastleCampaignContract, "TurnStarted")
-		.withArgs(user1.address,CastleCampaignContract.address,0,playerTurn,1);
+		.withArgs(CastleCampaignContract.address,0,playerTurn,1);
 
 		expect(await CastleCampaignContract.turnInProgress(0)).to.equal(true);
 
@@ -290,7 +290,7 @@ describe("Deploy contracts, mint character, progress through campaign", function
 
 		await expect(CastleCampaignContract.connect(user1).attackWithAbility(0,0,1))
 			.to.emit(CastleCampaignContract, "TurnCompleted")
-			.withArgs(user1.address, CastleCampaignContract.address, 0, 2);
+			.withArgs(CastleCampaignContract.address, 0, 2);
 
 		//killing last mob so health should reset
 		const userCampaignStatusAfter8 = await CastleCampaignContract.getCurrentCampaignStats(0);

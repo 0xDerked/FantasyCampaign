@@ -10,7 +10,15 @@ import '@typechain/hardhat';
 
 const config: HardhatUserConfig = {
   defaultNetwork: 'hardhat',
-  solidity: '0.8.0',
+  solidity: {
+	  version: '0.8.0',
+	  settings: {
+		  optimizer: {
+			  enabled: true,
+			  runs:1000,
+		  }
+	  }
+  },
   networks: {
     mumbai: {
       url: process.env.MUMBAI_RPC_URL,

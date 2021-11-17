@@ -41,8 +41,9 @@ abstract contract CampaignPlaymaster {
 	event CampaignStarted(address indexed _user, address indexed _campaign, uint256 _tokenId);
 	event CampaignEnded(address indexed _user, address indexed _campaign, uint256 _tokenId, bool _success);
 
-	event TurnStarted(address indexed _user, address indexed _campaign, uint256 _tokenId, uint256 _turnNumber, FantasyThings.TurnType _turnType);
-	event TurnCompleted(address indexed _user, address indexed _campaign, uint256 _tokenId, uint256 _turnNumber);
+	event TurnSet(uint256 _tokenId, uint256 _turnNumber);
+	event TurnStarted(address indexed _campaign, uint256 _tokenId, uint256 _turnNumber, FantasyThings.TurnType _turnType);
+	event TurnCompleted(address indexed _campaign, uint256 _tokenId, uint256 _turnNumber);
 
 	IERC721Metadata public fantasyCharacters;
 	FantasyAttributesManager attributesManager;
@@ -155,7 +156,7 @@ abstract contract CampaignPlaymaster {
 			_endCampaign(_tokenId, true);
 		} else {
 			playerStatus[_tokenId][_currentNonce].health = baseHealth;
-			emit TurnCompleted(msg.sender, address(this),_tokenId, playerTurn[_tokenId]-1);
+			emit TurnCompleted(address(this),_tokenId, playerTurn[_tokenId]-1);
 		}
 	}
 	
