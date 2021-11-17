@@ -93,6 +93,8 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 		//generate the turn if it's not a guaranteed turn type
 		//start the turn for both guaranteed and generated turns
 		if(turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.NotSet) {
+
+			//request and fulfillRandomness here
 			//if combat, set combatTurnToMobs, turnNumMobsAlive
 			uint256 rng = mockVRF.requestRandomness(5, "abc");
 			//make always combat for testing

@@ -61,6 +61,7 @@ describe("Deploy contracts, mint character, progress through campaign", function
 		expect(bossDragon.abilities[1].abilityType).to.equal(0);
 		expect(bossDragon.abilities[1].name).to.equal("Tail Whip");
 		expect(await CastleCampaignContract.numberOfTurns()).to.equal(5);
+		expect(await CastleCampaignContract.playerNonce(0)).to.equal(0);
 	});
 
 	it("Enter campaign and correctly updates state", async() => {
@@ -237,9 +238,66 @@ describe("Deploy contracts, mint character, progress through campaign", function
 		expect(mobsAfter2[0].health).to.equal(42);
 		expect(mobsAfter2[1].health).to.equal(100);
 
+		await CastleCampaignContract.connect(user1).attackWithAbility(0,0,0);
+
+		const userCampaignStatusAfter3 = await CastleCampaignContract.getCurrentCampaignStats(0);
+		expect(userCampaignStatusAfter3.health).to.equal(91);
+
+		const mobsAfter3 = await CastleCampaignContract.getMobsForTurn(0,playerTurn);
+		expect(mobsAfter3[0].health).to.equal(13);
+		expect(mobsAfter3[1].health).to.equal(100);
+
+		await CastleCampaignContract.connect(user1).attackWithAbility(0,0,0);
+
+		//killing mob so health should stay the same
+		const userCampaignStatusAfter4 = await CastleCampaignContract.getCurrentCampaignStats(0);
+		expect(userCampaignStatusAfter4.health).to.equal(91);
+
+		const mobsAfter4 = await CastleCampaignContract.getMobsForTurn(0,playerTurn);
+		expect(mobsAfter4[0].health).to.equal(0);
+		expect(mobsAfter4[1].health).to.equal(100);
+
 		/**End Kill Mob 1 **/
 
 		/**Begin Kill Mob 2 **/
+
+		await CastleCampaignContract.connect(user1).attackWithAbility(0,0,1);
+
+		const userCampaignStatusAfter5 = await CastleCampaignContract.getCurrentCampaignStats(0);
+		expect(userCampaignStatusAfter5.health).to.equal(88);
+
+		const mobsAfter5 = await CastleCampaignContract.getMobsForTurn(0,playerTurn);
+		expect(mobsAfter5[0].health).to.equal(0);
+		expect(mobsAfter5[1].health).to.equal(71);
+
+		await CastleCampaignContract.connect(user1).attackWithAbility(0,0,1);
+
+		const userCampaignStatusAfter6 = await CastleCampaignContract.getCurrentCampaignStats(0);
+		expect(userCampaignStatusAfter6.health).to.equal(85);
+
+		const mobsAfter6 = await CastleCampaignContract.getMobsForTurn(0,playerTurn);
+		expect(mobsAfter6[0].health).to.equal(0);
+		expect(mobsAfter6[1].health).to.equal(42);
+
+		await CastleCampaignContract.connect(user1).attackWithAbility(0,0,1);
+
+		const userCampaignStatusAfter7 = await CastleCampaignContract.getCurrentCampaignStats(0);
+		expect(userCampaignStatusAfter7.health).to.equal(82);
+
+		const mobsAfter7 = await CastleCampaignContract.getMobsForTurn(0,playerTurn);
+		expect(mobsAfter7[0].health).to.equal(0);
+		expect(mobsAfter7[1].health).to.equal(13);
+
+		await expect(CastleCampaignContract.connect(user1).attackWithAbility(0,0,1))
+			.to.emit(CastleCampaignContract, "TurnCompleted")
+			.withArgs(user1.address, CastleCampaignContract.address, 0, 2);
+
+		//killing last mob so health should reset
+		const userCampaignStatusAfter8 = await CastleCampaignContract.getCurrentCampaignStats(0);
+		expect(userCampaignStatusAfter8.health).to.equal(100);
+
+		expect(await CastleCampaignContract.playerTurn(0)).to.equal(3);
+		expect(await CastleCampaignContract.turnInProgress(0)).to.equal(false);
 
 		/**End Kill Mob 2 **/
 

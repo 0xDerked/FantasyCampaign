@@ -9,36 +9,40 @@ import "./FantasyAttributesManager.sol";
 abstract contract CampaignPlaymaster {
 
 	uint256 immutable public numberOfTurns;
-	mapping(uint256 => uint256) public playerTurn; //maps NFT token id to turn
+	//tokenId -> Turn Number
+	mapping(uint256 => uint256) public playerTurn;
+	//tokenId -> Nonce (# of times player has played campaign)
 	mapping(uint256 => uint256) public playerNonce; 
 	uint16 public baseHealth;
 
 
 	//tokenId -> playerNonce -> playerStatus
 	mapping(uint256 => mapping(uint256 => FantasyThings.CampaignAttributes)) public playerStatus;
-	mapping(uint256 => mapping(FantasyThings.AbilityType => uint8)) public characterPower; //this mapping is useful for dynamically selecting power for attacks and defends
+	//tokenId -> Ability Type -> Current Power (do not need a nonce as this is overwritten at enter campaign)
+	mapping(uint256 => mapping(FantasyThings.AbilityType => uint8)) public characterPower;
 	
+	//tokenId -> turnType (no nonce, overwritten)
 	mapping(uint256 => FantasyThings.TurnType) public turnGuaranteedTypes;
 
 	//tokenId -> Turn Number -> Turn Type
 	mapping(uint256 => mapping(uint256 => FantasyThings.TurnType)) public turnTypes;
-	mapping(uint256 => FantasyThings.Mob) public mobAttributes; //mapping from an ID to mob attributes
+	//mobId -> Attributes (no nonce, only ran once in constructor)
+	mapping(uint256 => FantasyThings.Mob) public mobAttributes;
 
 	//tokenId -> playerNonce -> Turn Number -> Mobs
-	mapping(uint256 => mapping(uint256 => mapping(uint256 => FantasyThings.Mob[]))) public combatTurnToMobs; //we want to generate this dynamically with chainlinkVRF except at specific points
+	mapping(uint256 => mapping(uint256 => mapping(uint256 => FantasyThings.Mob[]))) public combatTurnToMobs;
 	mapping(uint256 => uint256[]) public combatGuaranteedMobIds;
 
-	mapping(uint256 => mapping(uint256 => uint256)) public turnNumMobsAlive; //player -> turn -> number of remaining mobs
-	mapping(uint256 => bool) public turnInProgress; //tracks whether the player is in the middle of a turn or not
+	//tokenId -> Turn Number -> Mobs Alive
+	mapping(uint256 => mapping(uint256 => uint256)) public turnNumMobsAlive;
+	//tokenId -> Turn in Progress
+	mapping(uint256 => bool) public turnInProgress;
 
 	event CampaignStarted(address indexed _user, address indexed _campaign, uint256 _tokenId);
-	event CampaignCompleted(address indexed _user, address indexed _campaign, uint256 _tokenId);
-	event CampaignAbandoned(address indexed _user, address indexed _campaign, uint256 _tokenId);
-	event CampaignFailed(address indexed _user, address indexed _campaign, uint256 _tokenId);
+	event CampaignEnded(address indexed _user, address indexed _campaign, uint256 _tokenId, bool _success);
 
 	event TurnStarted(address indexed _user, address indexed _campaign, uint256 _tokenId, uint256 _turnNumber, FantasyThings.TurnType _turnType);
 	event TurnCompleted(address indexed _user, address indexed _campaign, uint256 _tokenId, uint256 _turnNumber);
-	event PlayerDied(address indexed _user, address indexed _campaign, uint256 _tokenId, uint256 _turnNumber);
 
 	IERC721Metadata public fantasyCharacters;
 	FantasyAttributesManager attributesManager;
@@ -106,10 +110,11 @@ abstract contract CampaignPlaymaster {
 			combatTurnToMobs[_tokenId][playerNonce[_tokenId]][_turnNum].push(mobAttributes[_mobIds[i]]);
 		}
 	}
-
+	 
+	 //This is a default configuration of attack with ability, can be overwritten if want to incorporate some other mechanics
 	 function attackWithAbility (
 		uint256 _tokenId, uint256 _abilityIndex, uint256 _target) 
-		external controlsCharacter(_tokenId) isCombatTurn(_tokenId) turnActive(_tokenId) {
+		external virtual controlsCharacter(_tokenId) isCombatTurn(_tokenId) turnActive(_tokenId) {
 		
 		uint256 currentNonce = playerNonce[_tokenId];
 		uint256 currentTurn = playerTurn[_tokenId];
@@ -128,9 +133,7 @@ abstract contract CampaignPlaymaster {
 			combatTurnToMobs[_tokenId][currentNonce][currentTurn][_target].health-=uint16(damageTotal);
 			_mobAttackPlayer(_tokenId, _target, 0);
 			if(playerStatus[_tokenId][currentNonce].health == 0) {
-				playerTurn[_tokenId] = 0;
-				turnInProgress[_tokenId] = false;
-				playerNonce[_tokenId]++;
+				_endCampaign(_tokenId, false);
 			}
 		}
 	}
@@ -140,19 +143,19 @@ abstract contract CampaignPlaymaster {
 		turnNumMobsAlive[_tokenId][_currentTurn]--;
 		if(turnNumMobsAlive[_tokenId][_currentTurn] == 0) {
 			_endTurn(_tokenId, _currentNonce);
-			}
+		}
 	}
 
 	function _endTurn(uint256 _tokenId, uint256 _currentNonce) internal {
+		
 		turnInProgress[_tokenId] = false;
 		playerTurn[_tokenId]++;
+
 		if(playerTurn[_tokenId] > numberOfTurns) {
-			playerTurn[_tokenId] = 0;
-			emit CampaignCompleted(msg.sender, address(this), _tokenId);
+			_endCampaign(_tokenId, true);
 		} else {
-			//reset to base health
 			playerStatus[_tokenId][_currentNonce].health = baseHealth;
-			emit TurnCompleted(msg.sender, address(this),_tokenId, playerTurn[_tokenId]);
+			emit TurnCompleted(msg.sender, address(this),_tokenId, playerTurn[_tokenId]-1);
 		}
 	}
 	
@@ -190,11 +193,13 @@ abstract contract CampaignPlaymaster {
 		}
      }
 
-	function _endCampaign(uint256 _tokenId) internal {
+	function _endCampaign(uint256 _tokenId, bool _campaignSuccess) internal {
 		playerTurn[_tokenId] = 0;
 		turnInProgress[_tokenId] = false;
 		playerNonce[_tokenId]++;
+		emit CampaignEnded(msg.sender, address(this), _tokenId, _campaignSuccess);
 	}
+
 	function inspectMob(uint256 _mobId) public view returns(FantasyThings.Mob memory) {
 		return mobAttributes[_mobId];
 	}
