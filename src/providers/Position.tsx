@@ -1,6 +1,6 @@
 import * as React from "react";
-import { useUserPosition } from "./hooks";
 import { Pos } from "../utils/positionHelpers";
+import { useUserPosition } from "../hooks/useUserPosition";
 
 const PositionContext = React.createContext<Pos>({
   col: 0,

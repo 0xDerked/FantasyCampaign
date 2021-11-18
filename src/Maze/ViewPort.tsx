@@ -1,43 +1,23 @@
 import * as React from "react";
 import { Ceiling, Floor, monsterMaps, Outer, textureMaps } from "./TextureMaps";
-import { usePositionContext } from "../providers/Position";
-import { rotate } from "../utils/rotate";
-import { monstersCoords, wallCoords } from "./mapData";
-import { round } from "../utils/round";
+import { useWalls } from "../hooks/useWalls";
+import { useMonsters } from "../hooks/useMonsters";
 
 export const ViewPort = () => {
-  const position = usePositionContext();
+  const walls = useWalls();
+  const monsters = useMonsters();
 
-  const { row, col, dir } = position;
-  const Rot = 90 * dir;
-  const wallSurfaces = wallCoords
+  const wallSurfaces = walls
     .map(({ x1, x2, y1, y2 }) => {
-      const orow = row + 0.5;
-      const ocol = col + 0.5;
-      const Cx = ocol;
-      const Cy = orow;
-      const [x1p, y1p] = rotate(x1, y1, Cx, Cy, Rot);
-      const [x2p, y2p] = rotate(x2, y2, Cx, Cy, Rot);
-      const x1r = round(x1p);
-      const y1r = round(y1p);
-      const x2r = round(x2p);
-      const y2r = round(y2p);
-      const leftRight =
-        textureMaps[`${x1r - ocol},${y1r - orow},${x2r - ocol},${y2r - orow}`];
-      const rightLeft =
-        textureMaps[`${x2r - ocol},${y2r - orow},${x1r - ocol},${y1r - orow}`];
+      const leftRight = textureMaps[`${x1},${y1},${x2},${y2}`];
+      const rightLeft = textureMaps[`${x2},${y2},${x1},${y1}`];
       return leftRight || rightLeft;
     })
     .filter(Boolean);
 
-  const monsterComponents = monstersCoords
+  const monsterComponents = monsters
     .map(({ x, y }) => {
-      const Cx = col;
-      const Cy = row;
-      const [xp, yp] = rotate(x, y, Cx, Cy, Rot);
-      const xr = round(xp);
-      const yr = round(yp);
-      return monsterMaps[`${xr - col},${yr - row}`];
+      return monsterMaps[`${x},${y}`];
     })
     .filter(Boolean);
 
