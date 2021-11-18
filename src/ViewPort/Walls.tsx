@@ -23,7 +23,7 @@ export const Outer = styled.div`
   position: relative;
 `;
 
-export const Floor = styled.img.attrs(props => ({
+export const Floor = styled.img.attrs(() => ({
   src: flooralt,
 }))`
   position: absolute;
@@ -33,7 +33,7 @@ export const Floor = styled.img.attrs(props => ({
   height: 140px;
 `;
 
-export const Ceiling = styled.img.attrs(props => ({
+export const Ceiling = styled.img.attrs(() => ({
   src: ceiling,
 }))`
   position: absolute;
@@ -46,7 +46,7 @@ export const Ceiling = styled.img.attrs(props => ({
 // --------------------------------------------------------------------------------
 // Angled walls
 
-export const WallLSide0 = styled.img.attrs(props => ({
+export const WallLSide0 = styled.img.attrs(() => ({
   src: wallLSide0alt,
 }))`
   position: absolute;
@@ -57,7 +57,7 @@ export const WallLSide0 = styled.img.attrs(props => ({
   z-index: 400;
 `;
 
-export const WallLSide1 = styled.img.attrs(props => ({
+export const WallLSide1 = styled.img.attrs(() => ({
   src: wallLSide1alt,
 }))`
   position: absolute;
@@ -68,7 +68,7 @@ export const WallLSide1 = styled.img.attrs(props => ({
   z-index: 300;
 `;
 
-export const WallLSide2 = styled.img.attrs(props => ({
+export const WallLSide2 = styled.img.attrs(() => ({
   src: wallLSide2alt,
 }))`
   position: absolute;
@@ -79,7 +79,7 @@ export const WallLSide2 = styled.img.attrs(props => ({
   z-index: 200;
 `;
 
-export const WallLSide3 = styled.img.attrs(props => ({
+export const WallLSide3 = styled.img.attrs(() => ({
   src: wallLSide3alt,
 }))`
   position: absolute;
@@ -117,7 +117,7 @@ export const WallRSide3 = styled(WallLSide3)`
 // --------------------------------------------------------------------------------
 // Center front-facing walls
 
-export const WallFront1 = styled.img.attrs(props => ({
+export const WallFront1 = styled.img.attrs(() => ({
   src: wallFront1nor,
 }))`
   position: absolute;
@@ -128,7 +128,7 @@ export const WallFront1 = styled.img.attrs(props => ({
   z-index: 301;
 `;
 
-export const WallFront2 = styled.img.attrs(props => ({
+export const WallFront2 = styled.img.attrs(() => ({
   src: wallFront2nor,
 }))`
   position: absolute;
@@ -139,7 +139,7 @@ export const WallFront2 = styled.img.attrs(props => ({
   z-index: 201;
 `;
 
-export const WallFront3 = styled.img.attrs(props => ({
+export const WallFront3 = styled.img.attrs(() => ({
   src: wallFront3nor,
 }))`
   position: absolute;
@@ -154,7 +154,7 @@ export const WallFront3 = styled.img.attrs(props => ({
 // Non-center front-facing walls
 
 // Left
-export const WallSide1_1 = styled.img.attrs(props => ({
+export const WallSide1_1 = styled.img.attrs(() => ({
   src: wallSide1alt,
 }))`
   position: absolute;
@@ -165,7 +165,7 @@ export const WallSide1_1 = styled.img.attrs(props => ({
   z-index: 300;
 `;
 
-export const WallSide2_1 = styled.img.attrs(props => ({
+export const WallSide2_1 = styled.img.attrs(() => ({
   src: wallSide2alt,
 }))`
   position: absolute;
@@ -176,7 +176,7 @@ export const WallSide2_1 = styled.img.attrs(props => ({
   z-index: 200;
 `;
 
-export const WallSide3_1 = styled.img.attrs(props => ({
+export const WallSide3_1 = styled.img.attrs(() => ({
   src: wallFront3nor,
 }))`
   position: absolute;
