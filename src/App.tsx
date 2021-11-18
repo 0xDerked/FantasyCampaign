@@ -1,9 +1,8 @@
 import * as React from "react";
-import "./App.css";
 import styled from "styled-components";
 import { PositionProvider } from "./providers/Position";
-import { WallMap } from "./Maze/WallMap";
-import { ViewPortWalls } from "./ViewPort/ViewPort2";
+import { Map } from "./Maze/Map";
+import { ViewPort } from "./Maze/ViewPort";
 
 const Container = styled.div`
   display: flex;
@@ -17,8 +16,8 @@ function App() {
   return (
     <PositionProvider>
       <Container>
-        <ViewPortWalls />
-        <WallMap rotateMap={false} />
+        <ViewPort />
+        <Map rotateMap={false} />
       </Container>
     </PositionProvider>
   );

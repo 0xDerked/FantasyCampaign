@@ -1,4 +1,6 @@
-import { tiles, walls } from "../Maze/mapData";
+import { rotate } from "./rotate";
+import { round } from "./round";
+import { wallsDict } from "../Maze/mapData";
 
 export enum Keys {
   Forward = "w",
@@ -35,32 +37,26 @@ export const rotRight = (pos: Pos) => ({
   dir: (pos.dir + 1) % 4,
 });
 
-export const getCellType = (pos: Pos): number => {
-  const { row, col } = pos;
-  return tiles?.[row]?.[col];
-};
-
 export const boundPos = (currPos: Pos, nextPos: Pos): Pos => {
-  const currWalls = walls[getCellType(currPos)];
-  const nextWalls = walls[getCellType(nextPos)];
-  const rowDelta = nextPos.row - currPos.row;
-  const colDelta = nextPos.col - currPos.col;
-  const isValid = () => {
-    if (rowDelta === -1) {
-      return currWalls?.[0] === 0 && nextWalls?.[2] === 0;
-    }
-    if (rowDelta === 1) {
-      return currWalls?.[2] === 0 && nextWalls?.[0] === 0;
-    }
-    if (colDelta === 1) {
-      return currWalls?.[1] === 0 && nextWalls?.[3] === 0;
-    }
-    if (colDelta === -1) {
-      return currWalls?.[3] === 0 && nextWalls?.[1] === 0;
-    }
-    throw "Nope";
-  };
-  return isValid() ? nextPos : currPos;
+  // User position is an integer so we add 0.5 to move the users into the middle of te tile
+  const x1 = currPos.col + 0.5;
+  const y1 = currPos.row + 0.5;
+  const x2 = nextPos.col + 0.5;
+  const y2 = nextPos.row + 0.5;
+  // Find center point of the move vector
+  const Cx = (x1 + x2) / 2;
+  const Cy = (y1 + y2) / 2;
+  const By = 90;
+  // Rotate those points 90 degrees to get the possible vector of the wall
+  const [x1p, y1p] = rotate(x1, y1, Cx, Cy, By);
+  const [x2p, y2p] = rotate(x2, y2, Cx, Cy, By);
+  if (wallsDict[`${round(x1p)},${round(y1p)},${round(x2p)},${round(y2p)}`]) {
+    return currPos;
+  }
+  if (wallsDict[`${round(x2p)},${round(y2p)},${round(x1p)},${round(y1p)}`]) {
+    return currPos;
+  }
+  return nextPos;
 };
 
 export const goForwards = (pos: Pos): Pos => {

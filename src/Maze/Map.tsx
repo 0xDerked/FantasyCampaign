@@ -1,9 +1,9 @@
 import * as React from "react";
 import { ReactElement } from "react";
 import styled from "styled-components";
-import { mazeToWalls } from "../utils/mazeToWalls";
 import { usePositionContext } from "../providers/Position";
 import { rotate } from "../utils/rotate";
+import { monstersCoords, wallCoords } from "./mapData";
 
 const CELL_PX = 50;
 
@@ -15,7 +15,7 @@ const Container = styled.div`
   overflow: visible;
 `;
 
-const Player = styled.text`
+const Avatar = styled.text`
   font-size: 30px;
   height: ${CELL_PX}px;
   width: ${CELL_PX}px;
@@ -25,12 +25,7 @@ const Player = styled.text`
   justify-content: center;
 `;
 
-export const WallMap = ({
-  rotateMap,
-}: {
-  rotateMap: boolean;
-}): ReactElement => {
-  const wallCoords = mazeToWalls();
+export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
   const position = usePositionContext();
   const { row, col, dir } = position;
   const By = rotateMap ? 90 * dir : 0;
@@ -56,15 +51,15 @@ export const WallMap = ({
         {rotatedWallCoords.map(({ x1, y1, x2, y2 }) => (
           <line
             key={JSON.stringify({ x1, y1, x2, y2 })}
-            x1={(x1 + 0.5 + OFFSET) * CELL_PX}
-            y1={(y1 + 0.5 + OFFSET) * CELL_PX}
-            x2={(x2 + 0.5 + OFFSET) * CELL_PX}
-            y2={(y2 + 0.5 + OFFSET) * CELL_PX}
+            x1={(x1 + OFFSET) * CELL_PX}
+            y1={(y1 + OFFSET) * CELL_PX}
+            x2={(x2 + OFFSET) * CELL_PX}
+            y2={(y2 + OFFSET) * CELL_PX}
             stroke="black"
           />
         ))}
       </svg>
-      <Player
+      <Avatar
         style={{
           left: rotateMap ? OFFSET * CELL_PX : col * CELL_PX,
           top: rotateMap ? OFFSET * CELL_PX : row * CELL_PX,
@@ -72,7 +67,18 @@ export const WallMap = ({
         }}
       >
         ️️️️⬆️️
-      </Player>
+      </Avatar>
+      {monstersCoords.map(({ x, y, type }) => (
+        <Avatar
+          key={JSON.stringify({ x, y })}
+          style={{
+            left: x * CELL_PX,
+            top: y * CELL_PX,
+          }}
+        >
+          {type !== 0 ? "🐉" : null}
+        </Avatar>
+      ))}
     </Container>
   );
 };
