@@ -13,6 +13,7 @@ abstract contract CampaignPlaymaster {
 	mapping(uint256 => uint256) public playerTurn;
 	//tokenId -> Nonce (# of times player has played campaign)
 	mapping(uint256 => uint256) public playerNonce; 
+	mapping(uint256 => uint256) internal currentRandomSeed;
 	uint16 public baseHealth;
 
 
@@ -39,15 +40,19 @@ abstract contract CampaignPlaymaster {
 
 	//tokenId -> Turn Number -> Mobs Alive
 	mapping(uint256 => mapping(uint256 => uint256)) public turnNumMobsAlive;
+	mapping(uint256 => mapping(uint256 => mapping(uint256 => bool))) public mobIndexAlive;
+
 	//tokenId -> Turn in Progress
 	mapping(uint256 => bool) public turnInProgress;
 
 	event CampaignStarted(address indexed _user, address indexed _campaign, uint256 _tokenId);
-	event CampaignEnded(address indexed _user, address indexed _campaign, uint256 _tokenId, bool _success);
+	event CampaignEnded(address indexed _campaign, uint256 _tokenId, bool _success);
 
 	event TurnSet(uint256 _tokenId, uint256 _turnNumber);
 	event TurnStarted(address indexed _campaign, uint256 _tokenId, uint256 _turnNumber, FantasyThings.TurnType _turnType);
 	event TurnCompleted(address indexed _campaign, uint256 _tokenId, uint256 _turnNumber);
+
+	event MobAttack(uint256 _mobTurnIndex, uint256 _mobAbilityIndex);
 
 	IERC721Metadata public fantasyCharacters;
 	FantasyAttributesManager attributesManager;
@@ -113,7 +118,9 @@ abstract contract CampaignPlaymaster {
 	function _setMobsForTurn(uint256 _tokenId, uint256[] memory _mobIds, uint256 _turnNum) internal {
 		for(uint256 i=0; i< _mobIds.length; i++) {
 			combatTurnToMobs[_tokenId][playerNonce[_tokenId]][_turnNum].push(mobAttributes[_mobIds[i]]);
+			mobIndexAlive[_tokenId][_turnNum][i] = true;
 		}
+		turnNumMobsAlive[_tokenId][playerTurn[_tokenId]] = _mobIds.length;
 	}
 	 
 	function _setItemsForTurn(uint256 _tokenId, uint256[] memory _itemIds, uint256 _turnNum) internal {
@@ -142,16 +149,47 @@ abstract contract CampaignPlaymaster {
 			_killMob(_tokenId, currentNonce, currentTurn, _target);
 		} else {
 			combatTurnToMobs[_tokenId][currentNonce][currentTurn][_target].health-=uint16(damageTotal);
-			_mobAttackPlayer(_tokenId, _target, 0);
-			if(playerStatus[_tokenId][currentNonce].health == 0) {
-				_endCampaign(_tokenId, false);
+			_retaliate(_tokenId, currentTurn, currentNonce, _target);
+		}
+	}
+
+	function castHealAbility(uint256 _tokenId, uint256 _abilityIndex) 
+		external virtual controlsCharacter(_tokenId) isCombatTurn(_tokenId) turnActive(_tokenId) {
+		
+		FantasyThings.Ability memory userAbility = attributesManager.getPlayerAbility(_tokenId, _abilityIndex);
+		require(userAbility.action == 2, "Cannot heal with this ability!");
+
+		uint256 currentNonce = playerNonce[_tokenId];
+
+		uint8 healingPower = characterPower[_tokenId][userAbility.abilityType];
+		uint16 currentHealth = playerStatus[_tokenId][currentNonce].health;
+
+		uint16(healingPower) + currentHealth >= baseHealth ? playerStatus[_tokenId][currentNonce].health = baseHealth : 
+			playerStatus[_tokenId][currentNonce].health = baseHealth + uint16(healingPower);
+
+		uint256 index;
+		for(uint256 i=0; i < combatTurnToMobs[_tokenId][currentNonce][playerTurn[_tokenId]].length; i++) {
+			if (mobIndexAlive[_tokenId][playerTurn[_tokenId]][i]) {
+				index = i;
+				break;
 			}
+		}
+
+		_retaliate(_tokenId, playerTurn[_tokenId], currentNonce, index);
+	}
+
+	function _retaliate(uint256 _tokenId, uint256 _turn, uint256 _nonce, uint256 _target) internal {
+		uint256 numMobAbils = combatTurnToMobs[_tokenId][_nonce][_turn][_target].abilities.length;
+		numMobAbils > 1 ? _mobAttackPlayer(_tokenId, _target, uint256(keccak256(abi.encodePacked(currentRandomSeed[_tokenId], playerStatus[_tokenId][_turn].health))) % numMobAbils) : _mobAttackPlayer(_tokenId, _target, 0);
+		if(playerStatus[_tokenId][_nonce].health == 0) {
+			_endCampaign(_tokenId, false);
 		}
 	}
 
 	function _killMob(uint256 _tokenId, uint256 _currentNonce, uint256 _currentTurn, uint256 _target) internal {
 		combatTurnToMobs[_tokenId][_currentNonce][_currentTurn][_target].health = 0;
 		turnNumMobsAlive[_tokenId][_currentTurn]--;
+		mobIndexAlive[_tokenId][_currentTurn][_target] = false;
 		if(turnNumMobsAlive[_tokenId][_currentTurn] == 0) {
 			_endTurn(_tokenId, _currentNonce);
 		}
@@ -189,26 +227,32 @@ abstract contract CampaignPlaymaster {
 	  uint256 currentTurn = playerTurn[_tokenId];
 	  FantasyThings.Ability memory mobAbility = combatTurnToMobs[_tokenId][currentNonce][currentTurn][_mobIndex].abilities[_mobAbilityIndex];
 	  uint8 baseDamage;
+	  uint8 dmgReduction;
 	  if (mobAbility.abilityType == FantasyThings.AbilityType.Strength) {
+		  //block & dodge
 		  baseDamage = combatTurnToMobs[_tokenId][currentNonce][currentTurn][_mobIndex].strength;
-		  uint8 dmgReduction = playerStatus[_tokenId][currentNonce].armor/10;
-		  playerStatus[_tokenId][currentNonce].health-=(baseDamage-dmgReduction);
+		  dmgReduction = playerStatus[_tokenId][currentNonce].armor/10;
 	  } else if (mobAbility.abilityType == FantasyThings.AbilityType.Agility) {
+		  //block & dodge
 		  	baseDamage = combatTurnToMobs[_tokenId][currentNonce][currentTurn][_mobIndex].agility;
-			uint8 dmgReduction = playerStatus[_tokenId][currentNonce].armor/10;
-			playerStatus[_tokenId][currentNonce].health-=(baseDamage-dmgReduction);
+			dmgReduction = playerStatus[_tokenId][currentNonce].armor/10;
 	  } else {
+		  //fullresist
 		  	baseDamage = combatTurnToMobs[_tokenId][currentNonce][currentTurn][_mobIndex].spellpower;
-			uint8 dmgReduction = playerStatus[_tokenId][currentNonce].spellresistance/10;
-			playerStatus[_tokenId][currentNonce].health-=(baseDamage-dmgReduction);
+			dmgReduction = playerStatus[_tokenId][currentNonce].spellresistance/10;
 		}
+		if (dmgReduction < baseDamage) {
+			uint8 totalDmg = baseDamage - dmgReduction;
+			totalDmg >= playerStatus[_tokenId][currentNonce].health ? playerStatus[_tokenId][currentNonce].health = 0 : playerStatus[_tokenId][currentNonce].health -= totalDmg;
+		}
+		emit MobAttack(_mobIndex, _mobAbilityIndex);
      }
 
 	function _endCampaign(uint256 _tokenId, bool _campaignSuccess) internal {
 		playerTurn[_tokenId] = 0;
 		turnInProgress[_tokenId] = false;
 		playerNonce[_tokenId]++;
-		emit CampaignEnded(msg.sender, address(this), _tokenId, _campaignSuccess);
+		emit CampaignEnded(address(this), _tokenId, _campaignSuccess);
 	}
 
 	function inspectMob(uint256 _mobId) public view returns(FantasyThings.Mob memory) {
