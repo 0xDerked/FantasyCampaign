@@ -34,6 +34,10 @@ abstract contract CampaignPlaymaster {
 	mapping(uint256 => mapping(uint256 => mapping(uint256 => FantasyThings.Mob[]))) public combatTurnToMobs;
 	mapping(uint256 => uint256[]) public combatGuaranteedMobIds;
 
+  // tokenId -> nonce -> Turn -> Items 
+  FantasyThings.Item[] CampaignItems;
+	mapping(uint256 => mapping(uint256 => mapping(uint256 => FantasyThings.Item[]))) public LootTurnToItems;
+
 	//tokenId -> Turn Number -> Mobs Alive
 	mapping(uint256 => mapping(uint256 => uint256)) public turnNumMobsAlive;
 	mapping(uint256 => mapping(uint256 => mapping(uint256 => bool))) public mobIndexAlive;
@@ -119,6 +123,12 @@ abstract contract CampaignPlaymaster {
 		turnNumMobsAlive[_tokenId][playerTurn[_tokenId]] = _mobIds.length;
 	}
 	 
+	function _setItemsForTurn(uint256 _tokenId, uint256[] memory _itemIds, uint256 _turnNum) internal {
+		for(uint256 i=0; i< _itemIds.length; i++) {
+			LootTurnToItems[_tokenId][playerNonce[_tokenId]][_turnNum].push(CampaignItems[_itemIds[i]]);
+		}
+	}
+	
 	 //This is a default configuration of attack with ability, can be overwritten if want to incorporate some other mechanics
 	 function attackWithAbility (
 		uint256 _tokenId, uint256 _abilityIndex, uint256 _target) 
