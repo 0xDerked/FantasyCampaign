@@ -1,4 +1,3 @@
-import { monstersCoords } from "../Maze/mapData";
 import { rotate } from "../utils/rotate";
 import { round } from "../utils/round";
 import { useGameData } from "../providers/GameData";
@@ -8,7 +7,7 @@ export const useMonstersWithTransforms = () => {
   const { row, col, dir } = gameData.position;
   const Rot = 90 * dir;
 
-  return monstersCoords.map(({ x, y }) => {
+  return gameData.monsters.map(({ x, y }) => {
     const Cx = col;
     const Cy = row;
     const [xp, yp] = rotate(x, y, Cx, Cy, Rot);

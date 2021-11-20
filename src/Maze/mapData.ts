@@ -1,10 +1,4 @@
-import {
-  DoorCoords,
-  DoorsDict,
-  WallCoords,
-  WallsDict,
-  WallType,
-} from "../types";
+import { DoorCoords, MonsterCoords, WallCoords, WallType } from "../types";
 
 export const doorsCoords: DoorCoords[] = [
   { x1: 0, y1: 0.5, x2: 1, y2: 0.5, open: true },
@@ -51,7 +45,7 @@ export const wallCoords: WallCoords[] = [
   { x1: 4, y1: 5, x2: 5, y2: 5, type: WallType.Wall2 },
 ];
 
-export const monstersCoords = [
+export const monstersCoords: MonsterCoords[] = [
   { x: 0, y: 0, type: 1 },
   { x: 2, y: 2, type: 1 },
   { x: 1, y: 4, type: 2 },

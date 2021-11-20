@@ -65,18 +65,19 @@ export const boundPosition = (
   const [x1w, y1w] = rotate(x1, y1, Cx, Cy, By);
   const [x2w, y2w] = rotate(x2, y2, Cx, Cy, By);
 
+  // Just check generally if there's a wall in the middle of tile and it's not open
   const doorsDict = generateDoorCollisions(currentState.doors);
-  const wallsDict = generateWallCollisions(currentState.walls);
+  const door = doorsDict[`${round(x2)},${round(y2)}`];
+  if (typeof door !== "undefined" && door === false) {
+    return currPosition;
+  }
 
+  // Make sure there's not a wall in the way
+  const wallsDict = generateWallCollisions(currentState.walls);
   if (wallsDict[`${round(x1w)},${round(y1w)},${round(x2w)},${round(y2w)}`]) {
     return currPosition;
   }
   if (wallsDict[`${round(x2w)},${round(y2w)},${round(x1w)},${round(y1w)}`]) {
-    return currPosition;
-  }
-  // Just check generally if there's a wall in the middle of tile and it's not open
-  const door = doorsDict[`${round(x2)},${round(y2)}`];
-  if (typeof door !== "undefined" && door === false) {
     return currPosition;
   }
   return nextPosition;
