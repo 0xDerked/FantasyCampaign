@@ -266,7 +266,7 @@ export const DoorFront1Inner = styled.img.attrs(() => ({
   top: 6px;
 `;
 
-export const DoorSide1_1 = styled.img.attrs(() => ({
+export const DoorSide1_1iASDASD = styled.img.attrs(() => ({
   src: doorSide1,
 }))`
   position: absolute;
@@ -277,27 +277,46 @@ export const DoorSide1_1 = styled.img.attrs(() => ({
   z-index: 301;
 `;
 
-export const DoorSide1_2 = styled.img.attrs(() => ({
-  src: doorSide1,
+// Close left
+export const DoorSide1_1 = styled.img.attrs(() => ({
+  src: doorFront1,
 }))`
   position: absolute;
-  right: 0;
-  top: 15px;
-  width: 64px;
+  top: 30px;
+  left: -261px;
   height: 222px;
-  z-index: 201;
+  z-index: 300;
+  width: 325px;
 `;
+
+// Close right
+export const DoorSide1_2 = styled(DoorSide1_1)`
+  right: -261px;
+  left: auto;
+  transform: scaleX(-1);
+`;
+
+// export const DoorSide1_2 = styled.img.attrs(() => ({
+//   src: doorSide1,
+// }))`
+//   position: absolute;
+//   right: 0;
+//   top: 15px;
+//   width: 64px;
+//   height: 222px;
+//   z-index: 201;
+// `;
 
 // Distant left
 export const DoorSide2_1 = styled.img.attrs(() => ({
   src: doorFront2,
 }))`
   position: absolute;
-  top: 47px;
-  width: 170px;
-  height: 140px;
-  z-index: 201;
-  left: -55px;
+  top: 40px;
+  left: 0;
+  width: 120px;
+  height: 142px;
+  z-index: 200;
 `;
 
 export const DoorSide2_2 = styled(DoorSide2_1)`
@@ -374,8 +393,8 @@ export const doorTextureMaps: Record<
   StyledComponent<"img", any>
 > = {
   // Ahead
-  "-0.5,-0.5,0.5,-0.5": DoorFront1,
-  "-0.5,-1.5,0.5,-1.5": DoorFront2,
+  "-0.5,-0.5,0.5,-0.5": DoorFront1, // Close
+  "-0.5,-1.5,0.5,-1.5": DoorFront2, // Medium
   // "-0.5,-2.5,0.5,-2.5": WallFront3,
   // Left
   "-0.5,-0.5,-0.5,0.5": DoorSide1_1,
@@ -388,11 +407,11 @@ export const doorTextureMaps: Record<
   // "0.5,-2.5,0.5,-1.5": WallRSide2,
   // "0.5,-3.5,0.5,-2.5": WallRSide3,
   // Ahead left
-  // "-1.5,-0.5,-0.5,-0.5": DoorSide1_1,
-  "-1.5,-1.5,-0.5,-1.5": DoorSide2_1,
+  "-1.5,-0.5,-0.5,-0.5": DoorSide1_1, // Close
+  "-1.5,-1.5,-0.5,-1.5": DoorSide2_1, // Medium
   // "-1.5,-2.5,-0.5,-2.5": WallSide3_1,
   // Ahead right
-  // "0.5,-0.5,1.5,-0.5": DoorSide1_2,
+  "0.5,-0.5,1.5,-0.5": DoorSide1_2,
   "0.5,-1.5,1.5,-1.5": DoorSide2_2,
   // "0.5,-2.5,1.5,-2.5": WallSide3_2,
 };
