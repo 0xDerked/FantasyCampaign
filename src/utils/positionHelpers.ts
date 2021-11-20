@@ -156,8 +156,8 @@ export const strafeLeft = (pos: Position, currentState: GameData): Position => {
   return pos;
 };
 
-type AnyFunction = (...args: any[]) => any;
-export const setPos = (fn: AnyFunction) => (state: GameData) => ({
+type PosFunction = (position: Position, currentState: GameData) => Position;
+export const setPos = (fn: PosFunction) => (state: GameData) => ({
   ...state,
   position: fn(state.position, state),
 });
