@@ -1,8 +1,7 @@
 export enum WallType {
   Wall1 = 0,
   Wall2 = 1,
-  DoorClosed = 2,
-  DoorOpen = 3,
+  Door = 2,
 }
 
 export const wallCoords: {

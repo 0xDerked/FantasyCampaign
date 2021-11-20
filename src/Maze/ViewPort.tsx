@@ -1,5 +1,5 @@
 import * as React from "react";
-import { doorInnerTextureMaps, doorTextureMaps } from "./DoorTextures";
+import { doorTextureMaps } from "./DoorTextures";
 import { useWalls } from "../hooks/useWalls";
 import { useMonsters } from "../hooks/useMonsters";
 import { WallType } from "./mapData";
@@ -22,11 +22,8 @@ export const ViewPort = () => {
         case WallType.Wall2:
           textureMap = wallTextureMaps;
           break;
-        case WallType.DoorFrame:
+        case WallType.Door:
           textureMap = doorTextureMaps;
-          break;
-        case WallType.DoorOpen:
-          textureMap = doorInnerTextureMaps;
           break;
       }
       const leftRight = textureMap[`${x1},${y1},${x2},${y2}`];

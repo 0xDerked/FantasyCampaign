@@ -56,7 +56,7 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
             y1={(y1 + OFFSET) * CELL_PX}
             x2={(x2 + OFFSET) * CELL_PX}
             y2={(y2 + OFFSET) * CELL_PX}
-            stroke={type === WallType.DoorFrame ? "red" : "black"}
+            stroke={type === WallType.Door ? "red" : "black"}
             strokeWidth={3}
           />
         ))}
