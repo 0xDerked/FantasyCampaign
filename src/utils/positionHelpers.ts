@@ -74,8 +74,9 @@ export const boundPosition = (
   if (wallsDict[`${round(x2w)},${round(y2w)},${round(x1w)},${round(y1w)}`]) {
     return currPosition;
   }
-  // Just check generally if there's a wall in the middle of tile
-  if (doorsDict[`${round(x2)},${round(y2)}`]) {
+  // Just check generally if there's a wall in the middle of tile and it's not open
+  const door = doorsDict[`${round(x2)},${round(y2)}`];
+  if (typeof door !== "undefined" && door === false) {
     return currPosition;
   }
   return nextPosition;

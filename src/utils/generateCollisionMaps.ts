@@ -9,7 +9,7 @@ export const generateDoorCollisions = (
       `${(doorCoord.x1 + doorCoord.x2) / 2},${
         (doorCoord.y1 + doorCoord.y2) / 2
       }`
-    ] = true;
+    ] = doorCoord.open;
   }
   return doorsDict;
 };
