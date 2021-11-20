@@ -1,21 +1,23 @@
 import * as React from "react";
 import { doorTextureMaps } from "./DoorTextures";
-import { useWalls } from "../hooks/useWalls";
-import { useMonsters } from "../hooks/useMonsters";
-import { WallType } from "./mapData";
+import { useMonstersWithTransforms } from "../hooks/useMonstersWithTransforms";
 import { wallTextureMaps } from "./WallTextures";
 import { Ceiling, Floor, Outer } from "./EnvironmentTextures";
 import { monsterMaps } from "./MonsterTextures";
-import { useDoors } from "../hooks/useDoors";
+import { WallType } from "../types";
+import { useUserPosition } from "../hooks/useGameData";
+import { useWallsWithTransforms } from "../hooks/useWallsWithTransforms";
+import { useDoorsWithTransforms } from "../hooks/useDoorsWithTransforms";
 
 export const ViewPort = () => {
-  const walls = useWalls();
-  const monsters = useMonsters();
-  const doors = useDoors();
-  const [openDoors, setOpenDoors] = React.useState<string[]>([]);
+  useUserPosition();
+  const walls = useWallsWithTransforms();
+  const doors = useDoorsWithTransforms();
+  const monsters = useMonstersWithTransforms();
 
   const wallSurfaces = walls
-    .map(({ x1, x2, y1, y2, type }) => {
+    .map(values => {
+      const { x1, y1, x2, y2, type } = values;
       let textureMap;
       switch (type) {
         case WallType.Wall1:
@@ -25,17 +27,19 @@ export const ViewPort = () => {
           textureMap = wallTextureMaps;
           break;
       }
-      const leftRight = textureMap?.[`${x1},${y1},${x2},${y2}`];
-      const rightLeft = textureMap?.[`${x2},${y2},${x1},${y1}`];
+      const leftRight = textureMap[`${x1},${y1},${x2},${y2}`];
+      const rightLeft = textureMap[`${x2},${y2},${x1},${y1}`];
       return leftRight || rightLeft;
     })
     .filter(Boolean);
 
   const doorSurfaces = doors
-    .map(({ x1, x2, y1, y2, type }) => {
+    .map(values => {
+      const { x1, y1, x2, y2, open } = values;
+      console.log(`${x1},${y1},${x2},${y2}`, open);
       const leftRight = doorTextureMaps[`${x1},${y1},${x2},${y2}`];
       const rightLeft = doorTextureMaps[`${x2},${y2},${x1},${y1}`];
-      return { Surface: leftRight || rightLeft, type, x1, x2, y1, y2 };
+      return { Surface: leftRight || rightLeft, ...values };
     })
     .filter(Boolean);
 
@@ -52,13 +56,9 @@ export const ViewPort = () => {
       {wallSurfaces.map((Surface, index) => {
         return Surface ? <Surface key={index} /> : null;
       })}
-      {doorSurfaces.map(({ Surface, type, x1, x2, y1, y2 }, index) => {
-        return Surface ? (
-          <Surface
-            key={index}
-            onClick={() => alert(JSON.stringify({ type, x1, x2, y1, y2 }))}
-          />
-        ) : null;
+      {doorSurfaces.map(({ Surface, open }, index) => {
+        // @ts-ignore
+        return Surface ? <Surface key={index} open={open} /> : null;
       })}
       {monsterComponents.map((Monster, index) => {
         return <Monster key={index} />;

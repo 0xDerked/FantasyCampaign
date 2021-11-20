@@ -14,6 +14,10 @@ const DOOR_FRAME_NEAR_LEFT = -158;
 const DOOR_FRAME_MEDIUM_WIDTH = 175;
 const DOOR_FRAME_FAR_WIDTH = 127;
 
+type OpenState = {
+  open: boolean;
+};
+
 // --------------------------------------------------------------------------------
 
 // Close
@@ -24,14 +28,15 @@ const DoorFront1 = styled.img.attrs(() => ({
 `;
 const DoorFront1Inner = styled.img.attrs(() => ({
   src: doorInnerDefault,
-}))`
+}))<OpenState>`
   position: absolute;
   top: 6px;
   left: 38px;
   width: 182px;
+  opacity: ${props => (props.open ? 0 : 1)};
 `;
-const DoorFront1Container = styled.div.attrs(() => ({
-  children: [<DoorFront1 key={1} />, <DoorFront1Inner key={2} />],
+const DoorFront1Container = styled.div.attrs(({ open }: OpenState) => ({
+  children: [<DoorFront1 key={1} />, <DoorFront1Inner key={2} open={open} />],
 }))`
   position: absolute;
   top: 30px;
@@ -49,15 +54,16 @@ const DoorFront2 = styled.img.attrs(() => ({
 `;
 const DoorFront2Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
-}))`
+}))<OpenState>`
   left: 25px;
   width: 125px;
   position: absolute;
   top: 3px;
   image-rendering: pixelated;
+  opacity: ${props => (props.open ? 0 : 1)};
 `;
-const DoorFront2Container = styled.div.attrs(() => ({
-  children: [<DoorFront2 key={1} />, <DoorFront2Inner key={2} />],
+const DoorFront2Container = styled.div.attrs(({ open }: OpenState) => ({
+  children: [<DoorFront2 key={1} />, <DoorFront2Inner key={2} open={open} />],
 }))`
   position: absolute;
   left: 136px;
@@ -78,15 +84,16 @@ const DoorFront3 = styled.img.attrs(() => ({
 `;
 const DoorFront3Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
-}))`
+}))<OpenState>`
   left: 19px;
   width: 89px;
   position: absolute;
   top: 2px;
   image-rendering: pixelated;
+  opacity: ${props => (props.open ? 0 : 1)};
 `;
-const DoorFront3Container = styled.div.attrs(() => ({
-  children: [<DoorFront3 key={1} />, <DoorFront3Inner key={2} />],
+const DoorFront3Container = styled.div.attrs(({ open }: OpenState) => ({
+  children: [<DoorFront3 key={1} />, <DoorFront3Inner key={2} open={open} />],
 }))`
   position: absolute;
   left: 160px;
@@ -136,11 +143,17 @@ export const doorTextureMaps: Record<
   StyledComponent<"img" | "div", any>
 > = {
   // Ahead
-  "0,-0.5,1,-0.5": DoorFront1Container, // Ahead close
-  "0,-1.5,1,-1.5": DoorFront2Container, // Ahead medium
-  "0,-2.5,1,-2.5": DoorFront3Container, // Ahead far
-  "-1,-0.5,0,-0.5": DoorSide1_1Container, // Left close
-  "1,-0.5,2,-0.5": DoorSide1_2Container, // Right close
-  "-1,-1.5,0,-1.5": DoorSide2_1Container, // Left medium
-  "1,-1.5,2,-1.5": DoorSide2_2Container, // Medium
+  // "0,-0.5,1,-0.5": DoorFront1Container, // Ahead close
+  // "0,-1.5,1,-1.5": DoorFront2Container, // Ahead medium
+  // "-1,-0.5,0,-0.5": DoorSide1_1Container, // Left close
+  // "1,-0.5,2,-0.5": DoorSide1_2Container, // Right close
+  // "-1,-1.5,0,-1.5": DoorSide2_1Container, // Left medium
+  // "1,-1.5,2,-1.5": DoorSide2_2Container, // Medium
+  "-0.5,-1,0.5,-1": DoorFront1Container, // Ahead close
+  "-0.5,-2,0.5,-2": DoorFront2Container, // Ahead medium
+  "-0.5,-3,0.5,-3": DoorFront3Container, // Ahead far
+  "-1.5,-1,-0.5,-1": DoorSide1_1Container, // Left close
+  "0.5,-1,1.5,-1": DoorSide1_2Container, // Right close
+  "-1.5,-2,-0.5,-2": DoorSide2_1Container, // Left medium
+  "0.5,-2,1.5,-2": DoorSide2_2Container, // Medium
 };

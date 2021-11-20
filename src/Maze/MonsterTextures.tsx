@@ -39,7 +39,7 @@ export const monsterMaps: Record<
   StyledComponent<"div", any>
 > = {
   // Ahead
-  "0,-1": Monster1,
-  "0,-2": Monster2,
-  "-1,-1": Monster1_2,
+  // "0,-1": Monster1,
+  // "0,-2": Monster2,
+  // "-1,-1": Monster1_2,
 };

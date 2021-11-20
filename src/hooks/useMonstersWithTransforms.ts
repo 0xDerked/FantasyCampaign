@@ -1,11 +1,11 @@
-import { usePositionContext } from "../providers/Position";
 import { monstersCoords } from "../Maze/mapData";
 import { rotate } from "../utils/rotate";
 import { round } from "../utils/round";
+import { useGameData } from "../providers/GameData";
 
-export const useMonsters = () => {
-  const position = usePositionContext();
-  const { row, col, dir } = position;
+export const useMonstersWithTransforms = () => {
+  const [gameData] = useGameData();
+  const { row, col, dir } = gameData.position;
   const Rot = 90 * dir;
 
   return monstersCoords.map(({ x, y }) => {

@@ -1,9 +1,8 @@
 import * as React from "react";
 import styled from "styled-components";
-import { PositionProvider } from "./providers/Position";
 import { ViewPort } from "./Maze/ViewPort";
-import image from "./assets/FANTASY_CHARACTERS_3_1.png";
 import { Map } from "./Maze/Map";
+import { GameDataProvider } from "./providers/GameData";
 
 const Container = styled.div`
   display: flex;
@@ -19,18 +18,14 @@ const Container2 = styled.div``;
 
 function App() {
   return (
-    <PositionProvider>
+    <GameDataProvider>
       <Container>
         <ViewPort />
       </Container>
       <Container2>
         <Map rotateMap={false} />
       </Container2>
-      {/*<img*/}
-      {/*  style={{ position: "absolute", left: 100, top: 47, zIndex: 1000 }}*/}
-      {/*  src={image}*/}
-      {/*/>*/}
-    </PositionProvider>
+    </GameDataProvider>
   );
 }
 

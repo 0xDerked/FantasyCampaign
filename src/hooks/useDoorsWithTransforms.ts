@@ -1,16 +1,15 @@
-import { usePositionContext } from "../providers/Position";
-import { wallCoords } from "../Maze/mapData";
 import { rotate } from "../utils/rotate";
 import { round } from "../utils/round";
+import { useGameData } from "../providers/GameData";
 
-export const useWalls = () => {
-  const position = usePositionContext();
-  const { row, col, dir } = position;
+export const useDoorsWithTransforms = () => {
+  const [gameData] = useGameData();
+  const { row, col, dir } = gameData.position;
+
   const Rot = 90 * dir;
 
-  return wallCoords.map(({ x1, x2, y1, y2, type }) => {
-    // Player moved by row/col index currently so we move them to the center of the tile
-    // for collision detection etc
+  return gameData.doors.map(({ x1, x2, y1, y2, ...rest }) => {
+    // Since doors exist in the middle of tiles, a door in the next cell directly ahead
     const orow = row + 0.5;
     const ocol = col + 0.5;
     const Cx = ocol;
@@ -26,7 +25,7 @@ export const useWalls = () => {
       y1: y1r - orow,
       x2: x2r - ocol,
       y2: y2r - orow,
-      type,
+      ...rest,
     };
   });
 };
