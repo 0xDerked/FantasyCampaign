@@ -1,16 +1,11 @@
 import * as React from "react";
-import {
-  Ceiling,
-  doorInnerTextureMaps,
-  doorTextureMaps,
-  Floor,
-  monsterMaps,
-  Outer,
-  wallTextureMaps,
-} from "./TextureMaps";
+import { doorInnerTextureMaps, doorTextureMaps } from "./DoorTextures";
 import { useWalls } from "../hooks/useWalls";
 import { useMonsters } from "../hooks/useMonsters";
 import { WallType } from "./mapData";
+import { wallTextureMaps } from "./WallTextures";
+import { Ceiling, Floor, Outer } from "./EnvironmentTextures";
+import { monsterMaps } from "./MonsterTextures";
 
 export const ViewPort = () => {
   const walls = useWalls();
@@ -27,7 +22,7 @@ export const ViewPort = () => {
         case WallType.Wall2:
           textureMap = wallTextureMaps;
           break;
-        case WallType.DoorClosed:
+        case WallType.DoorFrame:
           textureMap = doorTextureMaps;
           break;
         case WallType.DoorOpen:
