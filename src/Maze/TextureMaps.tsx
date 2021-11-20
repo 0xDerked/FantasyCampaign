@@ -20,6 +20,19 @@ import doorSide1 from "../assets/doorSide1.png";
 export const W = "448px";
 export const H = "272px";
 
+const SLIDING_DOOR_NEAR_WIDTH = 229;
+const SLIDING_DOOR_MEDIUM_WIDTH = 156;
+const SLIDING_DOOR_FAR_WIDTH = "32px";
+const SLIDING_DOOR_NEAR_TOP = 25;
+const SLIDING_DOOR_MEDIUM_TOP = 47;
+const SLIDING_DOOR_FAR_TOP = "32px";
+const SLIDING_DOOR_NEAR_BRIGHTNESS = 1;
+const SLIDING_DOOR_MEDIUM_BRIGHTNESS = 0.7;
+const SLIDING_DOOR_FAR_BRIGHTNESS = 0.6;
+const SLIDING_DOOR_NEAR_LEFT = -210;
+const SLIDING_DOOR_MEDIUM_LEFT = 47;
+const SLIDING_DOOR_FAR_LEFT = "32px";
+
 export const Outer = styled.div`
   width: ${W};
   height: ${H};
@@ -358,7 +371,7 @@ export const DoorInnerDefault2 = styled.img.attrs(() => ({
 }))`
   left: 25px;
   width: 125px;
-  position: absolute; ;
+  position: absolute;
   image-rendering: pixelated;
 `;
 
@@ -366,9 +379,9 @@ export const DoorFront1Inner = styled.img.attrs(() => ({
   src: doorInnerDefault,
 }))`
   position: absolute;
-  top: 25px;
+  top: ${SLIDING_DOOR_NEAR_TOP}px;
   left: 111px;
-  width: 229px;
+  width: ${SLIDING_DOOR_NEAR_WIDTH}px;
   z-index: 303;
   image-rendering: pixelated;
 `;
@@ -382,7 +395,7 @@ export const DoorFront2Inner = styled.img.attrs(() => ({
   position: absolute;
   top: 42px;
   z-index: 203;
-  filter: brightness(0.7);
+  filter: brightness(${SLIDING_DOOR_MEDIUM_BRIGHTNESS});
   image-rendering: pixelated;
 `;
 
@@ -394,11 +407,22 @@ export const DoorFront3Inner = styled.img.attrs(() => ({
   position: absolute;
   top: 49px;
   z-index: 203;
-  filter: brightness(0.5);
+  filter: brightness(${SLIDING_DOOR_FAR_BRIGHTNESS});
   image-rendering: pixelated;
 `;
 
 // Distant left sliding bit
+export const DoorSide1_1Inner = styled.img.attrs(() => ({
+  src: doorInnerDefault,
+}))`
+  position: absolute;
+  top: ${SLIDING_DOOR_NEAR_TOP}px;
+  left: ${SLIDING_DOOR_NEAR_LEFT}px;
+  z-index: 303;
+  width: ${SLIDING_DOOR_NEAR_WIDTH}px;
+  image-rendering: pixelated;
+`;
+
 export const DoorSide2_1Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))`
@@ -407,34 +431,19 @@ export const DoorSide2_1Inner = styled.img.attrs(() => ({
   position: absolute;
   top: 42px;
   z-index: 203;
-  filter: brightness(0.7);
+  filter: brightness(${SLIDING_DOOR_MEDIUM_BRIGHTNESS});
   image-rendering: pixelated;
 `;
 
-export const DoorSide1_1Inner = styled.img.attrs(() => ({
-  src: doorInnerDefault,
-}))`
-  position: absolute;
-  top: 30px;
-  left: -261px;
-  z-index: 303;
-  width: 229px;
-  image-rendering: pixelated;
-`;
-
-export const DoorSide1_2Inner = styled.img.attrs(() => ({
-  src: doorInnerDefault2,
-}))`
-  position: absolute;
-  left: -55px;
-  top: 47px;
-  width: 158px;
-  z-index: 203;
-  image-rendering: pixelated;
+export const DoorSide1_2Inner = styled(DoorSide1_1Inner)`
+  right: ${SLIDING_DOOR_NEAR_LEFT}px;
+  left: auto;
+  transform: scaleX(-1);
+\`;
 `;
 
 export const DoorSide2_2Inner = styled(DoorSide1_2Inner)`
-  right: -84px;
+  right: -55px;
   left: auto;
   transform: scaleX(-1);
 `;
