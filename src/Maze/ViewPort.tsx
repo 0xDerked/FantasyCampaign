@@ -1,6 +1,7 @@
 import * as React from "react";
 import {
   Ceiling,
+  doorInnerTextureMaps,
   doorTextureMaps,
   Floor,
   monsterMaps,
@@ -9,6 +10,7 @@ import {
 } from "./TextureMaps";
 import { useWalls } from "../hooks/useWalls";
 import { useMonsters } from "../hooks/useMonsters";
+import { WallType } from "./mapData";
 
 export const ViewPort = () => {
   const walls = useWalls();
@@ -17,7 +19,21 @@ export const ViewPort = () => {
 
   const wallSurfaces = walls
     .map(({ x1, x2, y1, y2, type }) => {
-      const textureMap = type === 0 ? wallTextureMaps : doorTextureMaps;
+      let textureMap;
+      switch (type) {
+        case WallType.Wall1:
+          textureMap = wallTextureMaps;
+          break;
+        case WallType.Wall2:
+          textureMap = wallTextureMaps;
+          break;
+        case WallType.DoorClosed:
+          textureMap = doorTextureMaps;
+          break;
+        case WallType.DoorOpen:
+          textureMap = doorInnerTextureMaps;
+          break;
+      }
       const leftRight = textureMap[`${x1},${y1},${x2},${y2}`];
       const rightLeft = textureMap[`${x2},${y2},${x1},${y1}`];
       return leftRight || rightLeft;

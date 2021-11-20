@@ -273,17 +273,6 @@ export const DoorSide1_2 = styled(DoorSide1_1)`
   transform: scaleX(-1);
 `;
 
-// export const DoorSide1_2 = styled.img.attrs(() => ({
-//   src: doorSide1,
-// }))`
-//   position: absolute;
-//   right: 0;
-//   top: 15px;
-//   width: 64px;
-//   height: 222px;
-//   z-index: 201;
-// `;
-
 // Distant left
 export const DoorSide2_1 = styled.img.attrs(() => ({
   src: doorFront2,
@@ -343,7 +332,7 @@ export const doorTextureMaps: Record<
 // --------------------------------------------------------------------------------
 // Door inners
 
-// Sliding bit
+// Sliding bit - ahead close
 export const DoorFront1Inner = styled.img.attrs(() => ({
   src: doorInnerDefault,
 }))`
@@ -355,6 +344,7 @@ export const DoorFront1Inner = styled.img.attrs(() => ({
   z-index: 301;
 `;
 
+// Sliding bit - ahead far
 export const DoorFront2Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))`
@@ -378,6 +368,17 @@ export const DoorSide2_1Inner = styled.img.attrs(() => ({
   z-index: 201;
 `;
 
+export const DoorSide1_1Inner = styled.img.attrs(() => ({
+  src: doorInnerDefault,
+}))`
+  position: absolute;
+  top: 30px;
+  left: -261px;
+  height: 222px;
+  z-index: 300;
+  width: 325px;
+`;
+
 export const DoorSide1_2Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))`
@@ -396,24 +397,13 @@ export const doorInnerTextureMaps: Record<
   // Ahead
   "-0.5,-0.5,0.5,-0.5": DoorFront1Inner, // Close
   "-0.5,-1.5,0.5,-1.5": DoorFront2Inner, // Medium
-  // "-0.5,-2.5,0.5,-2.5": WallFront3,
-  // Left
-  "-0.5,-0.5,-0.5,0.5": DoorSide1_2Inner,
-  "-0.5,-1.5,-0.5,-0.5": DoorSide1_2Inner,
-  // "-0.5,-2.5,-0.5,-1.5": WallLSide2,
-  // "-0.5,-3.5,-0.5,-2.5": WallLSide3,
-  // Right
-  // "0.5,-0.5,0.5,0.5": WallRSide0,
-  // "0.5,-1.5,0.5,-0.5": WallRSide1,
-  // "0.5,-2.5,0.5,-1.5": WallRSide2,
-  // "0.5,-3.5,0.5,-2.5": WallRSide3,
   // Ahead left
-  "-1.5,-0.5,-0.5,-0.5": DoorSide1_1, // Close
-  "-1.5,-1.5,-0.5,-1.5": DoorSide2_1, // Medium
+  "-1.5,-0.5,-0.5,-0.5": DoorSide1_1Inner, // Close
+  "-1.5,-1.5,-0.5,-1.5": DoorSide2_1Inner, // Medium
   // "-1.5,-2.5,-0.5,-2.5": WallSide3_1,
   // Ahead right
-  "0.5,-0.5,1.5,-0.5": DoorSide1_2,
-  "0.5,-1.5,1.5,-1.5": DoorSide2_2,
+  "0.5,-0.5,1.5,-0.5": DoorSide1_2Inner,
+  // "0.5,-1.5,1.5,-1.5": DoorSide2_2Inner,
   // "0.5,-2.5,1.5,-2.5": WallSide3_2,
 };
 
@@ -438,7 +428,7 @@ export const Monster2 = styled.div.attrs(() => ({
   top: 21px;
   left: 154px;
   width: 28px;
-  z-index: 201
+  z-index: 201;
   font-size: 134px;
 `;
 
@@ -458,7 +448,7 @@ export const monsterMaps: Record<
   StyledComponent<"div", any>
 > = {
   // Ahead
-  "0,-1": Monster1,
-  "0,-2": Monster2,
-  "-1,-1": Monster1_2,
+  // "0,-1": Monster1,
+  // "0,-2": Monster2,
+  // "-1,-1": Monster1_2,
 };
