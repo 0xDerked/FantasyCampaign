@@ -11,6 +11,11 @@ import wallSide2alt from "../assets/wallSide2alt.png";
 import wallFront1nor from "../assets/wallFront1nor.png";
 import wallFront2nor from "../assets/wallFront2nor.png";
 import wallFront3nor from "../assets/wallFront3nor.png";
+import doorFront1 from "../assets/doorFront1.png";
+import doorFront2 from "../assets/doorFront2.png";
+import doorInnerDefault from "../assets/doorinner_default.png";
+import doorInnerDefault2 from "../assets/doorinner_default2.png";
+import doorSide1 from "../assets/doorSide1.png";
 
 export const W = "448px";
 export const H = "272px";
@@ -207,7 +212,7 @@ export const WallSide3_2 = styled(WallSide3_1)`
   transform: scaleX(-1);
 `;
 
-export const textureMaps: Record<
+export const wallTextureMaps: Record<
   `${number},${number},${number},${number}`,
   StyledComponent<"img", any>
 > = {
@@ -234,6 +239,166 @@ export const textureMaps: Record<
   "0.5,-1.5,1.5,-1.5": WallSide2_2,
   "0.5,-2.5,1.5,-2.5": WallSide3_2,
 };
+
+// --------------------------------------------------------------------------------
+// Doors
+
+// Door frame
+export const DoorFront1 = styled.img.attrs(() => ({
+  src: doorFront1,
+}))`
+  position: absolute;
+  left: 95px;
+  top: 30px;
+  width: 320px;
+  height: 222px;
+  z-index: 301;
+`;
+
+// Sliding bit
+export const DoorFront1Inner = styled.img.attrs(() => ({
+  src: doorInnerDefault,
+}))`
+  left: 39px;
+  width: 181px;
+  height: 166px;
+  position: absolute;
+  top: 6px;
+`;
+
+export const DoorSide1_1 = styled.img.attrs(() => ({
+  src: doorSide1,
+}))`
+  position: absolute;
+  left: 0;
+  top: 15px;
+  width: 64px;
+  height: 222px;
+  z-index: 301;
+`;
+
+export const DoorSide1_2 = styled.img.attrs(() => ({
+  src: doorSide1,
+}))`
+  position: absolute;
+  right: 0;
+  top: 15px;
+  width: 64px;
+  height: 222px;
+  z-index: 201;
+`;
+
+// Distant left
+export const DoorSide2_1 = styled.img.attrs(() => ({
+  src: doorFront2,
+}))`
+  position: absolute;
+  top: 47px;
+  width: 170px;
+  height: 140px;
+  z-index: 201;
+  left: -55px;
+`;
+
+export const DoorSide2_2 = styled(DoorSide2_1)`
+  right: -55px;
+  left: auto;
+  transform: scaleX(-1);
+`;
+
+// Distant left sliding bit
+export const DoorSide2_1Inner = styled.img.attrs(() => ({
+  src: doorInnerDefault2,
+}))`
+  right: 25px;
+  width: 95px;
+  height: 111.22px;
+  position: absolute;
+  top: 4px;
+`;
+
+// export const DoorSide2_2 = styled.img.attrs(() => ({
+//   src: doorFront2,
+// }))`
+//   position: absolute;
+//   right: 0;
+//   top: 15px;
+//   width: 64px;
+//   height: 222px;
+//   z-index: 201;
+// `;
+
+export const DoorSide1_2Inner = styled.img.attrs(() => ({
+  src: doorSide1,
+}))`
+  left: 0;
+  width: 64px;
+  height: 80px;
+  position: absolute;
+  top: 25px;
+`;
+
+export const DoorFront2 = styled.img.attrs(() => ({
+  src: doorFront2,
+}))`
+  position: absolute;
+  left: 135px;
+  top: 47px;
+  width: 175px;
+  height: 140px;
+  z-index: 201;
+`;
+
+export const DoorFront2Inner = styled.img.attrs(() => ({
+  src: doorFront2,
+}))`
+  position: absolute;
+  left: 135px;
+  top: 47px;
+  width: 175px;
+  height: 140px;
+  z-index: 201;
+`;
+
+export const DoorInnerDefault2 = styled.img.attrs(() => ({
+  src: doorInnerDefault2,
+}))`
+  left: 25px;
+  width: 125px;
+  height: 111.22px;
+  position: absolute; ;
+`;
+
+export const doorTextureMaps: Record<
+  `${number},${number},${number},${number}`,
+  StyledComponent<"img", any>
+> = {
+  // Ahead
+  "-0.5,-0.5,0.5,-0.5": DoorFront1,
+  "-0.5,-1.5,0.5,-1.5": DoorFront2,
+  // "-0.5,-2.5,0.5,-2.5": WallFront3,
+  // Left
+  "-0.5,-0.5,-0.5,0.5": DoorSide1_1,
+  "-0.5,-1.5,-0.5,-0.5": DoorSide1_2,
+  // "-0.5,-2.5,-0.5,-1.5": WallLSide2,
+  // "-0.5,-3.5,-0.5,-2.5": WallLSide3,
+  // Right
+  // "0.5,-0.5,0.5,0.5": WallRSide0,
+  // "0.5,-1.5,0.5,-0.5": WallRSide1,
+  // "0.5,-2.5,0.5,-1.5": WallRSide2,
+  // "0.5,-3.5,0.5,-2.5": WallRSide3,
+  // Ahead left
+  // "-1.5,-0.5,-0.5,-0.5": DoorSide1_1,
+  "-1.5,-1.5,-0.5,-1.5": DoorSide2_1,
+  // "-1.5,-2.5,-0.5,-2.5": WallSide3_1,
+  // Ahead right
+  // "0.5,-0.5,1.5,-0.5": DoorSide1_2,
+  "0.5,-1.5,1.5,-1.5": DoorSide2_2,
+  // "0.5,-2.5,1.5,-2.5": WallSide3_2,
+};
+
+// --------------------------------------------------------------------------------
+// Avatars
 
 export const Monster1 = styled.div.attrs(() => ({
   children: "🐉",
