@@ -248,10 +248,32 @@ export const DoorFront1 = styled.img.attrs(() => ({
 }))`
   position: absolute;
   top: 18px;
-  left: 64px;
-  width: 320px;
-  height: 222px;
+  left: 58px;
+  width: 332px;
   z-index: 301;
+`;
+
+// Ahead medium
+export const DoorFront2 = styled.img.attrs(() => ({
+  src: doorFront2,
+}))`
+  position: absolute;
+  left: 114px;
+  top: 38px;
+  width: 220px;
+  z-index: 201;
+  filter: brightness(0.7);
+`;
+
+export const DoorFront3 = styled.img.attrs(() => ({
+  src: doorFront2,
+}))`
+  position: absolute;
+  left: 145px;
+  top: 46px;
+  width: 158px;
+  z-index: 201;
+  filter: brightness(0.6);
 `;
 
 // Close left
@@ -291,18 +313,6 @@ export const DoorSide2_2 = styled(DoorSide2_1)`
   transform: scaleX(-1);
 `;
 
-// Ahead medium
-export const DoorFront2 = styled.img.attrs(() => ({
-  src: doorFront2,
-}))`
-  position: absolute;
-  left: 135px;
-  top: 47px;
-  width: 175px;
-  height: 140px;
-  z-index: 201;
-`;
-
 export const DoorInnerDefault2 = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))`
@@ -319,6 +329,7 @@ export const doorTextureMaps: Record<
   // Ahead
   "-0.5,-0.5,0.5,-0.5": DoorFront1, // Close
   "-0.5,-1.5,0.5,-1.5": DoorFront2, // Medium
+  "-0.5,-2.5,0.5,-2.5": DoorFront3, // Far
   // Ahead left
   "-1.5,-0.5,-0.5,-0.5": DoorSide1_1, // Close
   "-1.5,-1.5,-0.5,-1.5": DoorSide2_1, // Medium
@@ -337,23 +348,33 @@ export const DoorFront1Inner = styled.img.attrs(() => ({
   src: doorInnerDefault,
 }))`
   position: absolute;
-  top: 18px;
-  left: 64px;
-  width: 320px;
-  height: 222px;
-  z-index: 301;
+  top: 25px;
+  left: 111px;
+  width: 229px;
+  z-index: 302;
 `;
 
 // Sliding bit - ahead far
 export const DoorFront2Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))`
+  left: 146px;
+  width: 156px;
   position: absolute;
-  left: 135px;
-  top: 47px;
-  width: 175px;
-  height: 140px;
-  z-index: 201;
+  top: 42px;
+  z-index: 202;
+  filter: brightness(0.7);
+`;
+
+export const DoorFront3Inner = styled.img.attrs(() => ({
+  src: doorInnerDefault2,
+}))`
+  left: 169px;
+  width: 110px;
+  position: absolute;
+  top: 49px;
+  z-index: 202;
+  filter: brightness(0.5);
 `;
 
 // Distant left sliding bit
@@ -397,6 +418,7 @@ export const doorInnerTextureMaps: Record<
   // Ahead
   "-0.5,-0.5,0.5,-0.5": DoorFront1Inner, // Close
   "-0.5,-1.5,0.5,-1.5": DoorFront2Inner, // Medium
+  "-0.5,-2.5,0.5,-2.5": DoorFront3Inner, // Far
   // Ahead left
   "-1.5,-0.5,-0.5,-0.5": DoorSide1_1Inner, // Close
   "-1.5,-1.5,-0.5,-1.5": DoorSide2_1Inner, // Medium
