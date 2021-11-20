@@ -21,17 +21,17 @@ export const W = "448px";
 export const H = "272px";
 
 const SLIDING_DOOR_NEAR_WIDTH = 229;
-const SLIDING_DOOR_MEDIUM_WIDTH = 156;
-const SLIDING_DOOR_FAR_WIDTH = "32px";
+const SLIDING_DOOR_MEDIUM_WIDTH = 154;
+const SLIDING_DOOR_FAR_WIDTH = 110;
 const SLIDING_DOOR_NEAR_TOP = 25;
-const SLIDING_DOOR_MEDIUM_TOP = 47;
-const SLIDING_DOOR_FAR_TOP = "32px";
+const SLIDING_DOOR_MEDIUM_TOP = 42;
+const SLIDING_DOOR_FAR_TOP = 49;
 const SLIDING_DOOR_NEAR_BRIGHTNESS = 1;
 const SLIDING_DOOR_MEDIUM_BRIGHTNESS = 0.7;
 const SLIDING_DOOR_FAR_BRIGHTNESS = 0.6;
 const SLIDING_DOOR_NEAR_LEFT = -210;
-const SLIDING_DOOR_MEDIUM_LEFT = 47;
-const SLIDING_DOOR_FAR_LEFT = "32px";
+const SLIDING_DOOR_MEDIUM_LEFT = -65;
+const SLIDING_DOOR_FAR_LEFT = 169;
 
 export const Outer = styled.div`
   width: ${W};
@@ -365,16 +365,6 @@ export const doorTextureMaps: Record<
 // --------------------------------------------------------------------------------
 // Door inners
 
-// Sliding bit - ahead close
-export const DoorInnerDefault2 = styled.img.attrs(() => ({
-  src: doorInnerDefault2,
-}))`
-  left: 25px;
-  width: 125px;
-  position: absolute;
-  image-rendering: pixelated;
-`;
-
 export const DoorFront1Inner = styled.img.attrs(() => ({
   src: doorInnerDefault,
 }))`
@@ -390,10 +380,10 @@ export const DoorFront1Inner = styled.img.attrs(() => ({
 export const DoorFront2Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))`
-  left: 146px;
-  width: 156px;
+  left: 147px;
+  width: ${SLIDING_DOOR_MEDIUM_WIDTH}px;
   position: absolute;
-  top: 42px;
+  top: ${SLIDING_DOOR_MEDIUM_TOP}px;
   z-index: 203;
   filter: brightness(${SLIDING_DOOR_MEDIUM_BRIGHTNESS});
   image-rendering: pixelated;
@@ -402,10 +392,10 @@ export const DoorFront2Inner = styled.img.attrs(() => ({
 export const DoorFront3Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))`
-  left: 169px;
-  width: 110px;
+  left: ${SLIDING_DOOR_FAR_LEFT}px;
+  width: ${SLIDING_DOOR_FAR_WIDTH}px;
   position: absolute;
-  top: 49px;
+  top: ${SLIDING_DOOR_FAR_TOP}px;
   z-index: 203;
   filter: brightness(${SLIDING_DOOR_FAR_BRIGHTNESS});
   image-rendering: pixelated;
@@ -426,10 +416,10 @@ export const DoorSide1_1Inner = styled.img.attrs(() => ({
 export const DoorSide2_1Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))`
-  left: -65px;
-  width: 156px;
+  left: ${SLIDING_DOOR_MEDIUM_LEFT}px;
+  width: ${SLIDING_DOOR_MEDIUM_WIDTH}px;
   position: absolute;
-  top: 42px;
+  top: ${SLIDING_DOOR_MEDIUM_TOP}px;
   z-index: 203;
   filter: brightness(${SLIDING_DOOR_MEDIUM_BRIGHTNESS});
   image-rendering: pixelated;
@@ -442,8 +432,8 @@ export const DoorSide1_2Inner = styled(DoorSide1_1Inner)`
 \`;
 `;
 
-export const DoorSide2_2Inner = styled(DoorSide1_2Inner)`
-  right: -55px;
+export const DoorSide2_2Inner = styled(DoorSide2_1Inner)`
+  right: ${SLIDING_DOOR_MEDIUM_LEFT}px;
   left: auto;
   transform: scaleX(-1);
 `;
