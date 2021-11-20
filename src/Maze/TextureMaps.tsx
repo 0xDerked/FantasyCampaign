@@ -25,6 +25,7 @@ export const Outer = styled.div`
   height: ${H};
   background-color: black;
   position: relative;
+  overflow: hidden;
 `;
 
 export const Floor = styled.img.attrs(() => ({
@@ -250,7 +251,7 @@ export const DoorFront1 = styled.img.attrs(() => ({
   top: 18px;
   left: 58px;
   width: 332px;
-  z-index: 301;
+  z-index: 302;
 `;
 
 // Ahead medium
@@ -261,7 +262,7 @@ export const DoorFront2 = styled.img.attrs(() => ({
   left: 114px;
   top: 38px;
   width: 220px;
-  z-index: 201;
+  z-index: 202;
   filter: brightness(0.7);
 `;
 
@@ -272,7 +273,7 @@ export const DoorFront3 = styled.img.attrs(() => ({
   left: 145px;
   top: 46px;
   width: 158px;
-  z-index: 201;
+  z-index: 202;
   filter: brightness(0.6);
 `;
 
@@ -281,11 +282,10 @@ export const DoorSide1_1 = styled.img.attrs(() => ({
   src: doorFront1,
 }))`
   position: absolute;
-  top: 30px;
-  left: -261px;
-  height: 222px;
-  z-index: 300;
-  width: 325px;
+  top: 18px;
+  left: -264px;
+  z-index: 302;
+  width: 332px;
 `;
 
 // Close right
@@ -300,26 +300,18 @@ export const DoorSide2_1 = styled.img.attrs(() => ({
   src: doorFront2,
 }))`
   position: absolute;
-  left: -55px;
-  top: 47px;
-  width: 175px;
-  height: 140px;
-  z-index: 201;
+  left: -96px;
+  top: 38px;
+  width: 220px;
+  z-index: 202;
+  filter: brightness(0.7);
 `;
 
 export const DoorSide2_2 = styled(DoorSide2_1)`
-  right: -55px;
+  right: -96px;
   left: auto;
   transform: scaleX(-1);
-`;
-
-export const DoorInnerDefault2 = styled.img.attrs(() => ({
-  src: doorInnerDefault2,
-}))`
-  left: 25px;
-  width: 125px;
-  height: 111.22px;
-  position: absolute; ;
+  z-index: 202;
 `;
 
 export const doorTextureMaps: Record<
@@ -344,6 +336,14 @@ export const doorTextureMaps: Record<
 // Door inners
 
 // Sliding bit - ahead close
+export const DoorInnerDefault2 = styled.img.attrs(() => ({
+  src: doorInnerDefault2,
+}))`
+  left: 25px;
+  width: 125px;
+  position: absolute; ;
+`;
+
 export const DoorFront1Inner = styled.img.attrs(() => ({
   src: doorInnerDefault,
 }))`
@@ -351,7 +351,7 @@ export const DoorFront1Inner = styled.img.attrs(() => ({
   top: 25px;
   left: 111px;
   width: 229px;
-  z-index: 302;
+  z-index: 303;
 `;
 
 // Sliding bit - ahead far
@@ -362,7 +362,7 @@ export const DoorFront2Inner = styled.img.attrs(() => ({
   width: 156px;
   position: absolute;
   top: 42px;
-  z-index: 202;
+  z-index: 203;
   filter: brightness(0.7);
 `;
 
@@ -373,7 +373,7 @@ export const DoorFront3Inner = styled.img.attrs(() => ({
   width: 110px;
   position: absolute;
   top: 49px;
-  z-index: 202;
+  z-index: 203;
   filter: brightness(0.5);
 `;
 
@@ -381,12 +381,12 @@ export const DoorFront3Inner = styled.img.attrs(() => ({
 export const DoorSide2_1Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))`
+  left: -65px;
+  width: 156px;
   position: absolute;
-  left: -55px;
-  top: 47px;
-  width: 175px;
-  height: 140px;
-  z-index: 201;
+  top: 42px;
+  z-index: 203;
+  filter: brightness(0.7);
 `;
 
 export const DoorSide1_1Inner = styled.img.attrs(() => ({
@@ -395,9 +395,8 @@ export const DoorSide1_1Inner = styled.img.attrs(() => ({
   position: absolute;
   top: 30px;
   left: -261px;
-  height: 222px;
-  z-index: 300;
-  width: 325px;
+  z-index: 303;
+  width: 229px;
 `;
 
 export const DoorSide1_2Inner = styled.img.attrs(() => ({
@@ -406,9 +405,14 @@ export const DoorSide1_2Inner = styled.img.attrs(() => ({
   position: absolute;
   left: -55px;
   top: 47px;
-  width: 175px;
-  height: 140px;
-  z-index: 201;
+  width: 158px;
+  z-index: 203;
+`;
+
+export const DoorSide2_2Inner = styled(DoorSide1_2Inner)`
+  right: -84px;
+  left: auto;
+  transform: scaleX(-1);
 `;
 
 export const doorInnerTextureMaps: Record<
@@ -425,7 +429,7 @@ export const doorInnerTextureMaps: Record<
   // "-1.5,-2.5,-0.5,-2.5": WallSide3_1,
   // Ahead right
   "0.5,-0.5,1.5,-0.5": DoorSide1_2Inner,
-  // "0.5,-1.5,1.5,-1.5": DoorSide2_2Inner,
+  "0.5,-1.5,1.5,-1.5": DoorSide2_2Inner,
   // "0.5,-2.5,1.5,-2.5": WallSide3_2,
 };
 
