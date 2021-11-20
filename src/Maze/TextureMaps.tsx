@@ -24,7 +24,6 @@ export const Outer = styled.div`
   width: ${W};
   height: ${H};
   background-color: black;
-  margin-right: 20px;
   position: relative;
 `;
 
@@ -241,38 +240,16 @@ export const wallTextureMaps: Record<
 };
 
 // --------------------------------------------------------------------------------
-// Doors
+// Door frames
 
-// Door frame
+// Close
 export const DoorFront1 = styled.img.attrs(() => ({
   src: doorFront1,
 }))`
   position: absolute;
-  left: 95px;
-  top: 30px;
+  top: 18px;
+  left: 64px;
   width: 320px;
-  height: 222px;
-  z-index: 301;
-`;
-
-// Sliding bit
-export const DoorFront1Inner = styled.img.attrs(() => ({
-  src: doorInnerDefault,
-}))`
-  left: 39px;
-  width: 181px;
-  height: 166px;
-  position: absolute;
-  top: 6px;
-`;
-
-export const DoorSide1_1iASDASD = styled.img.attrs(() => ({
-  src: doorSide1,
-}))`
-  position: absolute;
-  left: 0;
-  top: 15px;
-  width: 64px;
   height: 222px;
   z-index: 301;
 `;
@@ -312,11 +289,11 @@ export const DoorSide2_1 = styled.img.attrs(() => ({
   src: doorFront2,
 }))`
   position: absolute;
-  top: 40px;
-  left: 0;
-  width: 120px;
-  height: 142px;
-  z-index: 200;
+  left: -55px;
+  top: 47px;
+  width: 175px;
+  height: 140px;
+  z-index: 201;
 `;
 
 export const DoorSide2_2 = styled(DoorSide2_1)`
@@ -325,50 +302,8 @@ export const DoorSide2_2 = styled(DoorSide2_1)`
   transform: scaleX(-1);
 `;
 
-// Distant left sliding bit
-export const DoorSide2_1Inner = styled.img.attrs(() => ({
-  src: doorInnerDefault2,
-}))`
-  right: 25px;
-  width: 95px;
-  height: 111.22px;
-  position: absolute;
-  top: 4px;
-`;
-
-// export const DoorSide2_2 = styled.img.attrs(() => ({
-//   src: doorFront2,
-// }))`
-//   position: absolute;
-//   right: 0;
-//   top: 15px;
-//   width: 64px;
-//   height: 222px;
-//   z-index: 201;
-// `;
-
-export const DoorSide1_2Inner = styled.img.attrs(() => ({
-  src: doorSide1,
-}))`
-  left: 0;
-  width: 64px;
-  height: 80px;
-  position: absolute;
-  top: 25px;
-`;
-
+// Ahead medium
 export const DoorFront2 = styled.img.attrs(() => ({
-  src: doorFront2,
-}))`
-  position: absolute;
-  left: 135px;
-  top: 47px;
-  width: 175px;
-  height: 140px;
-  z-index: 201;
-`;
-
-export const DoorFront2Inner = styled.img.attrs(() => ({
   src: doorFront2,
 }))`
   position: absolute;
@@ -395,10 +330,76 @@ export const doorTextureMaps: Record<
   // Ahead
   "-0.5,-0.5,0.5,-0.5": DoorFront1, // Close
   "-0.5,-1.5,0.5,-1.5": DoorFront2, // Medium
+  // Ahead left
+  "-1.5,-0.5,-0.5,-0.5": DoorSide1_1, // Close
+  "-1.5,-1.5,-0.5,-1.5": DoorSide2_1, // Medium
+  // "-1.5,-2.5,-0.5,-2.5": WallSide3_1,
+  // Ahead right
+  "0.5,-0.5,1.5,-0.5": DoorSide1_2,
+  "0.5,-1.5,1.5,-1.5": DoorSide2_2,
+  // "0.5,-2.5,1.5,-2.5": WallSide3_2,
+};
+
+// --------------------------------------------------------------------------------
+// Door inners
+
+// Sliding bit
+export const DoorFront1Inner = styled.img.attrs(() => ({
+  src: doorInnerDefault,
+}))`
+  position: absolute;
+  top: 18px;
+  left: 64px;
+  width: 320px;
+  height: 222px;
+  z-index: 301;
+`;
+
+export const DoorFront2Inner = styled.img.attrs(() => ({
+  src: doorInnerDefault2,
+}))`
+  position: absolute;
+  left: 135px;
+  top: 47px;
+  width: 175px;
+  height: 140px;
+  z-index: 201;
+`;
+
+// Distant left sliding bit
+export const DoorSide2_1Inner = styled.img.attrs(() => ({
+  src: doorInnerDefault2,
+}))`
+  position: absolute;
+  left: -55px;
+  top: 47px;
+  width: 175px;
+  height: 140px;
+  z-index: 201;
+`;
+
+export const DoorSide1_2Inner = styled.img.attrs(() => ({
+  src: doorInnerDefault2,
+}))`
+  position: absolute;
+  left: -55px;
+  top: 47px;
+  width: 175px;
+  height: 140px;
+  z-index: 201;
+`;
+
+export const doorInnerTextureMaps: Record<
+  `${number},${number},${number},${number}`,
+  StyledComponent<"img", any>
+> = {
+  // Ahead
+  "-0.5,-0.5,0.5,-0.5": DoorFront1Inner, // Close
+  "-0.5,-1.5,0.5,-1.5": DoorFront2Inner, // Medium
   // "-0.5,-2.5,0.5,-2.5": WallFront3,
   // Left
-  "-0.5,-0.5,-0.5,0.5": DoorSide1_1,
-  "-0.5,-1.5,-0.5,-0.5": DoorSide1_2,
+  "-0.5,-0.5,-0.5,0.5": DoorSide1_2Inner,
+  "-0.5,-1.5,-0.5,-0.5": DoorSide1_2Inner,
   // "-0.5,-2.5,-0.5,-1.5": WallLSide2,
   // "-0.5,-3.5,-0.5,-2.5": WallLSide3,
   // Right
@@ -437,7 +438,7 @@ export const Monster2 = styled.div.attrs(() => ({
   top: 21px;
   left: 154px;
   width: 28px;
-  z-index: 201;
+  z-index: 201
   font-size: 134px;
 `;
 
