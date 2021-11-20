@@ -36,6 +36,7 @@ export const Floor = styled.img.attrs(() => ({
   left: 0;
   width: ${W};
   height: 140px;
+  image-rendering: pixelated;
 `;
 
 export const Ceiling = styled.img.attrs(() => ({
@@ -46,6 +47,7 @@ export const Ceiling = styled.img.attrs(() => ({
   left: 0;
   width: ${W};
   height: 50px;
+  image-rendering: pixelated;
 `;
 
 // --------------------------------------------------------------------------------
@@ -60,6 +62,7 @@ export const WallLSide0 = styled.img.attrs(() => ({
   width: 64px;
   height: ${H};
   z-index: 400;
+  image-rendering: pixelated;
 `;
 
 export const WallLSide1 = styled.img.attrs(() => ({
@@ -71,6 +74,7 @@ export const WallLSide1 = styled.img.attrs(() => ({
   width: 56px;
   height: 220px;
   z-index: 300;
+  image-rendering: pixelated;
 `;
 
 export const WallLSide2 = styled.img.attrs(() => ({
@@ -82,6 +86,7 @@ export const WallLSide2 = styled.img.attrs(() => ({
   width: 28px;
   height: 142px;
   z-index: 200;
+  image-rendering: pixelated;
 `;
 
 export const WallLSide3 = styled.img.attrs(() => ({
@@ -93,6 +98,7 @@ export const WallLSide3 = styled.img.attrs(() => ({
   width: 22px;
   height: 102px;
   z-index: 100;
+  image-rendering: pixelated;
 `;
 
 export const WallRSide0 = styled(WallLSide0)`
@@ -131,6 +137,7 @@ export const WallFront1 = styled.img.attrs(() => ({
   width: 320px;
   height: 222px;
   z-index: 301;
+  image-rendering: pixelated;
 `;
 
 export const WallFront2 = styled.img.attrs(() => ({
@@ -142,6 +149,7 @@ export const WallFront2 = styled.img.attrs(() => ({
   width: 208px;
   height: 142px;
   z-index: 201;
+  image-rendering: pixelated;
 `;
 
 export const WallFront3 = styled.img.attrs(() => ({
@@ -153,6 +161,7 @@ export const WallFront3 = styled.img.attrs(() => ({
   width: 152px;
   height: 102px;
   z-index: 101;
+  image-rendering: pixelated;
 `;
 
 // --------------------------------------------------------------------------------
@@ -168,6 +177,7 @@ export const WallSide1_1 = styled.img.attrs(() => ({
   width: 64px;
   height: 222px;
   z-index: 300;
+  image-rendering: pixelated;
 `;
 
 export const WallSide2_1 = styled.img.attrs(() => ({
@@ -179,6 +189,7 @@ export const WallSide2_1 = styled.img.attrs(() => ({
   width: 120px;
   height: 142px;
   z-index: 200;
+  image-rendering: pixelated;
 `;
 
 export const WallSide3_1 = styled.img.attrs(() => ({
@@ -190,6 +201,7 @@ export const WallSide3_1 = styled.img.attrs(() => ({
   width: 148px;
   height: 102px;
   z-index: 100;
+  image-rendering: pixelated;
 `;
 
 // Right
@@ -252,6 +264,7 @@ export const DoorFront1 = styled.img.attrs(() => ({
   left: 58px;
   width: 332px;
   z-index: 302;
+  image-rendering: pixelated;
 `;
 
 // Ahead medium
@@ -264,6 +277,7 @@ export const DoorFront2 = styled.img.attrs(() => ({
   width: 220px;
   z-index: 202;
   filter: brightness(0.7);
+  image-rendering: pixelated;
 `;
 
 export const DoorFront3 = styled.img.attrs(() => ({
@@ -275,6 +289,7 @@ export const DoorFront3 = styled.img.attrs(() => ({
   width: 158px;
   z-index: 202;
   filter: brightness(0.6);
+  image-rendering: pixelated;
 `;
 
 // Close left
@@ -286,6 +301,7 @@ export const DoorSide1_1 = styled.img.attrs(() => ({
   left: -264px;
   z-index: 302;
   width: 332px;
+  image-rendering: pixelated;
 `;
 
 // Close right
@@ -305,6 +321,7 @@ export const DoorSide2_1 = styled.img.attrs(() => ({
   width: 220px;
   z-index: 202;
   filter: brightness(0.7);
+  image-rendering: pixelated;
 `;
 
 export const DoorSide2_2 = styled(DoorSide2_1)`
@@ -342,6 +359,7 @@ export const DoorInnerDefault2 = styled.img.attrs(() => ({
   left: 25px;
   width: 125px;
   position: absolute; ;
+  image-rendering: pixelated;
 `;
 
 export const DoorFront1Inner = styled.img.attrs(() => ({
@@ -352,6 +370,7 @@ export const DoorFront1Inner = styled.img.attrs(() => ({
   left: 111px;
   width: 229px;
   z-index: 303;
+  image-rendering: pixelated;
 `;
 
 // Sliding bit - ahead far
@@ -364,6 +383,7 @@ export const DoorFront2Inner = styled.img.attrs(() => ({
   top: 42px;
   z-index: 203;
   filter: brightness(0.7);
+  image-rendering: pixelated;
 `;
 
 export const DoorFront3Inner = styled.img.attrs(() => ({
@@ -375,6 +395,7 @@ export const DoorFront3Inner = styled.img.attrs(() => ({
   top: 49px;
   z-index: 203;
   filter: brightness(0.5);
+  image-rendering: pixelated;
 `;
 
 // Distant left sliding bit
@@ -387,6 +408,7 @@ export const DoorSide2_1Inner = styled.img.attrs(() => ({
   top: 42px;
   z-index: 203;
   filter: brightness(0.7);
+  image-rendering: pixelated;
 `;
 
 export const DoorSide1_1Inner = styled.img.attrs(() => ({
@@ -397,6 +419,7 @@ export const DoorSide1_1Inner = styled.img.attrs(() => ({
   left: -261px;
   z-index: 303;
   width: 229px;
+  image-rendering: pixelated;
 `;
 
 export const DoorSide1_2Inner = styled.img.attrs(() => ({
@@ -407,6 +430,7 @@ export const DoorSide1_2Inner = styled.img.attrs(() => ({
   top: 47px;
   width: 158px;
   z-index: 203;
+  image-rendering: pixelated;
 `;
 
 export const DoorSide2_2Inner = styled(DoorSide1_2Inner)`
