@@ -5,14 +5,14 @@ import doorFront2 from "../assets/doorFront2.png";
 import doorInnerDefault from "../assets/doorinner_default.png";
 import doorInnerDefault2 from "../assets/doorinner_default2.png";
 
-const SLIDING_DOOR_NEAR_WIDTH = 182;
+const SLIDING_DOOR_NEAR_WIDTH = 225;
 const SLIDING_DOOR_MEDIUM_WIDTH = 144;
-const SLIDING_DOOR_MEDIUM_LEFT = -38;
+const SLIDING_DOOR_MEDIUM_LEFT = -65;
 
-const DOOR_FRAME_NEAR_WIDTH = 259;
-const DOOR_FRAME_NEAR_LEFT = -158;
-const DOOR_FRAME_MEDIUM_WIDTH = 175;
-const DOOR_FRAME_FAR_WIDTH = 127;
+const DOOR_FRAME_NEAR_WIDTH = 323;
+const DOOR_FRAME_NEAR_LEFT = -259;
+const DOOR_FRAME_MEDIUM_WIDTH = 209;
+const DOOR_FRAME_FAR_WIDTH = 152;
 
 // --------------------------------------------------------------------------------
 
@@ -21,21 +21,23 @@ const DoorFront1 = styled.img.attrs(() => ({
   src: doorFront1,
 }))`
   width: ${DOOR_FRAME_NEAR_WIDTH}px;
+  image-rendering: pixelated;
 `;
 const DoorFront1Inner = styled.img.attrs(() => ({
   src: doorInnerDefault,
 }))`
   position: absolute;
-  top: 6px;
-  left: 38px;
-  width: 182px;
+  top: 9px;
+  left: 49px;
+  width: ${SLIDING_DOOR_NEAR_WIDTH}px;
+  image-rendering: pixelated;
 `;
 const DoorFront1Container = styled.div.attrs(() => ({
   children: [<DoorFront1 key={1} />, <DoorFront1Inner key={2} />],
 }))`
   position: absolute;
-  top: 30px;
-  left: 96px;
+  top: 19px;
+  left: 63px;
   width: ${DOOR_FRAME_NEAR_WIDTH}px;
   z-index: 300;
 `;
@@ -46,22 +48,23 @@ const DoorFront2 = styled.img.attrs(() => ({
   src: doorFront2,
 }))`
   width: ${DOOR_FRAME_MEDIUM_WIDTH}px;
+  image-rendering: pixelated;
 `;
 const DoorFront2Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))`
-  left: 25px;
-  width: 125px;
+  left: 33px;
+  width: ${SLIDING_DOOR_MEDIUM_WIDTH}px;
   position: absolute;
-  top: 3px;
+  top: 5px;
   image-rendering: pixelated;
 `;
 const DoorFront2Container = styled.div.attrs(() => ({
   children: [<DoorFront2 key={1} />, <DoorFront2Inner key={2} />],
 }))`
   position: absolute;
-  left: 136px;
-  top: 47px;
+  left: 119px;
+  top: 39px;
   width: ${DOOR_FRAME_MEDIUM_WIDTH}px;
   z-index: 200;
   filter: brightness(0.7);
@@ -79,8 +82,8 @@ const DoorFront3 = styled.img.attrs(() => ({
 const DoorFront3Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))`
-  left: 19px;
-  width: 89px;
+  left: 23px;
+  width: 106px;
   position: absolute;
   top: 2px;
   image-rendering: pixelated;
@@ -89,11 +92,11 @@ const DoorFront3Container = styled.div.attrs(() => ({
   children: [<DoorFront3 key={1} />, <DoorFront3Inner key={2} />],
 }))`
   position: absolute;
-  left: 160px;
-  top: 52px;
+  left: 148px;
+  top: 49px;
   width: ${DOOR_FRAME_FAR_WIDTH}px;
   z-index: 200;
-  filter: brightness(0.3);
+  filter: brightness(0.6);
   image-rendering: pixelated;
 `;
 
@@ -101,13 +104,11 @@ const DoorFront3Container = styled.div.attrs(() => ({
 // Close left
 const DoorSide1_1Container = styled(DoorFront1Container)`
   left: ${DOOR_FRAME_NEAR_LEFT}px;
-  z-index: 199;
 `;
 
 // --------------------------------------------------------------------------------
 // Close right
 const DoorSide1_2Container = styled(DoorFront1Container)`
-  z-index: 299;
   right: ${DOOR_FRAME_NEAR_LEFT}px;
   left: auto;
   transform: scaleX(-1);
@@ -116,7 +117,6 @@ const DoorSide1_2Container = styled(DoorFront1Container)`
 // --------------------------------------------------------------------------------
 // Medium right
 const DoorSide2_2Container = styled(DoorFront2Container)`
-  z-index: 199;
   right: ${SLIDING_DOOR_MEDIUM_LEFT}px;
   left: auto;
   transform: scaleX(-1);
@@ -126,7 +126,6 @@ const DoorSide2_2Container = styled(DoorFront2Container)`
 // Medium left
 
 const DoorSide2_1Container = styled(DoorFront2Container)`
-  z-index: 199;
   left: ${SLIDING_DOOR_MEDIUM_LEFT}px;
   transform: scaleX(-1);
 `;
@@ -136,11 +135,11 @@ export const doorTextureMaps: Record<
   StyledComponent<"img" | "div", any>
 > = {
   // Ahead
-  "0,-0.5,1,-0.5": DoorFront1Container, // Ahead close
-  "0,-1.5,1,-1.5": DoorFront2Container, // Ahead medium
-  "0,-2.5,1,-2.5": DoorFront3Container, // Ahead far
-  "-1,-0.5,0,-0.5": DoorSide1_1Container, // Left close
-  "1,-0.5,2,-0.5": DoorSide1_2Container, // Right close
-  "-1,-1.5,0,-1.5": DoorSide2_1Container, // Left medium
-  "1,-1.5,2,-1.5": DoorSide2_2Container, // Medium
+  "-0.5,-0.5,0.5,-0.5": DoorFront1Container, // Close
+  "-0.5,-1.5,0.5,-1.5": DoorFront2Container, // Medium
+  "-0.5,-2.5,0.5,-2.5": DoorFront3Container, // Far
+  "-1.5,-0.5,-0.5,-0.5": DoorSide1_1Container, // Close
+  "0.5,-1.5,1.5,-1.5": DoorSide2_2Container,
+  "0.5,-0.5,1.5,-0.5": DoorSide1_2Container,
+  "-1.5,-1.5,-0.5,-1.5": DoorSide2_1Container, // Medium
 };

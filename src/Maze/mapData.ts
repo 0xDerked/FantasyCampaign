@@ -11,11 +11,11 @@ export const wallCoords: {
   y2: number;
   type: WallType;
 }[] = [
-  { x1: 1, y1: 0, x2: 2, y2: 0, type: WallType.Door },
-  { x1: 0, y1: 0, x2: 1, y2: 0, type: WallType.Wall2 },
+  { x1: 0, y1: 0.5, x2: 1, y2: 0.5, type: WallType.Door },
+  { x1: 1, y1: 0, x2: 2, y2: 0, type: WallType.Wall2 },
   { x1: 2, y1: 0, x2: 3, y2: 0, type: WallType.Wall2 },
   { x1: 0, y1: 0, x2: 0, y2: 1, type: WallType.Wall2 },
-  { x1: 1, y1: 1, x2: 2, y2: 1, type: WallType.Wall2 },
+  { x1: 1, y1: 0, x2: 1, y2: 1, type: WallType.Wall2 },
   { x1: 2, y1: 0, x2: 3, y2: 0, type: WallType.Wall2 },
   { x1: 3, y1: 0, x2: 3, y2: 1, type: WallType.Wall2 },
   { x1: 2, y1: 1, x2: 3, y2: 1, type: WallType.Wall2 },
