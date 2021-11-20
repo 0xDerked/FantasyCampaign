@@ -39,7 +39,7 @@ const DoorFront1Container = styled.div.attrs(() => ({
   top: 19px;
   left: 63px;
   width: ${DOOR_FRAME_NEAR_WIDTH}px;
-  z-index: 302;
+  z-index: 300;
 `;
 
 // --------------------------------------------------------------------------------
@@ -66,7 +66,7 @@ const DoorFront2Container = styled.div.attrs(() => ({
   left: 119px;
   top: 39px;
   width: ${DOOR_FRAME_MEDIUM_WIDTH}px;
-  z-index: 202;
+  z-index: 200;
   filter: brightness(0.7);
   image-rendering: pixelated;
 `;
@@ -95,7 +95,7 @@ const DoorFront3Container = styled.div.attrs(() => ({
   left: 148px;
   top: 49px;
   width: ${DOOR_FRAME_FAR_WIDTH}px;
-  z-index: 202;
+  z-index: 200;
   filter: brightness(0.6);
   image-rendering: pixelated;
 `;
