@@ -4,14 +4,31 @@ export enum WallType {
   Door = 2,
 }
 
+export const doorsCoords: {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  type: WallType.Door;
+}[] = [
+  { x1: 0, y1: 0.5, x2: 1, y2: 0.5, type: WallType.Door },
+  { x1: 1, y1: 2.5, x2: 2, y2: 2.5, type: WallType.Door },
+];
+
+export const doorsDict: Record<`${number},${number}`, boolean> = {};
+for (let doorCoord of doorsCoords) {
+  doorsDict[
+    `${(doorCoord.x1 + doorCoord.x2) / 2},${(doorCoord.y1 + doorCoord.y2) / 2}`
+  ] = true;
+}
+
 export const wallCoords: {
   x1: number;
   y1: number;
   x2: number;
   y2: number;
-  type: WallType;
+  type: WallType.Wall1 | WallType.Wall2;
 }[] = [
-  { x1: 0, y1: 0.5, x2: 1, y2: 0.5, type: WallType.Door },
   { x1: 1, y1: 0, x2: 2, y2: 0, type: WallType.Wall2 },
   { x1: 2, y1: 0, x2: 3, y2: 0, type: WallType.Wall2 },
   { x1: 0, y1: 0, x2: 0, y2: 1, type: WallType.Wall2 },

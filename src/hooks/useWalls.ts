@@ -8,7 +8,7 @@ export const useWalls = () => {
   const { row, col, dir } = position;
   const Rot = 90 * dir;
 
-  const rotatedWalls = wallCoords.map(({ x1, x2, y1, y2, type }) => {
+  return wallCoords.map(({ x1, x2, y1, y2, type }) => {
     // Player moved by row/col index currently so we move them to the center of the tile
     // for collision detection etc
     const orow = row + 0.5;
@@ -29,5 +29,4 @@ export const useWalls = () => {
       type,
     };
   });
-  return rotatedWalls;
 };

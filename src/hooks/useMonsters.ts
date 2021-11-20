@@ -8,7 +8,7 @@ export const useMonsters = () => {
   const { row, col, dir } = position;
   const Rot = 90 * dir;
 
-  const rotatedMonsters = monstersCoords.map(({ x, y }) => {
+  return monstersCoords.map(({ x, y }) => {
     const Cx = col;
     const Cy = row;
     const [xp, yp] = rotate(x, y, Cx, Cy, Rot);
@@ -17,5 +17,4 @@ export const useMonsters = () => {
     // Monsters are in the center of the tile like players so we don't need to offset by 0.5
     return { x: xr - col, y: yr - row };
   });
-  return rotatedMonsters;
 };

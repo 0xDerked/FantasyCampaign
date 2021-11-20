@@ -1,6 +1,6 @@
 import { rotate } from "./rotate";
 import { round } from "./round";
-import { wallsDict } from "../Maze/mapData";
+import { doorsDict, wallsDict } from "../Maze/mapData";
 
 export enum Keys {
   Forward = "w",
@@ -48,12 +48,16 @@ export const boundPos = (currPos: Pos, nextPos: Pos): Pos => {
   const Cy = (y1 + y2) / 2;
   const By = 90;
   // Rotate those points 90 degrees to get the possible vector of the wall
-  const [x1p, y1p] = rotate(x1, y1, Cx, Cy, By);
-  const [x2p, y2p] = rotate(x2, y2, Cx, Cy, By);
-  if (wallsDict[`${round(x1p)},${round(y1p)},${round(x2p)},${round(y2p)}`]) {
+  const [x1w, y1w] = rotate(x1, y1, Cx, Cy, By);
+  const [x2w, y2w] = rotate(x2, y2, Cx, Cy, By);
+
+  if (wallsDict[`${round(x1w)},${round(y1w)},${round(x2w)},${round(y2w)}`]) {
     return currPos;
   }
-  if (wallsDict[`${round(x2p)},${round(y2p)},${round(x1p)},${round(y1p)}`]) {
+  if (wallsDict[`${round(x2w)},${round(y2w)},${round(x1w)},${round(y1w)}`]) {
+    return currPos;
+  }
+  if (doorsDict[`${x2},${y2}`]) {
     return currPos;
   }
   return nextPos;
