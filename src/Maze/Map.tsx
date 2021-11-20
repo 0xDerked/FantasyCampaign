@@ -3,7 +3,7 @@ import { ReactElement } from "react";
 import styled from "styled-components";
 import { usePositionContext } from "../providers/Position";
 import { rotate } from "../utils/rotate";
-import { monstersCoords, wallCoords } from "./mapData";
+import { monstersCoords, wallCoords, WallType } from "./mapData";
 
 const CELL_PX = 50;
 
@@ -32,7 +32,7 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
   const Cx = col;
   const Cy = row;
   const OFFSET = rotateMap ? 2 : 0;
-  const rotatedWallCoords = wallCoords.map(({ x1, x2, y1, y2 }) => {
+  const rotatedWallCoords = wallCoords.map(({ x1, x2, y1, y2, type }) => {
     const [x1p, y1p] = rotate(x1, y1, Cx, Cy, By);
     const [x2p, y2p] = rotate(x2, y2, Cx, Cy, By);
     return {
@@ -40,6 +40,7 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
       y1: y1p - (rotateMap ? row : 0),
       x2: x2p - (rotateMap ? col : 0),
       y2: y2p - (rotateMap ? row : 0),
+      type,
     };
   });
   return (
@@ -48,14 +49,15 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
         viewBox={`0 0 ${5 * CELL_PX} ${5 * CELL_PX}`}
         xmlns="http://www.w3.org/2000/svg"
       >
-        {rotatedWallCoords.map(({ x1, y1, x2, y2 }) => (
+        {rotatedWallCoords.map(({ x1, y1, x2, y2, type }) => (
           <line
             key={JSON.stringify({ x1, y1, x2, y2 })}
             x1={(x1 + OFFSET) * CELL_PX}
             y1={(y1 + OFFSET) * CELL_PX}
             x2={(x2 + OFFSET) * CELL_PX}
             y2={(y2 + OFFSET) * CELL_PX}
-            stroke="black"
+            stroke={type === WallType.DoorFrame ? "red" : "black"}
+            strokeWidth={3}
           />
         ))}
       </svg>

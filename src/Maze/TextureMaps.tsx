@@ -17,8 +17,8 @@ import doorInnerDefault from "../assets/doorinner_default.png";
 import doorInnerDefault2 from "../assets/doorinner_default2.png";
 import doorSide1 from "../assets/doorSide1.png";
 
-export const W = "448px";
-export const H = "272px";
+const W = "448px";
+const H = "272px";
 
 const SLIDING_DOOR_NEAR_WIDTH = 229;
 const SLIDING_DOOR_MEDIUM_WIDTH = 154;
@@ -33,6 +33,16 @@ const SLIDING_DOOR_NEAR_LEFT = -210;
 const SLIDING_DOOR_MEDIUM_LEFT = -65;
 const SLIDING_DOOR_FAR_LEFT = 169;
 
+const DOOR_FRAME_NEAR_WIDTH = 323;
+const DOOR_FRAME_NEAR_TOP = 19;
+const DOOR_FRAME_NEAR_LEFT_LEFT = -259;
+const DOOR_FRAME_MEDIUM_WIDTH = 209;
+const DOOR_FRAME_MEDIUM_TOP = 39;
+const DOOR_FRAME_MEDIUM_LEFT_LEFT = -89;
+const DOOR_FRAME_FAR_WIDTH = 152;
+const DOOR_FRAME_FAR_TOP = 49;
+// const DOOR_FRAME_FAR_LEFT_LEFT = -89;
+
 export const Outer = styled.div`
   width: ${W};
   height: ${H};
@@ -40,7 +50,6 @@ export const Outer = styled.div`
   position: relative;
   overflow: hidden;
 `;
-
 export const Floor = styled.img.attrs(() => ({
   src: flooralt,
 }))`
@@ -66,7 +75,7 @@ export const Ceiling = styled.img.attrs(() => ({
 // --------------------------------------------------------------------------------
 // Angled walls
 
-export const WallLSide0 = styled.img.attrs(() => ({
+const WallLSide0 = styled.img.attrs(() => ({
   src: wallLSide0alt,
 }))`
   position: absolute;
@@ -78,7 +87,7 @@ export const WallLSide0 = styled.img.attrs(() => ({
   image-rendering: pixelated;
 `;
 
-export const WallLSide1 = styled.img.attrs(() => ({
+const WallLSide1 = styled.img.attrs(() => ({
   src: wallLSide1alt,
 }))`
   position: absolute;
@@ -90,7 +99,7 @@ export const WallLSide1 = styled.img.attrs(() => ({
   image-rendering: pixelated;
 `;
 
-export const WallLSide2 = styled.img.attrs(() => ({
+const WallLSide2 = styled.img.attrs(() => ({
   src: wallLSide2alt,
 }))`
   position: absolute;
@@ -102,7 +111,7 @@ export const WallLSide2 = styled.img.attrs(() => ({
   image-rendering: pixelated;
 `;
 
-export const WallLSide3 = styled.img.attrs(() => ({
+const WallLSide3 = styled.img.attrs(() => ({
   src: wallLSide3alt,
 }))`
   position: absolute;
@@ -114,25 +123,25 @@ export const WallLSide3 = styled.img.attrs(() => ({
   image-rendering: pixelated;
 `;
 
-export const WallRSide0 = styled(WallLSide0)`
+const WallRSide0 = styled(WallLSide0)`
   right: 0;
   left: auto;
   transform: scaleX(-1);
 `;
 
-export const WallRSide1 = styled(WallLSide1)`
+const WallRSide1 = styled(WallLSide1)`
   right: 64px;
   left: auto;
   transform: scaleX(-1);
 `;
 
-export const WallRSide2 = styled(WallLSide2)`
+const WallRSide2 = styled(WallLSide2)`
   right: 120px;
   left: auto;
   transform: scaleX(-1);
 `;
 
-export const WallRSide3 = styled(WallLSide3)`
+const WallRSide3 = styled(WallLSide3)`
   right: 148px;
   left: auto;
   transform: scaleX(-1);
@@ -141,7 +150,7 @@ export const WallRSide3 = styled(WallLSide3)`
 // --------------------------------------------------------------------------------
 // Center front-facing walls
 
-export const WallFront1 = styled.img.attrs(() => ({
+const WallFront1 = styled.img.attrs(() => ({
   src: wallFront1nor,
 }))`
   position: absolute;
@@ -153,7 +162,7 @@ export const WallFront1 = styled.img.attrs(() => ({
   image-rendering: pixelated;
 `;
 
-export const WallFront2 = styled.img.attrs(() => ({
+const WallFront2 = styled.img.attrs(() => ({
   src: wallFront2nor,
 }))`
   position: absolute;
@@ -165,7 +174,7 @@ export const WallFront2 = styled.img.attrs(() => ({
   image-rendering: pixelated;
 `;
 
-export const WallFront3 = styled.img.attrs(() => ({
+const WallFront3 = styled.img.attrs(() => ({
   src: wallFront3nor,
 }))`
   position: absolute;
@@ -181,7 +190,7 @@ export const WallFront3 = styled.img.attrs(() => ({
 // Non-center front-facing walls
 
 // Left
-export const WallSide1_1 = styled.img.attrs(() => ({
+const WallSide1_1 = styled.img.attrs(() => ({
   src: wallSide1alt,
 }))`
   position: absolute;
@@ -193,7 +202,7 @@ export const WallSide1_1 = styled.img.attrs(() => ({
   image-rendering: pixelated;
 `;
 
-export const WallSide2_1 = styled.img.attrs(() => ({
+const WallSide2_1 = styled.img.attrs(() => ({
   src: wallSide2alt,
 }))`
   position: absolute;
@@ -205,7 +214,7 @@ export const WallSide2_1 = styled.img.attrs(() => ({
   image-rendering: pixelated;
 `;
 
-export const WallSide3_1 = styled.img.attrs(() => ({
+const WallSide3_1 = styled.img.attrs(() => ({
   src: wallFront3nor,
 }))`
   position: absolute;
@@ -219,19 +228,19 @@ export const WallSide3_1 = styled.img.attrs(() => ({
 
 // Right
 
-export const WallSide1_2 = styled(WallSide1_1)`
+const WallSide1_2 = styled(WallSide1_1)`
   right: 0;
   left: auto;
   transform: scaleX(-1);
 `;
 
-export const WallSide2_2 = styled(WallSide2_1)`
+const WallSide2_2 = styled(WallSide2_1)`
   right: 0;
   left: auto;
   transform: scaleX(-1);
 `;
 
-export const WallSide3_2 = styled(WallSide3_1)`
+const WallSide3_2 = styled(WallSide3_1)`
   right: 0;
   left: auto;
   transform: scaleX(-1);
@@ -269,76 +278,76 @@ export const wallTextureMaps: Record<
 // Door frames
 
 // Close
-export const DoorFront1 = styled.img.attrs(() => ({
+const DoorFront1 = styled.img.attrs(() => ({
   src: doorFront1,
 }))`
   position: absolute;
-  top: 18px;
-  left: 58px;
-  width: 332px;
+  top: ${DOOR_FRAME_NEAR_TOP}px;
+  left: 63px;
+  width: ${DOOR_FRAME_NEAR_WIDTH}px;
   z-index: 302;
   image-rendering: pixelated;
 `;
 
 // Ahead medium
-export const DoorFront2 = styled.img.attrs(() => ({
+const DoorFront2 = styled.img.attrs(() => ({
   src: doorFront2,
 }))`
   position: absolute;
-  left: 114px;
-  top: 38px;
-  width: 220px;
+  left: 119px;
+  top: ${DOOR_FRAME_MEDIUM_TOP}px;
+  width: ${DOOR_FRAME_MEDIUM_WIDTH}px;
   z-index: 202;
   filter: brightness(0.7);
   image-rendering: pixelated;
 `;
 
-export const DoorFront3 = styled.img.attrs(() => ({
+const DoorFront3 = styled.img.attrs(() => ({
   src: doorFront2,
 }))`
   position: absolute;
-  left: 145px;
-  top: 46px;
-  width: 158px;
+  left: 148px;
+  top: ${DOOR_FRAME_FAR_TOP}px;
+  width: ${DOOR_FRAME_FAR_WIDTH}px;
   z-index: 202;
   filter: brightness(0.6);
   image-rendering: pixelated;
 `;
 
 // Close left
-export const DoorSide1_1 = styled.img.attrs(() => ({
+const DoorSide1_1 = styled.img.attrs(() => ({
   src: doorFront1,
 }))`
   position: absolute;
-  top: 18px;
-  left: -264px;
+  top: ${DOOR_FRAME_NEAR_TOP}px;
+  left: ${DOOR_FRAME_NEAR_LEFT_LEFT}px;
   z-index: 302;
-  width: 332px;
+  width: ${DOOR_FRAME_NEAR_WIDTH}px;
   image-rendering: pixelated;
 `;
 
 // Close right
-export const DoorSide1_2 = styled(DoorSide1_1)`
-  right: -261px;
+const DoorSide1_2 = styled(DoorSide1_1)`
+  right: ${DOOR_FRAME_NEAR_LEFT_LEFT}px;
   left: auto;
   transform: scaleX(-1);
 `;
 
 // Distant left
-export const DoorSide2_1 = styled.img.attrs(() => ({
+const DoorSide2_1 = styled.img.attrs(() => ({
   src: doorFront2,
 }))`
   position: absolute;
-  left: -96px;
-  top: 38px;
-  width: 220px;
+  left: ${DOOR_FRAME_MEDIUM_LEFT_LEFT}px;
+  top: ${DOOR_FRAME_MEDIUM_TOP}px;
+  width: ${DOOR_FRAME_MEDIUM_WIDTH}px;
   z-index: 202;
   filter: brightness(0.7);
   image-rendering: pixelated;
 `;
 
-export const DoorSide2_2 = styled(DoorSide2_1)`
-  right: -96px;
+const DoorSide2_2 = styled(DoorSide2_1)`
+  right: ${DOOR_FRAME_MEDIUM_LEFT_LEFT}px;
   left: auto;
   transform: scaleX(-1);
   z-index: 202;
@@ -365,7 +374,7 @@ export const doorTextureMaps: Record<
 // --------------------------------------------------------------------------------
 // Door inners
 
-export const DoorFront1Inner = styled.img.attrs(() => ({
+const DoorFront1Inner = styled.img.attrs(() => ({
   src: doorInnerDefault,
 }))`
   position: absolute;
@@ -377,7 +386,7 @@ export const DoorFront1Inner = styled.img.attrs(() => ({
 `;
 
 // Sliding bit - ahead far
-export const DoorFront2Inner = styled.img.attrs(() => ({
+const DoorFront2Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))`
   left: 147px;
@@ -389,7 +398,7 @@ export const DoorFront2Inner = styled.img.attrs(() => ({
   image-rendering: pixelated;
 `;
 
-export const DoorFront3Inner = styled.img.attrs(() => ({
+const DoorFront3Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))`
   left: ${SLIDING_DOOR_FAR_LEFT}px;
@@ -402,7 +411,7 @@ export const DoorFront3Inner = styled.img.attrs(() => ({
 `;
 
 // Distant left sliding bit
-export const DoorSide1_1Inner = styled.img.attrs(() => ({
+const DoorSide1_1Inner = styled.img.attrs(() => ({
   src: doorInnerDefault,
 }))`
   position: absolute;
@@ -413,7 +422,7 @@ export const DoorSide1_1Inner = styled.img.attrs(() => ({
   image-rendering: pixelated;
 `;
 
-export const DoorSide2_1Inner = styled.img.attrs(() => ({
+const DoorSide2_1Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))`
   left: ${SLIDING_DOOR_MEDIUM_LEFT}px;
@@ -425,14 +434,14 @@ export const DoorSide2_1Inner = styled.img.attrs(() => ({
   image-rendering: pixelated;
 `;
 
-export const DoorSide1_2Inner = styled(DoorSide1_1Inner)`
+const DoorSide1_2Inner = styled(DoorSide1_1Inner)`
   right: ${SLIDING_DOOR_NEAR_LEFT}px;
   left: auto;
   transform: scaleX(-1);
 \`;
 `;
 
-export const DoorSide2_2Inner = styled(DoorSide2_1Inner)`
+const DoorSide2_2Inner = styled(DoorSide2_1Inner)`
   right: ${SLIDING_DOOR_MEDIUM_LEFT}px;
   left: auto;
   transform: scaleX(-1);
@@ -459,7 +468,7 @@ export const doorInnerTextureMaps: Record<
 // --------------------------------------------------------------------------------
 // Avatars
 
-export const Monster1 = styled.div.attrs(() => ({
+const Monster1 = styled.div.attrs(() => ({
   children: "🐉",
 }))`
   position: absolute;
@@ -470,7 +479,7 @@ export const Monster1 = styled.div.attrs(() => ({
   font-size: 186px;
 `;
 
-export const Monster2 = styled.div.attrs(() => ({
+const Monster2 = styled.div.attrs(() => ({
   children: "🐉",
 }))`
   position: absolute;
@@ -481,7 +490,7 @@ export const Monster2 = styled.div.attrs(() => ({
   font-size: 134px;
 `;
 
-export const Monster1_2 = styled.div.attrs(() => ({
+const Monster1_2 = styled.div.attrs(() => ({
   children: "🐉",
 }))`
   position: absolute;
