@@ -18,6 +18,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 
 	mapping(bytes32 => uint256) private requestToTokenId;
 
+
 	IMockVRF mockVRF;
 
 	constructor(address _fantasyCharacters, address _mockVRF, address _attributesManager, uint256 _numTurns) VRFConsumerBase(
@@ -37,7 +38,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 		FantasyThings.Ability[] memory bigBossDragonAbilities = new FantasyThings.Ability[](2);
 		bigBossDragonAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Spellpower, 1,"Breathe Fire");
 		bigBossDragonAbilities[1] = FantasyThings.Ability(FantasyThings.AbilityType.Strength,1, "Tail Whip");
-		_setMob(150, [15,20,10,10,15,15,0,100], "Draco", bigBossDragonAbilities, 1);
+		_setMob(150, [15,20,10,10,20,15,0,100], "Draco", bigBossDragonAbilities, 1);
 
 		//set up some guaranteed events with the mobs/puzzles/loot and turn types
 		//last turn will be a boss fight against the dragon
