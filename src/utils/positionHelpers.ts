@@ -3,6 +3,7 @@ import { round } from "./round";
 import { GameData, Position } from "../types";
 import {
   generateDoorCollisions,
+  generateSpawnCollisions,
   generateWallCollisions,
 } from "./generateCollisionMaps";
 
@@ -158,7 +159,22 @@ export const strafeLeft = (pos: Position, currentState: GameData): Position => {
 };
 
 type PosFunction = (position: Position, currentState: GameData) => Position;
-export const setPos = (fn: PosFunction) => (state: GameData) => ({
-  ...state,
-  position: fn(state.position, state),
-});
+export const setPos = (fn: PosFunction) => (state: GameData) => {
+  const newPosition = fn(state.position, state);
+  // Check if the new position runs over a spawn point
+  const spawnPointsDict = generateSpawnCollisions(state.spawnPoints);
+  const spawnPoint =
+    spawnPointsDict[`${round(newPosition.col)},${round(newPosition.row)}`];
+  if (typeof spawnPoint !== "undefined") {
+    return {
+      ...state,
+      isFighting: true,
+      position: newPosition,
+    };
+  }
+  return {
+    ...state,
+    isFighting: false,
+    position: newPosition,
+  };
+};

@@ -8,7 +8,8 @@ export type GameData = {
   position: Position;
   walls: WallCoords[];
   doors: DoorCoords[];
-  monsters: MonsterCoords[];
+  spawnPoints: SpawnPointCoords[];
+  isFighting: boolean;
 };
 
 export enum WallType {
@@ -41,7 +42,9 @@ export type WallsDict = Record<
   boolean
 >;
 
-export type MonsterCoords = {
+export type SpawnPointCoords = {
   x: number;
   y: number;
 };
+
+export type SpawnPointsDict = Record<`${number},${number}`, boolean>;

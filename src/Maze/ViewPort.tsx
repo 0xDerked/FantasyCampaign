@@ -1,22 +1,37 @@
 import * as React from "react";
 import { doorTextureMaps } from "./DoorTextures";
-import { useMonstersWithTransforms } from "../hooks/useMonstersWithTransforms";
 import { wallTextureMaps } from "./WallTextures";
 import { Ceiling, Floor, Outer } from "./EnvironmentTextures";
-import { monsterMaps } from "./MonsterTextures";
 import { DoorCoords, WallType } from "../types";
 import { useUserPosition } from "../hooks/useGameData";
 import { useWallsWithTransforms } from "../hooks/useWallsWithTransforms";
 import { useDoorsWithTransforms } from "../hooks/useDoorsWithTransforms";
 import { useGameData } from "../providers/GameData";
 import clone from "lodash/clone";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
+import styled from "styled-components";
+import {
+  SCALE,
+  UNSCALED_VIEWPORT_HEIGHT,
+  UNSCALED_VIEWPORT_WIDTH,
+} from "./constants";
+
+import match from "../assets/scaled/match.png";
+
+const Match = styled.img.attrs(() => ({
+  src: match,
+}))`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: ${UNSCALED_VIEWPORT_HEIGHT * SCALE}px;
+  width: ${UNSCALED_VIEWPORT_WIDTH * SCALE}px;
+`;
 
 export const ViewPort = () => {
   useUserPosition();
   const walls = useWallsWithTransforms();
   const doors = useDoorsWithTransforms();
-  const monsters = useMonstersWithTransforms();
   const [gameData, setGameData] = useGameData();
 
   const wallSurfaces = walls
@@ -46,12 +61,6 @@ export const ViewPort = () => {
     })
     .filter(Boolean);
 
-  const monsterComponents = monsters
-    .map(({ x, y }) => {
-      return monsterMaps[`${x},${y}`];
-    })
-    .filter(Boolean);
-
   const handleClick = useCallback(
     (coords: DoorCoords) => {
       const doors = gameData.doors;
@@ -67,6 +76,10 @@ export const ViewPort = () => {
     },
     [doors]
   );
+
+  if (gameData.isFighting) {
+    return <Match />;
+  }
 
   return (
     <Outer>
@@ -84,9 +97,6 @@ export const ViewPort = () => {
             onClick={() => handleClick(rest)}
           />
         ) : null;
-      })}
-      {monsterComponents.map((Monster, index) => {
-        return <Monster key={index} />;
       })}
     </Outer>
   );

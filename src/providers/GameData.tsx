@@ -1,12 +1,13 @@
 import * as React from "react";
-import { doorsCoords, monstersCoords, wallCoords } from "../Maze/mapData";
+import { doorsCoords, spawnPointCoords, wallCoords } from "../Maze/mapData";
 import { GameData } from "../types";
 
 const defaultValue: GameData = {
   position: { col: 1, dir: 0, row: 1 },
   walls: wallCoords,
   doors: doorsCoords,
-  monsters: monstersCoords,
+  spawnPoints: spawnPointCoords,
+  isFighting: false,
 };
 
 const GameDataContext = React.createContext<

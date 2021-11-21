@@ -3,7 +3,7 @@ import { ReactElement } from "react";
 import styled from "styled-components";
 import { rotate } from "../utils/rotate";
 import { useGameData } from "../providers/GameData";
-import { monstersCoords } from "./mapData";
+import { spawnPointCoords } from "./mapData";
 
 const CELL_PX = 7;
 
@@ -16,8 +16,8 @@ const Container = styled.div`
   top: 2px;
   right: 2px;
   z-index: 500;
-  background-color: black;
-  border: 2px solid black;
+  background-color: #382b1f;
+  border: 2px solid #382b1f;
 `;
 
 const Avatar = styled.div`
@@ -89,7 +89,7 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
             y1={(y1 + OFFSET) * CELL_PX}
             x2={(x2 + OFFSET) * CELL_PX}
             y2={(y2 + OFFSET) * CELL_PX}
-            stroke={"white"}
+            stroke={"#DCAB7C"}
             strokeWidth={1}
           />
         ))}
@@ -100,7 +100,7 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
             y1={(y1 + OFFSET) * CELL_PX}
             x2={(x2 + OFFSET) * CELL_PX}
             y2={(y2 + OFFSET) * CELL_PX}
-            stroke={open ? "blue" : "red"}
+            stroke={open ? "black" : "#7E7E7E"}
             strokeWidth={1}
           />
         ))}
@@ -114,7 +114,7 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
       >
         ️️️️↑
       </Avatar>
-      {monstersCoords.map(({ x, y }) => (
+      {spawnPointCoords.map(({ x, y }) => (
         <SpawnPoint
           key={JSON.stringify({ x, y })}
           style={{

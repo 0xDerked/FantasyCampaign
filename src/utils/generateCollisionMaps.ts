@@ -1,4 +1,11 @@
-import { DoorCoords, DoorsDict, WallCoords, WallsDict } from "../types";
+import {
+  DoorCoords,
+  DoorsDict,
+  SpawnPointCoords,
+  SpawnPointsDict,
+  WallCoords,
+  WallsDict,
+} from "../types";
 
 export const generateDoorCollisions = (
   doorsCoords: DoorCoords[]
@@ -24,4 +31,14 @@ export const generateWallCollisions = (
     ] = true;
   }
   return wallsDict;
+};
+
+export const generateSpawnCollisions = (
+  spawnCoords: SpawnPointCoords[]
+): SpawnPointsDict => {
+  const spawnDict: SpawnPointsDict = {};
+  for (let spawnCoord of spawnCoords) {
+    spawnDict[`${spawnCoord.x},${spawnCoord.y}`] = true;
+  }
+  return spawnDict;
 };
