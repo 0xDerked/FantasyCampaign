@@ -5,13 +5,14 @@ pragma experimental ABIEncoderV2;
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 import "./FantasyThings.sol";
 import "./CampaignPlaymaster.sol";
+import "./CastleCampaignItems.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 
 interface IMockVRF {
 	function requestRandomness(uint256 _num, string calldata _letters, bytes32 _requestId) external;
 }
 
-contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
+contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignItems {
 
 	bytes32 public keyHash;
 	uint256 public fee;
@@ -108,6 +109,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 				_setMobsForTurn(_tokenId, combatGuaranteedMobIds[playerTurn[_tokenId]], playerTurn[_tokenId]);
 			} else if (turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.Loot) {
 				//set loot
+        _setItemsForTurn(_tokenId, [uint(1)], playerTurn[_tokenId]);
 			} else {
 				//set puzzle
 			}

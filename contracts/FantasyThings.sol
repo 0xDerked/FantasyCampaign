@@ -95,7 +95,9 @@ library FantasyThings {
 
   struct Item {
     ItemType item;
-    ItemAttributes attrs;
+    AbilityType attr;
+    int8 power;
+    uint8 num_uses;
     string name;
   }
 
