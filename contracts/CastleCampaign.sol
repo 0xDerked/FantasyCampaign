@@ -109,7 +109,11 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 				_setMobsForTurn(_tokenId, combatGuaranteedMobIds[playerTurn[_tokenId]], playerTurn[_tokenId]);
 			} else if (turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.Loot) {
 				//set loot
-        _setItemsForTurn(_tokenId, [uint(1)], playerTurn[_tokenId]);
+        uint256[] memory itemIdsForTurn = new uint256[](1);
+			  for(uint256 i=0; i<itemIdsForTurn.length; i++) {
+				  itemIdsForTurn[i] = 1;
+			  }
+        _setItemsForTurn(_tokenId, itemIdsForTurn, playerTurn[_tokenId]);
 			} else {
 				//set puzzle
 			}
