@@ -9,7 +9,9 @@
     "eject": "react-scripts eject",
     "lint": "eslint --ext .js,.ts,.tsx src/",
     "lint:fix": "eslint --fix --ext .js,.ts,.tsx test/",
-    "circuits:test": "yarn jest ./circuits/circuits.test.ts"
+    "circuits:test": "yarn jest ./circuits/circuits.test.ts",
+    "circuits:compile": "node ./circuits/compile.js",
+    "circuits:ptau": "sh ./circuits/ptau.sh"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
