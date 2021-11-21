@@ -151,9 +151,11 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		emit TurnSet(tokenId, playerTurn[tokenId]);
 	}
 
-  function attackWithItem(uint256 _tokenId, uint256 _itemId, uint256 _target) external override controlsCharacter(_tokenId) isCombatTurn(_tokenId) {
+  function attackWithItem(uint256 _tokenId, uint256 _itemId, uint256 _target) external override controlsCharacter(_tokenId) isCombatTurn(_tokenId) turnActive(_tokenId) {
 
-   }
-  
+    FantasyThings.Item item = item_by_id(_itemId);
+		
+  }
+
 
 }
