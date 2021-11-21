@@ -17,7 +17,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 	uint256 public fee;
 
 	mapping(bytes32 => uint256) private requestToTokenId;
-	mapping(uint256 => uint256) internal currentRandomSeed;
+
 
 	IMockVRF mockVRF;
 
@@ -38,9 +38,10 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 		FantasyThings.Ability[] memory bigBossDragonAbilities = new FantasyThings.Ability[](2);
 		bigBossDragonAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Spellpower, 1,"Breathe Fire");
 		bigBossDragonAbilities[1] = FantasyThings.Ability(FantasyThings.AbilityType.Strength,1, "Tail Whip");
-		_setMob(200, [20,15,10,10,15,15,0,100], "Draco", bigBossDragonAbilities, 1);
+		_setMob(150, [15,20,10,10,20,15,0,100], "Draco", bigBossDragonAbilities, 1);
 
 		//set up some guaranteed events with the mobs/puzzles/loot and turn types
+		//last turn will be a boss fight against the dragon
 		turnGuaranteedTypes[_numTurns] = FantasyThings.TurnType.Combat;
 		uint256[] memory mobIdsForLast = new uint256[](1);
 		mobIdsForLast[0] = 1; //1 corresponds to Draco Id
@@ -101,11 +102,15 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 			bytes32 requestId = keccak256(abi.encodePacked(msg.sender, _tokenId, playerTurn[_tokenId], playerNonce[_tokenId]));
 		   //bytes32 requestId = requestRandomness(keyHash, fee);
 			requestToTokenId[requestId] = _tokenId;
-			mockVRF.requestRandomness(5,"abc",requestId);
+			mockVRF.requestRandomness(uint256(keccak256(abi.encodePacked(playerTurn[_tokenId],playerNonce[_tokenId]))),"abc",requestId);
 		} else {
 			turnTypes[_tokenId][playerTurn[_tokenId]]  = turnGuaranteedTypes[playerTurn[_tokenId]];
 			if(turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.Combat) {
 				_setMobsForTurn(_tokenId, combatGuaranteedMobIds[playerTurn[_tokenId]], playerTurn[_tokenId]);
+			} else if (turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.Loot) {
+				//set loot
+			} else {
+				//set puzzle
 			}
 			emit TurnStarted(address(this), _tokenId, playerTurn[_tokenId], turnTypes[_tokenId][playerTurn[_tokenId]]);
 			emit TurnSet(_tokenId, playerTurn[_tokenId]);
@@ -124,12 +129,12 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 
 		if(randomness % 100 < 101) {
 			//set up combat turn
-			uint256[] memory mobIdsForTurn = new uint256[](2);
-			mobIdsForTurn[0] = 0;
-			mobIdsForTurn[1] = 0;
+			uint256[] memory mobIdsForTurn = new uint256[](randomness%2+1);
+			for(uint256 i=0; i<mobIdsForTurn.length; i++) {
+				mobIdsForTurn[i] = 0; //we could randomly generate this from some sort of data model and spawn rate
+			}
 			_setMobsForTurn(tokenId,mobIdsForTurn,playerTurn[tokenId]);
 			turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Combat;
-			turnNumMobsAlive[tokenId][playerTurn[tokenId]] = 2;
 			} else if(randomness % 100 < 95) {
 				//set up looting turn
 				turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Loot;
