@@ -65,7 +65,6 @@ WASM_FILE="${CIRCUIT_DIR}/circuit_js/circuit.wasm"
 # - circuit.r1cs: the r1cs constraint system of the circuit in binary format
 # - "${circuitName}_js folder: wasm_file and witness tools
 # - circuit.sym: a symbols file required for debugging and printing the constraint system in an annotated mode
-which circom
 circom --r1cs --wasm --sym --output "${CIRCUIT_DIR}" "${CIRCUIT_FILE}"
 
 # Optional - view circuit state info

@@ -1,5 +1,10 @@
 pragma circom 2.0.0;
 
-include "./templates/Test.circom";
+template Add() {
+    signal input in1;
+    signal input in2;
+    signal output out;
+    out <== 1;
+}
 
-component main = Test();
+component main = Add();
