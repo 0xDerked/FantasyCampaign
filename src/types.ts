@@ -23,6 +23,7 @@ export type DoorCoords = {
   x2: number;
   y2: number;
   open: boolean;
+  id: number;
 };
 
 export type DoorsDict = Record<`${number},${number}`, boolean>;
@@ -43,5 +44,4 @@ export type WallsDict = Record<
 export type MonsterCoords = {
   x: number;
   y: number;
-  type: number;
 };

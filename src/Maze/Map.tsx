@@ -5,24 +5,46 @@ import { rotate } from "../utils/rotate";
 import { useGameData } from "../providers/GameData";
 import { monstersCoords } from "./mapData";
 
-const CELL_PX = 50;
+const CELL_PX = 7;
+
+const PADDING = 2;
 
 const Container = styled.div`
-  position: relative;
   height: ${CELL_PX * 5}px;
   width: ${CELL_PX * 5}px;
-  background-color: white;
-  overflow: visible;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  z-index: 500;
+  background-color: black;
+  border: 2px solid black;
 `;
 
-const Avatar = styled.text`
-  font-size: 30px;
+const Avatar = styled.div`
+  height: ${CELL_PX}px;
+  width: ${CELL_PX}px;
+  position: absolute;
+  font-size: 6px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const SpawnPoint = styled.div`
   height: ${CELL_PX}px;
   width: ${CELL_PX}px;
   position: absolute;
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+
+const SpawnDot = styled.div`
+  height: 2px;
+  width: 2px;
+  border-radius: 2px;
+  background-color: green;
 `;
 
 export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
@@ -67,8 +89,8 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
             y1={(y1 + OFFSET) * CELL_PX}
             x2={(x2 + OFFSET) * CELL_PX}
             y2={(y2 + OFFSET) * CELL_PX}
-            stroke={"black"}
-            strokeWidth={3}
+            stroke={"white"}
+            strokeWidth={1}
           />
         ))}
         {rotatedDoorCoords.map(({ x1, y1, x2, y2, open }, i) => (
@@ -79,7 +101,7 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
             x2={(x2 + OFFSET) * CELL_PX}
             y2={(y2 + OFFSET) * CELL_PX}
             stroke={open ? "blue" : "red"}
-            strokeWidth={3}
+            strokeWidth={1}
           />
         ))}
       </svg>
@@ -90,18 +112,18 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
           transform: `rotate(${rotateMap ? 0 : dir * 90}deg)`,
         }}
       >
-        ️️️️⬆️️
+        ️️️️↑
       </Avatar>
-      {monstersCoords.map(({ x, y, type }) => (
-        <Avatar
+      {monstersCoords.map(({ x, y }) => (
+        <SpawnPoint
           key={JSON.stringify({ x, y })}
           style={{
             left: x * CELL_PX,
             top: y * CELL_PX,
           }}
         >
-          {type !== 0 ? "🐉" : null}
-        </Avatar>
+          <SpawnDot />
+        </SpawnPoint>
       ))}
     </Container>
   );

@@ -1,7 +1,5 @@
 import * as React from "react";
 import styled, { StyledComponent } from "styled-components";
-const W = "448px";
-const H = "272px";
 import wallLSide0alt from "../assets/scaled/wallLSide0alt.png";
 import wallLSide1alt from "../assets/scaled/wallLSide1alt.png";
 import wallLSide2alt from "../assets/scaled/wallLSide2alt.png";
@@ -11,6 +9,7 @@ import wallSide2alt from "../assets/scaled/wallSide2alt.png";
 import wallFront1nor from "../assets/scaled/wallFront1nor.png";
 import wallFront2nor from "../assets/scaled/wallFront2nor.png";
 import wallFront3nor from "../assets/scaled/wallFront3nor.png";
+import { SCALE } from "./constants";
 
 // --------------------------------------------------------------------------------
 // Angled walls
@@ -21,46 +20,42 @@ const WallLSide0 = styled.img.attrs(() => ({
   position: absolute;
   top: 0;
   left: 0;
-  width: 64px;
-  height: ${H};
+  width: ${64 * SCALE}px;
+  height: ${272 * SCALE}px;
   z-index: 400;
-  image-rendering: pixelated;
 `;
 
 const WallLSide1 = styled.img.attrs(() => ({
   src: wallLSide1alt,
 }))`
   position: absolute;
-  top: 18px;
-  left: 64px;
-  width: 56px;
-  height: 220px;
+  top: ${18 * SCALE}px;
+  left: ${64 * SCALE}px;
+  width: ${56 * SCALE}px;
+  height: ${220 * SCALE}px;
   z-index: 300;
-  image-rendering: pixelated;
 `;
 
 const WallLSide2 = styled.img.attrs(() => ({
   src: wallLSide2alt,
 }))`
   position: absolute;
-  top: 40px;
-  left: 120px;
-  width: 28px;
-  height: 142px;
+  top: ${40 * SCALE}px;
+  left: ${120 * SCALE}px;
+  width: ${28 * SCALE}px;
+  height: ${142 * SCALE}px;
   z-index: 200;
-  image-rendering: pixelated;
 `;
 
 const WallLSide3 = styled.img.attrs(() => ({
   src: wallLSide3alt,
 }))`
   position: absolute;
-  top: 47px;
-  left: 148px;
-  width: 22px;
-  height: 102px;
+  top: ${47 * SCALE}px;
+  left: ${148 * SCALE}px;
+  width: ${22 * SCALE}px;
+  height: ${102 * SCALE}px;
   z-index: 100;
-  image-rendering: pixelated;
 `;
 
 const WallRSide0 = styled(WallLSide0)`
@@ -70,19 +65,19 @@ const WallRSide0 = styled(WallLSide0)`
 `;
 
 const WallRSide1 = styled(WallLSide1)`
-  right: 64px;
+  right: ${64 * SCALE}px;
   left: auto;
   transform: scaleX(-1);
 `;
 
 const WallRSide2 = styled(WallLSide2)`
-  right: 120px;
+  right: ${120 * SCALE}px;
   left: auto;
   transform: scaleX(-1);
 `;
 
 const WallRSide3 = styled(WallLSide3)`
-  right: 148px;
+  right: ${148 * SCALE}px;
   left: auto;
   transform: scaleX(-1);
 `;
@@ -94,36 +89,33 @@ const WallFront1 = styled.img.attrs(() => ({
   src: wallFront1nor,
 }))`
   position: absolute;
-  top: 18px;
-  left: 64px;
-  width: 320px;
-  height: 222px;
+  top: ${18 * SCALE}px;
+  left: ${64 * SCALE}px;
+  width: ${320 * SCALE}px;
+  height: ${222 * SCALE}px;
   z-index: 301;
-  image-rendering: pixelated;
 `;
 
 const WallFront2 = styled.img.attrs(() => ({
   src: wallFront2nor,
 }))`
   position: absolute;
-  top: 40px;
-  left: 120px;
-  width: 208px;
-  height: 142px;
+  top: ${40 * SCALE}px;
+  left: ${120 * SCALE}px;
+  width: ${208 * SCALE}px;
+  height: ${142 * SCALE}px;
   z-index: 201;
-  image-rendering: pixelated;
 `;
 
 const WallFront3 = styled.img.attrs(() => ({
   src: wallFront3nor,
 }))`
   position: absolute;
-  top: 48px;
-  right: 148px;
-  width: 152px;
-  height: 102px;
+  top: ${48 * SCALE}px;
+  right: ${148 * SCALE}px;
+  width: ${152 * SCALE}px;
+  height: ${102 * SCALE}px;
   z-index: 101;
-  image-rendering: pixelated;
 `;
 
 // --------------------------------------------------------------------------------
@@ -134,36 +126,33 @@ const WallSide1_1 = styled.img.attrs(() => ({
   src: wallSide1alt,
 }))`
   position: absolute;
-  top: 18px;
   left: 0;
-  width: 64px;
-  height: 222px;
+  top: ${18 * SCALE}px;
+  width: ${64 * SCALE}px;
+  height: ${222 * SCALE}px;
   z-index: 300;
-  image-rendering: pixelated;
 `;
 
 const WallSide2_1 = styled.img.attrs(() => ({
   src: wallSide2alt,
 }))`
   position: absolute;
-  top: 40px;
   left: 0;
-  width: 120px;
-  height: 142px;
+  top: ${40 * SCALE}px;
+  width: ${120 * SCALE}px;
+  height: ${142 * SCALE}px;
   z-index: 200;
-  image-rendering: pixelated;
 `;
 
 const WallSide3_1 = styled.img.attrs(() => ({
   src: wallFront3nor,
 }))`
   position: absolute;
-  top: 48px;
   left: 0;
-  width: 148px;
-  height: 102px;
+  top: ${48 * SCALE}px;
+  width: ${148 * SCALE}px;
+  height: ${102 * SCALE}px;
   z-index: 100;
-  image-rendering: pixelated;
 `;
 
 // Right

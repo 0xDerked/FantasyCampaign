@@ -3,8 +3,13 @@ import styled from "styled-components";
 import { ViewPort } from "./Maze/ViewPort";
 import { Map } from "./Maze/Map";
 import { GameDataProvider } from "./providers/GameData";
+import {
+  SCALE,
+  UNSCALED_VIEWPORT_HEIGHT,
+  UNSCALED_VIEWPORT_WIDTH,
+} from "./Maze/constants";
 
-const Container = styled.div`
+const GameScreenContainer = styled.div`
   display: flex;
   flex: 1;
   background-color: #282c34;
@@ -12,19 +17,24 @@ const Container = styled.div`
   justify-content: center;
   position: relative;
   overflow: hidden;
+  transform: scale(3);
 `;
 
-const Container2 = styled.div``;
+const ViewPortContainer = styled.div`
+  position: relative;
+  height: ${UNSCALED_VIEWPORT_HEIGHT * SCALE}px;
+  width: ${UNSCALED_VIEWPORT_WIDTH * SCALE}px;
+`;
 
 function App() {
   return (
     <GameDataProvider>
-      <Container>
-        <ViewPort />
-      </Container>
-      <Container2>
-        <Map rotateMap={false} />
-      </Container2>
+      <GameScreenContainer>
+        <ViewPortContainer>
+          <ViewPort />
+          <Map rotateMap={false} />
+        </ViewPortContainer>
+      </GameScreenContainer>
     </GameDataProvider>
   );
 }

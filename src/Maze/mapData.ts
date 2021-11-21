@@ -1,9 +1,9 @@
 import { DoorCoords, MonsterCoords, WallCoords, WallType } from "../types";
 
 export const doorsCoords: DoorCoords[] = [
-  { x1: 0, y1: 0.5, x2: 1, y2: 0.5, open: true },
-  { x1: 1, y1: 2.5, x2: 2, y2: 2.5, open: false },
-  { x1: 2.5, y1: 1, x2: 2.5, y2: 2, open: false },
+  { id: 1, x1: 0, y1: 0.5, x2: 1, y2: 0.5, open: true },
+  { id: 2, x1: 1, y1: 2.5, x2: 2, y2: 2.5, open: false },
+  { id: 3, x1: 3, y1: 1.5, x2: 4, y2: 1.5, open: false },
 ];
 
 export const wallCoords: WallCoords[] = [
@@ -46,7 +46,7 @@ export const wallCoords: WallCoords[] = [
 ];
 
 export const monstersCoords: MonsterCoords[] = [
-  { x: 0, y: 0, type: 1 },
-  { x: 2, y: 2, type: 1 },
-  { x: 1, y: 4, type: 2 },
+  { x: 0, y: 0 },
+  { x: 2, y: 2 },
+  { x: 1, y: 4 },
 ];

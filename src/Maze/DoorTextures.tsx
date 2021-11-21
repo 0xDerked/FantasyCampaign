@@ -23,24 +23,24 @@ type OpenState = {
 const DoorFront1 = styled.img.attrs(() => ({
   src: doorFront1,
 }))`
-  width: ${DOOR_FRAME_NEAR_WIDTH}px;
+  width: ${DOOR_FRAME_NEAR_WIDTH * SCALE}px;
 `;
 const DoorFront1Inner = styled.img.attrs(() => ({
   src: doorInnerDefault,
 }))<OpenState>`
   position: absolute;
-  top: 6px;
-  left: 38px;
-  width: 182px;
+  top: ${6 * SCALE}px;
+  left: ${38 * SCALE}px;
+  width: ${182 * SCALE}px;
   opacity: ${props => (props.open ? 0 : 1)};
 `;
 const DoorFront1Container = styled.div.attrs(({ open }: OpenState) => ({
   children: [<DoorFront1 key={1} />, <DoorFront1Inner key={2} open={open} />],
 }))`
   position: absolute;
-  top: 30px;
-  left: 96px;
-  width: ${DOOR_FRAME_NEAR_WIDTH}px;
+  top: ${30 * SCALE}px;
+  left: ${96 * SCALE}px;
+  width: ${DOOR_FRAME_NEAR_WIDTH * SCALE}px;
   z-index: 300;
 `;
 
@@ -50,28 +50,26 @@ const DoorFront1Container = styled.div.attrs(({ open }: OpenState) => ({
 const DoorFront2 = styled.img.attrs(() => ({
   src: doorFront2,
 }))`
-  width: ${DOOR_FRAME_MEDIUM_WIDTH}px;
+  width: ${DOOR_FRAME_MEDIUM_WIDTH * SCALE}px;
 `;
 const DoorFront2Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))<OpenState>`
-  left: 25px;
-  width: 125px;
   position: absolute;
-  top: 3px;
-  image-rendering: pixelated;
+  left: ${25 * SCALE}px;
+  width: ${125 * SCALE}px;
+  top: ${3 * SCALE}px;
   opacity: ${props => (props.open ? 0 : 1)};
 `;
 const DoorFront2Container = styled.div.attrs(({ open }: OpenState) => ({
   children: [<DoorFront2 key={1} />, <DoorFront2Inner key={2} open={open} />],
 }))`
   position: absolute;
-  left: 136px;
-  top: 47px;
-  width: ${DOOR_FRAME_MEDIUM_WIDTH}px;
+  left: ${136 * SCALE}px;
+  top: ${47 * SCALE}px;
+  width: ${DOOR_FRAME_MEDIUM_WIDTH * SCALE}px;
   z-index: 200;
   filter: brightness(0.7);
-  image-rendering: pixelated;
 `;
 
 // --------------------------------------------------------------------------------
@@ -80,36 +78,33 @@ const DoorFront2Container = styled.div.attrs(({ open }: OpenState) => ({
 const DoorFront3 = styled.img.attrs(() => ({
   src: doorFront2,
 }))`
-  width: ${DOOR_FRAME_FAR_WIDTH}px;
-  image-rendering: pixelated;
+  width: ${SCALE * DOOR_FRAME_FAR_WIDTH}px;
 `;
 const DoorFront3Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))<OpenState>`
-  left: 19px;
-  width: 89px;
   position: absolute;
-  top: 2px;
-  image-rendering: pixelated;
+  left: ${19 * SCALE}px;
+  width: ${89 * SCALE}px;
+  top: ${2 * SCALE}px;
   opacity: ${props => (props.open ? 0 : 1)};
 `;
 const DoorFront3Container = styled.div.attrs(({ open }: OpenState) => ({
   children: [<DoorFront3 key={1} />, <DoorFront3Inner key={2} open={open} />],
 }))`
   position: absolute;
-  left: 160px;
-  top: 52px;
-  width: ${DOOR_FRAME_FAR_WIDTH}px;
+  left: ${160 * SCALE}px;
+  top: ${52 * SCALE}px;
+  width: ${DOOR_FRAME_FAR_WIDTH * SCALE}px;
   z-index: 200;
   filter: brightness(0.3);
-  image-rendering: pixelated;
 `;
 
 // --------------------------------------------------------------------------------
 // Close left
 
 const DoorSide1_1Container = styled(DoorFront1Container)`
-  left: ${DOOR_FRAME_NEAR_LEFT}px;
+  left: ${DOOR_FRAME_NEAR_LEFT * SCALE}px;
   z-index: 199;
 `;
 
@@ -118,7 +113,7 @@ const DoorSide1_1Container = styled(DoorFront1Container)`
 
 const DoorSide1_2Container = styled(DoorFront1Container)`
   z-index: 299;
-  right: ${DOOR_FRAME_NEAR_LEFT}px;
+  right: ${DOOR_FRAME_NEAR_LEFT * SCALE}px;
   left: auto;
   transform: scaleX(-1);
 `;
@@ -128,7 +123,7 @@ const DoorSide1_2Container = styled(DoorFront1Container)`
 
 const DoorSide2_2Container = styled(DoorFront2Container)`
   z-index: 199;
-  right: ${DOOR_FRAME_MEDIUM_LEFT}px;
+  right: ${DOOR_FRAME_MEDIUM_LEFT * SCALE}px;
   left: auto;
   transform: scaleX(-1);
 `;
@@ -138,7 +133,7 @@ const DoorSide2_2Container = styled(DoorFront2Container)`
 
 const DoorSide2_1Container = styled(DoorFront2Container)`
   z-index: 199;
-  left: ${DOOR_FRAME_MEDIUM_LEFT}px;
+  left: ${DOOR_FRAME_MEDIUM_LEFT * SCALE}px;
   transform: scaleX(-1);
 `;
 

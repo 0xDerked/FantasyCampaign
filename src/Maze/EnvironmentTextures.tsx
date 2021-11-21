@@ -1,14 +1,16 @@
 import * as React from "react";
 import styled from "styled-components";
-
-const W = "448px";
-const H = "272px";
 import ceiling from "../assets/scaled/roofalt.png";
 import flooralt from "../assets/scaled/flooralt.png";
+import {
+  UNSCALED_VIEWPORT_HEIGHT,
+  SCALE,
+  UNSCALED_VIEWPORT_WIDTH,
+} from "./constants";
 
 export const Outer = styled.div`
-  width: ${W};
-  height: ${H};
+  width: ${UNSCALED_VIEWPORT_WIDTH * SCALE}px;
+  height: ${UNSCALED_VIEWPORT_HEIGHT * SCALE}px;
   background-color: black;
   position: relative;
   overflow: hidden;
@@ -19,9 +21,8 @@ export const Floor = styled.img.attrs(() => ({
   position: absolute;
   bottom: 0;
   left: 0;
-  width: ${W};
-  height: 140px;
-  image-rendering: pixelated;
+  width: ${UNSCALED_VIEWPORT_WIDTH * SCALE}px;
+  height: ${140 * SCALE}px;
 `;
 
 export const Ceiling = styled.img.attrs(() => ({
@@ -30,7 +31,6 @@ export const Ceiling = styled.img.attrs(() => ({
   position: absolute;
   top: 0;
   left: 0;
-  width: ${W};
-  height: 50px;
-  image-rendering: pixelated;
+  width: ${UNSCALED_VIEWPORT_WIDTH * SCALE}px;
+  height: ${50 * SCALE}px;
 `;
