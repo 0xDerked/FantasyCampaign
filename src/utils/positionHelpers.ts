@@ -160,6 +160,9 @@ export const strafeLeft = (pos: Position, currentState: GameData): Position => {
 
 type PosFunction = (position: Position, currentState: GameData) => Position;
 export const setPos = (fn: PosFunction) => (state: GameData) => {
+  if (state.isFighting) {
+    return state;
+  }
   const newPosition = fn(state.position, state);
   // Check if the new position runs over a spawn point
   const spawnPointsDict = generateSpawnCollisions(state.spawnPoints);

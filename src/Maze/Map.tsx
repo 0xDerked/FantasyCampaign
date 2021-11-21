@@ -91,6 +91,7 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
             y2={(y2 + OFFSET) * CELL_PX}
             stroke={"#DCAB7C"}
             strokeWidth={1}
+            strokeLinecap={"square"}
           />
         ))}
         {rotatedDoorCoords.map(({ x1, y1, x2, y2, open }, i) => (
@@ -102,6 +103,7 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
             y2={(y2 + OFFSET) * CELL_PX}
             stroke={open ? "black" : "#7E7E7E"}
             strokeWidth={1}
+            strokeLinecap={"square"}
           />
         ))}
       </svg>
