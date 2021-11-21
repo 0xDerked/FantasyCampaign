@@ -1,9 +1,10 @@
 import * as React from "react";
 import styled, { StyledComponent } from "styled-components";
-import doorFront1 from "../assets/doorFront1.png";
-import doorFront2 from "../assets/doorFront2.png";
-import doorInnerDefault from "../assets/doorinner_default.png";
-import doorInnerDefault2 from "../assets/doorinner_default2.png";
+import doorFront1 from "../assets/scaled/doorFront1.png";
+import doorFront2 from "../assets/scaled/doorFront2.png";
+import doorInnerDefault from "../assets/scaled/doorinner_default.png";
+import doorInnerDefault2 from "../assets/scaled/doorinner_default2.png";
+import { SCALE } from "./constants";
 
 const DOOR_FRAME_FAR_WIDTH = 127;
 const DOOR_FRAME_MEDIUM_LEFT = -38;

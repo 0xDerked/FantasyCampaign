@@ -1,17 +1,16 @@
 import * as React from "react";
 import styled, { StyledComponent } from "styled-components";
-import wallLSide0alt from "../assets/wallLSide0alt.png";
-import wallLSide1alt from "../assets/wallLSide1alt.png";
-import wallLSide2alt from "../assets/wallLSide2alt.png";
-import wallLSide3alt from "../assets/wallLSide3alt.png";
-import wallSide1alt from "../assets/wallSide1alt.png";
-import wallSide2alt from "../assets/wallSide2alt.png";
-import wallFront1nor from "../assets/wallFront1nor.png";
-import wallFront2nor from "../assets/wallFront2nor.png";
-import wallFront3nor from "../assets/wallFront3nor.png";
-
 const W = "448px";
 const H = "272px";
+import wallLSide0alt from "../assets/scaled/wallLSide0alt.png";
+import wallLSide1alt from "../assets/scaled/wallLSide1alt.png";
+import wallLSide2alt from "../assets/scaled/wallLSide2alt.png";
+import wallLSide3alt from "../assets/scaled/wallLSide3alt.png";
+import wallSide1alt from "../assets/scaled/wallSide1alt.png";
+import wallSide2alt from "../assets/scaled/wallSide2alt.png";
+import wallFront1nor from "../assets/scaled/wallFront1nor.png";
+import wallFront2nor from "../assets/scaled/wallFront2nor.png";
+import wallFront3nor from "../assets/scaled/wallFront3nor.png";
 
 // --------------------------------------------------------------------------------
 // Angled walls

@@ -1,10 +1,10 @@
 import * as React from "react";
 import styled from "styled-components";
-import ceiling from "../assets/roofalt.png";
-import flooralt from "../assets/flooralt.png";
 
 const W = "448px";
 const H = "272px";
+import ceiling from "../assets/scaled/roofalt.png";
+import flooralt from "../assets/scaled/flooralt.png";
 
 export const Outer = styled.div`
   width: ${W};
