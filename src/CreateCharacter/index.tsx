@@ -3,6 +3,8 @@ import { CharacterClass } from "../types";
 import { useGameData } from "../providers/GameData";
 import styled from "styled-components";
 import { characterStats } from "../constants";
+import { useWallet } from "../providers/WalletProvider";
+import { ethers } from "ethers";
 
 const Button = styled.button<{ selected: boolean }>`
   font-size: 10px;
@@ -34,14 +36,24 @@ const CharacterContainer = styled.div`
 
 export const CreateCharacter = () => {
   const [gameData, setGameData] = useGameData();
+  const { signer } = useWallet();
   const [characterClass, setCharacterClass] =
     React.useState<CharacterClass | null>(null);
 
-  const submit = () => {
-    setGameData({
-      ...gameData,
-      characterClass,
-    });
+  const submit = async () => {
+    try {
+      const contract = new ethers.Contract(thingAddress, Thing.abi, signer);
+      const transaction = await contract.createCharacter(characterClass);
+      await transaction.wait();
+      setGameData({
+        ...gameData,
+        characterClass,
+      });
+    } catch (e) {
+      alert("Error creating character");
+    } finally {
+      //
+    }
   };
   const selectCharacter = (char: CharacterClass) => {
     setCharacterClass(char);
