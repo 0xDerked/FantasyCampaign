@@ -90,8 +90,8 @@ const WallFront1 = styled.img.attrs(() => ({
 }))`
   position: absolute;
   top: ${scale(18)}px;
-  left: ${scale(64)}px;
-  width: ${scale(320)}px;
+  left: ${scale(65)}px;
+  width: ${scale(322)}px;
   height: ${scale(222)}px;
   z-index: 301;
 `;
@@ -102,7 +102,7 @@ const WallFront2 = styled.img.attrs(() => ({
   position: absolute;
   top: ${scale(40)}px;
   left: ${scale(120)}px;
-  width: ${scale(208)}px;
+  width: ${scale(210)}px;
   height: ${scale(142)}px;
   z-index: 201;
 `;
@@ -113,7 +113,7 @@ const WallFront3 = styled.img.attrs(() => ({
   position: absolute;
   top: ${scale(48)}px;
   right: ${scale(148)}px;
-  width: ${scale(152)}px;
+  width: ${scale(154)}px;
   height: ${scale(102)}px;
   z-index: 101;
 `;
