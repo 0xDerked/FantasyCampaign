@@ -3,7 +3,7 @@ import { Routes } from "../types";
 import { useGameData } from "../providers/GameData";
 import styled from "styled-components";
 import { useWallet } from "../providers/WalletProvider";
-import { ethers } from "ethers";
+import { ethers, BigNumber } from "ethers";
 import CastleCampaign from "../../artifacts/contracts/CastleCampaign.sol/CastleCampaign.json";
 import FantasyCharacter from "../../artifacts/contracts/FantasyCharacter.sol/FantasyCharacter.json";
 import { useEffect, useState } from "react";
@@ -18,7 +18,8 @@ const Container = styled.div`
 
 export const StartCampaign = () => {
   const { signer } = useWallet();
-  const [characters, setCharacters] = useState();
+  const [characters, setCharacters] = useState<any>();
+  const [gameData, setGameData] = useGameData();
 
   useEffect(() => {
     (async () => {
@@ -32,9 +33,9 @@ export const StartCampaign = () => {
           FantasyCharacter.abi,
           signer
         );
-        const data = await contract.currentTokenId();
-        // const data = await contract.getAllCharacters(address);
-        setCharacters(data);
+        const data: BigNumber[] = await contract.getAllCharacters(address);
+        const charData = data.map(id => ethers.utils.formatUnits(id, "wei"));
+        setCharacters(charData);
       } catch (e: any) {
         alert(`Failed to get characters: ${e.message}`);
       }
@@ -51,12 +52,12 @@ export const StartCampaign = () => {
         CastleCampaign.abi,
         signer
       );
-      const data = await contract.getAllCharacters(signer);
-      console.log(data);
-      // setGameData({
-      //   ...gameData,
-      //   route: Routes.Maze,
-      // });
+      const tokenId = characters[0]; //just taking the first character we own for now
+      const data = await contract.enterCampaign(tokenId);
+      setGameData({
+        ...gameData,
+        route: Routes.Maze,
+      });
     } catch (e: any) {
       alert(`Error starting campaign: ${e.message}`);
     } finally {
