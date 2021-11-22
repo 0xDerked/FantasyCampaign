@@ -13,7 +13,8 @@
     "circuits:compile": "node ./circuits/compile.js",
     "circuits:ptau": "sh ./circuits/ptau.sh",
     "contracts:compile": "npx hardhat compile",
-    "node:start": "npx hardhat node"
+    "node:start": "npx hardhat node",
+    "node:run": "npx hardhat run ./scripts/deploy.ts"
   },
   "dependencies": {
     "@craco/craco": "^6.4.1",

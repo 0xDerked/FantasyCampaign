@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CharacterClass } from "../types";
+import { CharacterClass, Routes } from "../types";
 import { useGameData } from "../providers/GameData";
 import styled from "styled-components";
 import { characterStats } from "../constants";
@@ -47,18 +47,20 @@ export const CreateCharacter = () => {
     }
     try {
       const contract = new ethers.Contract(
-        "Asdasd",
+        "0x5FbDB2315678afecb367f032d93F642f64180aa3",
         FantasyCharacter.abi,
         signer
       );
       const transaction = await contract.createCharacter(characterClass);
       await transaction.wait();
+
       setGameData({
         ...gameData,
         characterClass,
+        route: Routes.StartCampaign,
       });
-    } catch (e) {
-      alert("Error creating character");
+    } catch (e: any) {
+      alert(`Error creating character: ${e.message}`);
     } finally {
       //
     }

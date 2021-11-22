@@ -1,6 +1,6 @@
 import * as React from "react";
 import { doorsCoords, spawnPointCoords, wallCoords } from "../Maze/mapData";
-import { GameData, GameMode } from "../types";
+import { GameData, GameMode, Routes } from "../types";
 
 const defaultValue: GameData = {
   position: { col: 1, dir: 0, row: 1 },
@@ -10,6 +10,7 @@ const defaultValue: GameData = {
   isFighting: false,
   gameMode: GameMode.CreateCharacter,
   characterClass: null,
+  route: Routes.Splash,
 };
 
 const GameDataContext = React.createContext<

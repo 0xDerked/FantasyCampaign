@@ -1,11 +1,15 @@
-import { BigNumber } from "ethers";
-import { AbilityStructOutput } from "../typechain/FantasyAttributesManager";
-
 export type Position = {
   row: number;
   col: number;
   dir: number; // up : 0, right: 1, down: 2, left: 3
 };
+
+export enum Routes {
+  Splash = "Splash",
+  CreateCharacter = "CreateCharacter",
+  StartCampaign = "StartCampaign",
+  Maze = "Maze",
+}
 
 export type GameData = {
   position: Position;
@@ -15,6 +19,7 @@ export type GameData = {
   isFighting: boolean;
   gameMode: GameMode;
   characterClass: CharacterClass | null;
+  route: Routes;
 };
 
 export enum CharacterClass {
