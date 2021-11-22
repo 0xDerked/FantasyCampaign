@@ -1,6 +1,11 @@
 import { rotate } from "./rotate";
 import { round } from "./round";
-import { wallsDict } from "../Maze/mapData";
+import { GameData, Position } from "../types";
+import {
+  generateDoorCollisions,
+  generateSpawnCollisions,
+  generateWallCollisions,
+} from "./generateCollisionMaps";
 
 export enum Keys {
   Forward = "w",
@@ -11,118 +16,168 @@ export enum Keys {
   RotRight = "]",
 }
 
-export type Pos = {
-  row: number;
-  col: number;
-  dir: number; // up : 0, right: 1, down: 2, left: 3
-};
-
-export const setCol = (pos: Pos, delta: number) => ({
+export const setCol = (pos: Position, delta: number) => ({
   ...pos,
   col: pos.col + delta,
 });
 
-export const setRow = (pos: Pos, delta: number) => ({
+export const setRow = (pos: Position, delta: number) => ({
   ...pos,
   row: pos.row + delta,
 });
 
-export const rotLeft = (pos: Pos) => ({
-  ...pos,
-  dir: (pos.dir + 3) % 4,
-});
+export const rotLeft = (gameData: GameData): GameData => {
+  const newPos = {
+    ...gameData.position,
+    dir: (gameData.position.dir + 3) % 4,
+  };
+  return {
+    ...gameData,
+    position: newPos,
+  };
+};
 
-export const rotRight = (pos: Pos) => ({
-  ...pos,
-  dir: (pos.dir + 1) % 4,
-});
+export const rotRight = (gameData: GameData): GameData => {
+  const newPos = {
+    ...gameData.position,
+    dir: (gameData.position.dir + 1) % 4,
+  };
+  return {
+    ...gameData,
+    position: newPos,
+  };
+};
 
-export const boundPos = (currPos: Pos, nextPos: Pos): Pos => {
+export const boundPosition = (
+  currPosition: Position,
+  nextPosition: Position,
+  currentState: GameData
+): Position => {
   // User position is an integer so we add 0.5 to move the users into the middle of te tile
-  const x1 = currPos.col + 0.5;
-  const y1 = currPos.row + 0.5;
-  const x2 = nextPos.col + 0.5;
-  const y2 = nextPos.row + 0.5;
+  const x1 = currPosition.col + 0.5;
+  const y1 = currPosition.row + 0.5;
+  const x2 = nextPosition.col + 0.5;
+  const y2 = nextPosition.row + 0.5;
   // Find center point of the move vector
   const Cx = (x1 + x2) / 2;
   const Cy = (y1 + y2) / 2;
   const By = 90;
   // Rotate those points 90 degrees to get the possible vector of the wall
-  const [x1p, y1p] = rotate(x1, y1, Cx, Cy, By);
-  const [x2p, y2p] = rotate(x2, y2, Cx, Cy, By);
-  if (wallsDict[`${round(x1p)},${round(y1p)},${round(x2p)},${round(y2p)}`]) {
-    return currPos;
+  const [x1w, y1w] = rotate(x1, y1, Cx, Cy, By);
+  const [x2w, y2w] = rotate(x2, y2, Cx, Cy, By);
+
+  // Just check generally if there's a wall in the middle of tile and it's not open
+  const doorsDict = generateDoorCollisions(currentState.doors);
+  const door = doorsDict[`${round(x2)},${round(y2)}`];
+  if (typeof door !== "undefined" && door === false) {
+    return currPosition;
   }
-  if (wallsDict[`${round(x2p)},${round(y2p)},${round(x1p)},${round(y1p)}`]) {
-    return currPos;
+
+  // Make sure there's not a wall in the way
+  const wallsDict = generateWallCollisions(currentState.walls);
+  if (wallsDict[`${round(x1w)},${round(y1w)},${round(x2w)},${round(y2w)}`]) {
+    return currPosition;
   }
-  return nextPos;
+  if (wallsDict[`${round(x2w)},${round(y2w)},${round(x1w)},${round(y1w)}`]) {
+    return currPosition;
+  }
+  return nextPosition;
 };
 
-export const goForwards = (pos: Pos): Pos => {
+export const goForwards = (pos: Position, currentState: GameData): Position => {
   const dir = pos.dir;
   if (dir === 0) {
-    return boundPos(pos, setRow(pos, -1));
+    return boundPosition(pos, setRow(pos, -1), currentState);
   }
   if (dir === 1) {
-    return boundPos(pos, setCol(pos, 1));
+    return boundPosition(pos, setCol(pos, 1), currentState);
   }
   if (dir === 2) {
-    return boundPos(pos, setRow(pos, 1));
+    return boundPosition(pos, setRow(pos, 1), currentState);
   }
   if (dir === 3) {
-    return boundPos(pos, setCol(pos, -1));
+    return boundPosition(pos, setCol(pos, -1), currentState);
   }
   return pos;
 };
 
-export const goBackwards = (pos: Pos): Pos => {
+export const goBackwards = (
+  pos: Position,
+  currentState: GameData
+): Position => {
   const dir = pos.dir;
   if (dir === 0) {
-    return boundPos(pos, setRow(pos, 1));
+    return boundPosition(pos, setRow(pos, 1), currentState);
   }
   if (dir === 1) {
-    return boundPos(pos, setCol(pos, -1));
+    return boundPosition(pos, setCol(pos, -1), currentState);
   }
   if (dir === 2) {
-    return boundPos(pos, setRow(pos, -1));
+    return boundPosition(pos, setRow(pos, -1), currentState);
   }
   if (dir === 3) {
-    return boundPos(pos, setCol(pos, 1));
+    return boundPosition(pos, setCol(pos, 1), currentState);
   }
   return pos;
 };
 
-export const strafeRight = (pos: Pos): Pos => {
+export const strafeRight = (
+  pos: Position,
+  currentState: GameData
+): Position => {
   const dir = pos.dir;
   if (dir === 0) {
-    return boundPos(pos, setCol(pos, 1));
+    return boundPosition(pos, setCol(pos, 1), currentState);
   }
   if (dir === 1) {
-    return boundPos(pos, setRow(pos, 1));
+    return boundPosition(pos, setRow(pos, 1), currentState);
   }
   if (dir === 2) {
-    return boundPos(pos, setCol(pos, -1));
+    return boundPosition(pos, setCol(pos, -1), currentState);
   }
   if (dir === 3) {
-    return boundPos(pos, setRow(pos, -1));
+    return boundPosition(pos, setRow(pos, -1), currentState);
   }
   return pos;
 };
 
-export const strafeLeft = (pos: Pos): Pos => {
+export const strafeLeft = (pos: Position, currentState: GameData): Position => {
   const dir = pos.dir;
   if (dir === 0) {
-    return boundPos(pos, setCol(pos, -1));
+    return boundPosition(pos, setCol(pos, -1), currentState);
   }
   if (dir === 1) {
-    return boundPos(pos, setRow(pos, -1));
+    return boundPosition(pos, setRow(pos, -1), currentState);
   }
   if (dir === 2) {
-    return boundPos(pos, setCol(pos, 1));
+    return boundPosition(pos, setCol(pos, 1), currentState);
   }
   if (dir === 3) {
-    return boundPos(pos, setRow(pos, 1));
+    return boundPosition(pos, setRow(pos, 1), currentState);
   }
   return pos;
+};
+
+type PosFunction = (position: Position, currentState: GameData) => Position;
+export const setPos = (fn: PosFunction) => (state: GameData) => {
+  if (state.isFighting) {
+    return state;
+  }
+  const newPosition = fn(state.position, state);
+  // Check if the new position runs over a spawn point
+  const spawnPointsDict = generateSpawnCollisions(state.spawnPoints);
+  const spawnPoint =
+    spawnPointsDict[`${round(newPosition.col)},${round(newPosition.row)}`];
+  if (typeof spawnPoint !== "undefined") {
+    return {
+      ...state,
+      isFighting: true,
+      position: newPosition,
+    };
+  }
+  return {
+    ...state,
+    isFighting: false,
+    position: newPosition,
+  };
 };

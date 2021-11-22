@@ -1,42 +1,43 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   goBackwards,
   goForwards,
   Keys,
-  Pos,
   rotLeft,
   rotRight,
+  setPos,
   strafeLeft,
   strafeRight,
 } from "../utils/positionHelpers";
+import { useGameData } from "../providers/GameData";
 
 export const useUserPosition = () => {
-  const [pos, setPos] = useState<Pos>({ row: 0, col: 0, dir: 0 });
+  const [gameData, setGameData] = useGameData();
 
   const handleKeyDown = ({ key }: KeyboardEvent) => {
     switch (key) {
       case Keys.Forward: {
-        setPos(goForwards);
+        setGameData(setPos(goForwards));
         break;
       }
       case Keys.Backward: {
-        setPos(goBackwards);
+        setGameData(setPos(goBackwards));
         break;
       }
       case Keys.StrafeLeft: {
-        setPos(strafeLeft);
+        setGameData(setPos(strafeLeft));
         break;
       }
       case Keys.StrafeRight: {
-        setPos(strafeRight);
+        setGameData(setPos(strafeRight));
         break;
       }
       case Keys.RotLeft: {
-        setPos(rotLeft);
+        setGameData(rotLeft);
         break;
       }
       case Keys.RotRight: {
-        setPos(rotRight);
+        setGameData(rotRight);
         break;
       }
       default:
@@ -51,5 +52,5 @@ export const useUserPosition = () => {
     };
   }, []);
 
-  return pos;
+  return gameData.position;
 };
