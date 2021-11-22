@@ -10,7 +10,8 @@ library FantasyThings {
 			Shaman,
 			Cleric,
 			Rogue,
-			Ranger
+			Ranger,
+			Warlock
 	}
 
 	enum AbilityType {
@@ -80,22 +81,13 @@ library FantasyThings {
 
     // Describe campaign items
 
-  enum ItemType { Spell, Weapon, Shield  }
-
-	struct ItemAttributes {
-		int16 health;
-		int8 strength;
-		int8 armor;
-		int8 physicalblock;
-		int8 agility;
-		int8 spellpower;
-		int8 spellresistance;
-		int8 healingpower;
-  }
+  enum ItemType { Spell,Weapon,Shield}
 
   struct Item {
     ItemType item;
-    ItemAttributes attrs;
+    AbilityType attr;
+	 uint8 power;
+	 uint8 numUses;
     string name;
   }
 

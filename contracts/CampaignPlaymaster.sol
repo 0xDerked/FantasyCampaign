@@ -34,9 +34,11 @@ abstract contract CampaignPlaymaster {
 	mapping(uint256 => mapping(uint256 => mapping(uint256 => FantasyThings.Mob[]))) public combatTurnToMobs;
 	mapping(uint256 => uint256[]) public combatGuaranteedMobIds;
 
-  // tokenId -> nonce -> Turn -> Items 
-  FantasyThings.Item[] CampaignItems;
-	mapping(uint256 => mapping(uint256 => mapping(uint256 => FantasyThings.Item[]))) public LootTurnToItems;
+	//tokenId -> nonce -> Items
+	mapping(uint256 => mapping(uint256 => FantasyThings.Item[])) public campaignInventory;
+
+   FantasyThings.Item[] public CampaignItems;
+	mapping(uint256 => uint256[]) public lootGuaranteedItemIds;
 
 	//tokenId -> Turn Number -> Mobs Alive
 	mapping(uint256 => mapping(uint256 => uint256)) public turnNumMobsAlive;
@@ -126,9 +128,9 @@ abstract contract CampaignPlaymaster {
 		turnNumMobsAlive[_tokenId][playerTurn[_tokenId]] = _mobIds.length;
 	}
 	 
-	function _setItemsForTurn(uint256 _tokenId, uint256[] memory _itemIds, uint256 _turnNum) internal {
+	function _setItemsForTurn(uint256 _tokenId, uint256[] memory _itemIds) internal {
 		for(uint256 i=0; i< _itemIds.length; i++) {
-			LootTurnToItems[_tokenId][playerNonce[_tokenId]][_turnNum].push(CampaignItems[_itemIds[i]]);
+			campaignInventory[_tokenId][playerNonce[_tokenId]].push(CampaignItems[_itemIds[i]]);
 		}
 	}
 	
@@ -155,6 +157,32 @@ abstract contract CampaignPlaymaster {
 			_retaliate(_tokenId, currentTurn, currentNonce, _target);
 		}
 	}
+
+	function attackWithItem(
+		uint256 _tokenId, uint256 _itemId, uint256 _target) 
+		external virtual controlsCharacter(_tokenId) isCombatTurn(_tokenId) turnActive(_tokenId) {
+		  	
+	  uint256 currentNonce = playerNonce[_tokenId];
+	  uint256 currentTurn = playerTurn[_tokenId];
+	  FantasyThings.Item memory attackItem = campaignInventory[_tokenId][currentNonce][_itemId];
+	  require(attackItem.item == FantasyThings.ItemType.Weapon, "Can't attack with this Item");
+	  require(attackItem.numUses > 0, "This item is expired");
+	  require(combatTurnToMobs[_tokenId][currentNonce][currentTurn][_target].health > 0, "Can't attack a dead mob");
+	  
+	  uint8 damageBase = attackItem.power;
+	  uint16 targetHealthStart = combatTurnToMobs[_tokenId][currentNonce][currentTurn][_target].health;
+	  uint8 damageTotal = _getDamageTotal(_tokenId, attackItem.attr, _target, damageBase);
+	  
+	  campaignInventory[_tokenId][playerNonce[_tokenId]][_itemId].numUses--;
+
+	  if(damageTotal >= targetHealthStart) {
+			_killMob(_tokenId, currentNonce, currentTurn, _target);
+		} else {
+			combatTurnToMobs[_tokenId][currentNonce][currentTurn][_target].health-=uint16(damageTotal);
+			_retaliate(_tokenId, currentTurn, currentNonce, _target);
+		}
+
+   }
 
 	function castHealAbility(uint256 _tokenId, uint256 _abilityIndex) 
 		external virtual controlsCharacter(_tokenId) isCombatTurn(_tokenId) turnActive(_tokenId) {
@@ -196,6 +224,10 @@ abstract contract CampaignPlaymaster {
 		if(turnNumMobsAlive[_tokenId][_currentTurn] == 0) {
 			_endTurn(_tokenId, _currentNonce);
 		}
+	}
+
+	function endExploreLoot(uint256 _tokenId) external virtual controlsCharacter(_tokenId) isLootTurn(_tokenId) turnActive(_tokenId) {
+		_endTurn(_tokenId, playerNonce[_tokenId]);
 	}
 
 	function _endTurn(uint256 _tokenId, uint256 _currentNonce) internal {
@@ -349,8 +381,11 @@ abstract contract CampaignPlaymaster {
 		return mobAttributes[_mobId].abilities[_abilityId];
 	}
 
+	function getInventory(uint256 _tokenId) external view returns(FantasyThings.Item[] memory) {
+		return campaignInventory[_tokenId][playerNonce[_tokenId]];
+	}
+
 	function enterCampaign(uint256 _tokenId) external virtual;
 	function generateTurn(uint256 _tokenId) external virtual;
-	function attackWithItem(uint256 _tokenId, uint256 _itemId, uint256 _target) external virtual;	
 
 }

@@ -36,7 +36,7 @@ contract FantasyAttributesManager {
 		FantasyThings.Ability[] memory shamanAbilities = new FantasyThings.Ability[](2);
 		shamanAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Spellpower,1,"Lightning Bolt");
 		shamanAbilities[1] = FantasyThings.Ability(FantasyThings.AbilityType.HealingPower,2,"Nature Heal");
-		_setStartingCharacter(90, [10,15,10,10,20,15,10], FantasyThings.CharacterClass.Shaman, shamanAbilities);
+		_setStartingCharacter(110, [10,15,10,10,20,15,10], FantasyThings.CharacterClass.Shaman, shamanAbilities);
 
 		FantasyThings.Ability[] memory clericAbilities = new FantasyThings.Ability[](2);
 		clericAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Spellpower,1,"Smite");
@@ -50,6 +50,10 @@ contract FantasyAttributesManager {
 		FantasyThings.Ability[] memory rangerAbilities = new FantasyThings.Ability[](1);
 		rangerAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Agility,1,"Fire Bow");
 		_setStartingCharacter(100, [10,15,10,35,0,5,0], FantasyThings.CharacterClass.Ranger, rangerAbilities);
+
+		FantasyThings.Ability[] memory warlockAbilities = new FantasyThings.Ability[](1);
+		rangerAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Agility,1,"Shadow Bolt");
+		_setStartingCharacter(90, [5,10,5,5,30,20,0], FantasyThings.CharacterClass.Warlock, warlockAbilities);
 	}
 
 	function _setStartingCharacter(uint16 _health, uint8[7] memory _stats, FantasyThings.CharacterClass _charClass, FantasyThings.Ability[] memory _abilities) internal {

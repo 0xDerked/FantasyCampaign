@@ -13,7 +13,8 @@ enum CharacterClass {
 			Shaman,
 			Cleric,
 			Rogue,
-			Ranger
+			Ranger,
+			Warlock
 	}
 
 interface IFantasyAttributesManager {

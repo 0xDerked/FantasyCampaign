@@ -4,6 +4,7 @@ pragma experimental ABIEncoderV2;
 
 import "@chainlink/contracts/src/v0.8/VRFConsumerBase.sol";
 import "./FantasyThings.sol";
+import "./CastleCampaignItems.sol";
 import "./CampaignPlaymaster.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 
@@ -11,7 +12,7 @@ interface IMockVRF {
 	function requestRandomness(uint256 _num, string calldata _letters, bytes32 _requestId) external;
 }
 
-contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
+contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignItems {
 
 	bytes32 public keyHash;
 	uint256 public fee;
@@ -40,12 +41,24 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 		bigBossDragonAbilities[1] = FantasyThings.Ability(FantasyThings.AbilityType.Strength,1, "Tail Whip");
 		_setMob(150, [15,20,10,10,20,15,0,100], "Draco", bigBossDragonAbilities, 1);
 
+		//create some items -- maybe separate file for this somehow?
+
+		CampaignItems.push(iceLance);
+		CampaignItems.push(scrollOfProtection);
+		CampaignItems.push(scrollOfStrength);
+
 		//set up some guaranteed events with the mobs/puzzles/loot and turn types
 		//last turn will be a boss fight against the dragon
 		turnGuaranteedTypes[_numTurns] = FantasyThings.TurnType.Combat;
 		uint256[] memory mobIdsForLast = new uint256[](1);
 		mobIdsForLast[0] = 1; //1 corresponds to Draco Id
 		combatGuaranteedMobIds[_numTurns] = mobIdsForLast;
+
+		//second to last turn we will find the dragonslayer ice lance
+		turnGuaranteedTypes[_numTurns - 1] = FantasyThings.TurnType.Loot;
+		uint256[] memory itemIdsForTurn = new uint256[](1);
+		itemIdsForTurn[0] = 0; 
+		lootGuaranteedItemIds[_numTurns - 1] = itemIdsForTurn;
 	}
 
 	function enterCampaign(uint256 _tokenId) external override controlsCharacter(_tokenId) {
@@ -108,7 +121,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 			if(turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.Combat) {
 				_setMobsForTurn(_tokenId, combatGuaranteedMobIds[playerTurn[_tokenId]], playerTurn[_tokenId]);
 			} else if (turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.Loot) {
-				//set loot
+				_setItemsForTurn(_tokenId, lootGuaranteedItemIds[playerTurn[_tokenId]]);
 			} else {
 				//set puzzle
 			}
@@ -145,10 +158,6 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster {
 		emit TurnStarted(address(this), tokenId, playerTurn[tokenId], turnTypes[tokenId][playerTurn[tokenId]]);
 		emit TurnSet(tokenId, playerTurn[tokenId]);
 	}
-
-  function attackWithItem(uint256 _tokenId, uint256 _itemId, uint256 _target) external override controlsCharacter(_tokenId) isCombatTurn(_tokenId) {
-
-   }
   
 
 }
