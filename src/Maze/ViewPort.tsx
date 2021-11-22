@@ -3,7 +3,7 @@ import { doorTextureMaps } from "./DoorTextures";
 import { wallTextureMaps } from "./WallTextures";
 import { Ceiling, Floor, Outer } from "./EnvironmentTextures";
 import { DoorCoords, WallType } from "../types";
-import { useUserPosition } from "../hooks/useUserPosition";
+import { useInterfaceEventsListeners } from "../hooks/useInterfaceEventsListeners";
 import { useWallsWithTransforms } from "../hooks/useWallsWithTransforms";
 import { useDoorsWithTransforms } from "../hooks/useDoorsWithTransforms";
 import { useGameData } from "../providers/GameData";
@@ -29,7 +29,6 @@ const Match = styled.img.attrs(() => ({
 `;
 
 export const ViewPort = () => {
-  useUserPosition();
   const walls = useWallsWithTransforms();
   const doors = useDoorsWithTransforms();
   const [gameData, setGameData] = useGameData();

@@ -8,6 +8,8 @@ import {
   UNSCALED_VIEWPORT_HEIGHT,
   UNSCALED_VIEWPORT_WIDTH,
 } from "./Maze/constants";
+import { useContractListeners } from "./hooks/useContractListeners";
+import { useInterfaceEventsListeners } from "./hooks/useInterfaceEventsListeners";
 
 const GameScreenContainer = styled.div`
   display: flex;
@@ -26,9 +28,16 @@ const ViewPortContainer = styled.div`
   width: ${UNSCALED_VIEWPORT_WIDTH * SCALE}px;
 `;
 
+const Listeners = () => {
+  useContractListeners();
+  useInterfaceEventsListeners();
+  return <div />;
+};
+
 function App() {
   return (
     <GameDataProvider>
+      <Listeners />
       <GameScreenContainer>
         <ViewPortContainer>
           <ViewPort />
