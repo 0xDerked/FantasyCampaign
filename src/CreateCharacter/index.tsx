@@ -5,6 +5,7 @@ import styled from "styled-components";
 import { characterStats } from "../constants";
 import { useWallet } from "../providers/WalletProvider";
 import { ethers } from "ethers";
+import FantasyCharacter from "../../artifacts/contracts/FantasyCharacter.json";
 
 const Button = styled.button<{ selected: boolean }>`
   font-size: 10px;
@@ -41,8 +42,15 @@ export const CreateCharacter = () => {
     React.useState<CharacterClass | null>(null);
 
   const submit = async () => {
+    if (!signer) {
+      return;
+    }
     try {
-      const contract = new ethers.Contract(thingAddress, Thing.abi, signer);
+      const contract = new ethers.Contract(
+        thingAddress,
+        FantasyCharacter.abi,
+        signer
+      );
       const transaction = await contract.createCharacter(characterClass);
       await transaction.wait();
       setGameData({
