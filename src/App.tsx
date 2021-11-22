@@ -2,12 +2,17 @@ import * as React from "react";
 import styled from "styled-components";
 import { ViewPort } from "./Maze/ViewPort";
 import { Map } from "./Maze/Map";
-import { GameDataProvider } from "./providers/GameData";
+import { GameDataProvider, useGameData } from "./providers/GameData";
 import {
-  SCALE,
   UNSCALED_VIEWPORT_HEIGHT,
   UNSCALED_VIEWPORT_WIDTH,
 } from "./Maze/constants";
+import { useContractListeners } from "./hooks/useContractListeners";
+import { useInterfaceEventsListeners } from "./hooks/useInterfaceEventsListeners";
+import { CreateCharacter } from "./CreateCharacter";
+import { useWallet, WalletProvider } from "./providers/WalletProvider";
+import { SplashScreen } from "./SplashScreen";
+import { scale } from "./utils/scale";
 
 const GameScreenContainer = styled.div`
   display: flex;
@@ -20,21 +25,44 @@ const GameScreenContainer = styled.div`
   transform: scale(3);
 `;
 
+const GameScreen = () => {
+  const [gameData] = useGameData();
+  const { signer } = useWallet();
+  if (!signer) {
+    return <SplashScreen />;
+  }
+  if (gameData.characterClass === null) {
+    return <CreateCharacter />;
+  }
+  return (
+    <ViewPortContainer>
+      <ViewPort />
+      <Map rotateMap={false} />
+    </ViewPortContainer>
+  );
+};
+
 const ViewPortContainer = styled.div`
   position: relative;
-  height: ${UNSCALED_VIEWPORT_HEIGHT * SCALE}px;
-  width: ${UNSCALED_VIEWPORT_WIDTH * SCALE}px;
+  height: ${scale(UNSCALED_VIEWPORT_HEIGHT)}px;
+  width: ${scale(UNSCALED_VIEWPORT_WIDTH)}px;
 `;
+
+const Listeners = () => {
+  useContractListeners();
+  useInterfaceEventsListeners();
+  return <div />;
+};
 
 function App() {
   return (
     <GameDataProvider>
-      <GameScreenContainer>
-        <ViewPortContainer>
-          <ViewPort />
-          <Map rotateMap={false} />
-        </ViewPortContainer>
-      </GameScreenContainer>
+      <WalletProvider>
+        <Listeners />
+        <GameScreenContainer>
+          <GameScreen />
+        </GameScreenContainer>
+      </WalletProvider>
     </GameDataProvider>
   );
 }

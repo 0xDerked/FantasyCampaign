@@ -1,3 +1,6 @@
+import { BigNumber } from "ethers";
+import { AbilityStructOutput } from "../typechain/FantasyAttributesManager";
+
 export type Position = {
   row: number;
   col: number;
@@ -10,7 +13,27 @@ export type GameData = {
   doors: DoorCoords[];
   spawnPoints: SpawnPointCoords[];
   isFighting: boolean;
+  gameMode: GameMode;
+  characterClass: CharacterClass | null;
 };
+
+export enum CharacterClass {
+  Knight = 0,
+  Warlord = 1,
+  Wizard = 2,
+  Shaman = 3,
+  Cleric = 4,
+  Rogue = 5,
+  Ranger = 6,
+  Warlock = 7,
+}
+export enum GameMode {
+  CreateCharacter = "CreateCharacter",
+  Navigation = "Navigation",
+  Fight = "Fight",
+  Puzzle = "Puzzle",
+  Looting = "Looting",
+}
 
 export enum WallType {
   Wall1 = 0,

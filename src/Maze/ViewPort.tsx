@@ -3,20 +3,16 @@ import { doorTextureMaps } from "./DoorTextures";
 import { wallTextureMaps } from "./WallTextures";
 import { Ceiling, Floor, Outer } from "./EnvironmentTextures";
 import { DoorCoords, WallType } from "../types";
-import { useUserPosition } from "../hooks/useUserPosition";
 import { useWallsWithTransforms } from "../hooks/useWallsWithTransforms";
 import { useDoorsWithTransforms } from "../hooks/useDoorsWithTransforms";
 import { useGameData } from "../providers/GameData";
 import clone from "lodash/clone";
 import { useCallback } from "react";
 import styled from "styled-components";
-import {
-  SCALE,
-  UNSCALED_VIEWPORT_HEIGHT,
-  UNSCALED_VIEWPORT_WIDTH,
-} from "./constants";
+import { UNSCALED_VIEWPORT_HEIGHT, UNSCALED_VIEWPORT_WIDTH } from "./constants";
 
 import match from "../assets/scaled/match.png";
+import { scale as scaleDims } from "../utils/scale";
 
 const Match = styled.img.attrs(() => ({
   src: match,
@@ -24,12 +20,11 @@ const Match = styled.img.attrs(() => ({
   position: absolute;
   bottom: 0;
   left: 0;
-  height: ${UNSCALED_VIEWPORT_HEIGHT * SCALE}px;
-  width: ${UNSCALED_VIEWPORT_WIDTH * SCALE}px;
+  height: ${scaleDims(UNSCALED_VIEWPORT_HEIGHT)}px;
+  width: ${scaleDims(UNSCALED_VIEWPORT_WIDTH)}px;
 `;
 
 export const ViewPort = () => {
-  useUserPosition();
   const walls = useWallsWithTransforms();
   const doors = useDoorsWithTransforms();
   const [gameData, setGameData] = useGameData();

@@ -11,7 +11,7 @@ import {
 } from "../utils/positionHelpers";
 import { useGameData } from "../providers/GameData";
 
-export const useUserPosition = () => {
+export const useInterfaceEventsListeners = () => {
   const [gameData, setGameData] = useGameData();
 
   const handleKeyDown = ({ key }: KeyboardEvent) => {

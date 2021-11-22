@@ -1,34 +1,44 @@
-import { config as dotenvConfig } from 'dotenv';
-import { resolve } from 'path';
-dotenvConfig({ path: resolve(__dirname, './.env') });
+const dotenvConfig = require("dotenv").config;
+const path = require("path");
+dotenvConfig({ path: path.resolve(__dirname, "./.env") });
 
-import { HardhatUserConfig } from 'hardhat/types';
-import { NetworkUserConfig } from 'hardhat/types';
+require("@nomiclabs/hardhat-waffle");
+require("@typechain/hardhat");
 
-import '@nomiclabs/hardhat-waffle';
-import '@typechain/hardhat';
-
-const config: HardhatUserConfig = {
-  defaultNetwork: 'hardhat',
+const config = {
+  defaultNetwork: "hardhat",
   solidity: {
-	  version: '0.8.0',
-	  settings: {
-		  optimizer: {
-			  enabled: true,
-			  runs:1000,
-		  }
-	  }
+    compilers: [
+      {
+        version: "0.8.0",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000,
+          },
+        },
+      },
+      {
+        version: "0.6.11",
+        settings: {
+          optimizer: {
+            enabled: true,
+            runs: 1000,
+          },
+        },
+      },
+    ],
   },
   networks: {
     mumbai: {
       url: process.env.MUMBAI_RPC_URL,
-      accounts: [process.env.PRIVATE_KEY || ''],
+      accounts: [process.env.PRIVATE_KEY || ""],
     },
   },
   typechain: {
-    outDir: 'typechain',
-    target: 'ethers-v5',
+    outDir: "typechain",
+    target: "ethers-v5",
   },
 };
 
-export default config;
+module.exports = config;

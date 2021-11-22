@@ -4,7 +4,7 @@ import doorFront1 from "../assets/scaled/doorFront1.png";
 import doorFront2 from "../assets/scaled/doorFront2.png";
 import doorInnerDefault from "../assets/scaled/doorinner_default.png";
 import doorInnerDefault2 from "../assets/scaled/doorinner_default2.png";
-import { SCALE } from "./constants";
+import { scale } from "../utils/scale";
 
 const DOOR_FRAME_FAR_WIDTH = 127;
 const DOOR_FRAME_MEDIUM_LEFT = -38;
@@ -23,24 +23,24 @@ type OpenState = {
 const DoorFront1 = styled.img.attrs(() => ({
   src: doorFront1,
 }))`
-  width: ${DOOR_FRAME_NEAR_WIDTH * SCALE}px;
+  width: ${scale(DOOR_FRAME_NEAR_WIDTH)}px;
 `;
 const DoorFront1Inner = styled.img.attrs(() => ({
   src: doorInnerDefault,
 }))<OpenState>`
   position: absolute;
-  top: ${6 * SCALE}px;
-  left: ${38 * SCALE}px;
-  width: ${182 * SCALE}px;
+  top: ${scale(6)}px;
+  left: ${scale(38)}px;
+  width: ${scale(182)}px;
   opacity: ${props => (props.open ? 0 : 1)};
 `;
 const DoorFront1Container = styled.div.attrs(({ open }: OpenState) => ({
   children: [<DoorFront1 key={1} />, <DoorFront1Inner key={2} open={open} />],
 }))`
   position: absolute;
-  top: ${30 * SCALE}px;
-  left: ${96 * SCALE}px;
-  width: ${DOOR_FRAME_NEAR_WIDTH * SCALE}px;
+  top: ${scale(30)}px;
+  left: ${scale(96)}px;
+  width: ${scale(DOOR_FRAME_NEAR_WIDTH)}px;
   z-index: 300;
 `;
 
@@ -50,24 +50,24 @@ const DoorFront1Container = styled.div.attrs(({ open }: OpenState) => ({
 const DoorFront2 = styled.img.attrs(() => ({
   src: doorFront2,
 }))`
-  width: ${DOOR_FRAME_MEDIUM_WIDTH * SCALE}px;
+  width: ${scale(DOOR_FRAME_MEDIUM_WIDTH)}px;
 `;
 const DoorFront2Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))<OpenState>`
   position: absolute;
-  left: ${25 * SCALE}px;
-  width: ${125 * SCALE}px;
-  top: ${3 * SCALE}px;
+  left: ${scale(25)}px;
+  width: ${scale(125)}px;
+  top: ${scale(3)}px;
   opacity: ${props => (props.open ? 0 : 1)};
 `;
 const DoorFront2Container = styled.div.attrs(({ open }: OpenState) => ({
   children: [<DoorFront2 key={1} />, <DoorFront2Inner key={2} open={open} />],
 }))`
   position: absolute;
-  left: ${136 * SCALE}px;
-  top: ${47 * SCALE}px;
-  width: ${DOOR_FRAME_MEDIUM_WIDTH * SCALE}px;
+  left: ${scale(136)}px;
+  top: ${scale(47)}px;
+  width: ${scale(DOOR_FRAME_MEDIUM_WIDTH)}px;
   z-index: 200;
   filter: brightness(0.7);
 `;
@@ -78,24 +78,24 @@ const DoorFront2Container = styled.div.attrs(({ open }: OpenState) => ({
 const DoorFront3 = styled.img.attrs(() => ({
   src: doorFront2,
 }))`
-  width: ${SCALE * DOOR_FRAME_FAR_WIDTH}px;
+  width: ${scale(DOOR_FRAME_FAR_WIDTH)}px;
 `;
 const DoorFront3Inner = styled.img.attrs(() => ({
   src: doorInnerDefault2,
 }))<OpenState>`
   position: absolute;
-  left: ${19 * SCALE}px;
-  width: ${89 * SCALE}px;
-  top: ${2 * SCALE}px;
+  left: ${scale(19)}px;
+  width: ${scale(89)}px;
+  top: ${scale(2)}px;
   opacity: ${props => (props.open ? 0 : 1)};
 `;
 const DoorFront3Container = styled.div.attrs(({ open }: OpenState) => ({
   children: [<DoorFront3 key={1} />, <DoorFront3Inner key={2} open={open} />],
 }))`
   position: absolute;
-  left: ${160 * SCALE}px;
-  top: ${52 * SCALE}px;
-  width: ${DOOR_FRAME_FAR_WIDTH * SCALE}px;
+  left: ${scale(160)}px;
+  top: ${scale(52)}px;
+  width: ${scale(DOOR_FRAME_FAR_WIDTH)}px;
   z-index: 200;
   filter: brightness(0.3);
 `;
@@ -104,7 +104,7 @@ const DoorFront3Container = styled.div.attrs(({ open }: OpenState) => ({
 // Close left
 
 const DoorSide1_1Container = styled(DoorFront1Container)`
-  left: ${DOOR_FRAME_NEAR_LEFT * SCALE}px;
+  left: ${scale(DOOR_FRAME_NEAR_LEFT)}px;
   z-index: 199;
 `;
 
@@ -113,7 +113,7 @@ const DoorSide1_1Container = styled(DoorFront1Container)`
 
 const DoorSide1_2Container = styled(DoorFront1Container)`
   z-index: 299;
-  right: ${DOOR_FRAME_NEAR_LEFT * SCALE}px;
+  right: ${scale(DOOR_FRAME_NEAR_LEFT)}px;
   left: auto;
   transform: scaleX(-1);
 `;
@@ -123,7 +123,7 @@ const DoorSide1_2Container = styled(DoorFront1Container)`
 
 const DoorSide2_2Container = styled(DoorFront2Container)`
   z-index: 199;
-  right: ${DOOR_FRAME_MEDIUM_LEFT * SCALE}px;
+  right: ${scale(DOOR_FRAME_MEDIUM_LEFT)}px;
   left: auto;
   transform: scaleX(-1);
 `;
@@ -133,7 +133,7 @@ const DoorSide2_2Container = styled(DoorFront2Container)`
 
 const DoorSide2_1Container = styled(DoorFront2Container)`
   z-index: 199;
-  left: ${DOOR_FRAME_MEDIUM_LEFT * SCALE}px;
+  left: ${scale(DOOR_FRAME_MEDIUM_LEFT)}px;
   transform: scaleX(-1);
 `;
 
