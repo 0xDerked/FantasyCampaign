@@ -28,7 +28,7 @@ export const WalletProvider: React.FC = ({ children }) => {
       connectWallet,
       signer: signer,
     };
-  }, []);
+  }, [signer, connectWallet]);
 
   return (
     <WalletContext.Provider value={value}>{children}</WalletContext.Provider>

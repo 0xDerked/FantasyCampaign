@@ -1,13 +1,11 @@
-import { config as dotenvConfig } from "dotenv";
-import { resolve } from "path";
-dotenvConfig({ path: resolve(__dirname, "./.env") });
+const dotenvConfig = require("dotenv").config;
+const path = require("path");
+dotenvConfig({ path: path.resolve(__dirname, "./.env") });
 
-import { HardhatUserConfig, HttpNetworkConfig } from "hardhat/types";
+require("@nomiclabs/hardhat-waffle");
+require("@typechain/hardhat");
 
-import "@nomiclabs/hardhat-waffle";
-import "@typechain/hardhat";
-
-const config: HardhatUserConfig = {
+const config = {
   defaultNetwork: "hardhat",
   solidity: {
     compilers: [
@@ -35,7 +33,7 @@ const config: HardhatUserConfig = {
     mumbai: {
       url: process.env.MUMBAI_RPC_URL,
       accounts: [process.env.PRIVATE_KEY || ""],
-    } as HttpNetworkConfig,
+    },
   },
   typechain: {
     outDir: "typechain",
@@ -43,4 +41,4 @@ const config: HardhatUserConfig = {
   },
 };
 
-export default config;
+module.exports = config;
