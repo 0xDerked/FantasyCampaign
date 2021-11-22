@@ -9,7 +9,7 @@ import wallSide2alt from "../assets/scaled/wallSide2alt.png";
 import wallFront1nor from "../assets/scaled/wallFront1nor.png";
 import wallFront2nor from "../assets/scaled/wallFront2nor.png";
 import wallFront3nor from "../assets/scaled/wallFront3nor.png";
-import { SCALE } from "./constants";
+import { scale } from "../utils/scale";
 
 // --------------------------------------------------------------------------------
 // Angled walls
@@ -20,8 +20,8 @@ const WallLSide0 = styled.img.attrs(() => ({
   position: absolute;
   top: 0;
   left: 0;
-  width: ${64 * SCALE}px;
-  height: ${272 * SCALE}px;
+  width: ${scale(64)}px;
+  height: ${scale(272)}px;
   z-index: 400;
 `;
 
@@ -29,10 +29,10 @@ const WallLSide1 = styled.img.attrs(() => ({
   src: wallLSide1alt,
 }))`
   position: absolute;
-  top: ${18 * SCALE}px;
-  left: ${64 * SCALE}px;
-  width: ${56 * SCALE}px;
-  height: ${220 * SCALE}px;
+  top: ${scale(18)}px;
+  left: ${scale(64)}px;
+  width: ${scale(56)}px;
+  height: ${scale(220)}px;
   z-index: 300;
 `;
 
@@ -40,10 +40,10 @@ const WallLSide2 = styled.img.attrs(() => ({
   src: wallLSide2alt,
 }))`
   position: absolute;
-  top: ${40 * SCALE}px;
-  left: ${120 * SCALE}px;
-  width: ${28 * SCALE}px;
-  height: ${142 * SCALE}px;
+  top: ${scale(40)}px;
+  left: ${scale(120)}px;
+  width: ${scale(28)}px;
+  height: ${scale(142)}px;
   z-index: 200;
 `;
 
@@ -51,10 +51,10 @@ const WallLSide3 = styled.img.attrs(() => ({
   src: wallLSide3alt,
 }))`
   position: absolute;
-  top: ${47 * SCALE}px;
-  left: ${148 * SCALE}px;
-  width: ${22 * SCALE}px;
-  height: ${102 * SCALE}px;
+  top: ${scale(47)}px;
+  left: ${scale(148)}px;
+  width: ${scale(22)}px;
+  height: ${scale(102)}px;
   z-index: 100;
 `;
 
@@ -65,19 +65,19 @@ const WallRSide0 = styled(WallLSide0)`
 `;
 
 const WallRSide1 = styled(WallLSide1)`
-  right: ${64 * SCALE}px;
+  right: ${scale(64)}px;
   left: auto;
   transform: scaleX(-1);
 `;
 
 const WallRSide2 = styled(WallLSide2)`
-  right: ${120 * SCALE}px;
+  right: ${scale(120)}px;
   left: auto;
   transform: scaleX(-1);
 `;
 
 const WallRSide3 = styled(WallLSide3)`
-  right: ${148 * SCALE}px;
+  right: ${scale(148)}px;
   left: auto;
   transform: scaleX(-1);
 `;
@@ -89,10 +89,10 @@ const WallFront1 = styled.img.attrs(() => ({
   src: wallFront1nor,
 }))`
   position: absolute;
-  top: ${18 * SCALE}px;
-  left: ${64 * SCALE}px;
-  width: ${320 * SCALE}px;
-  height: ${222 * SCALE}px;
+  top: ${scale(18)}px;
+  left: ${scale(64)}px;
+  width: ${scale(320)}px;
+  height: ${scale(222)}px;
   z-index: 301;
 `;
 
@@ -100,10 +100,10 @@ const WallFront2 = styled.img.attrs(() => ({
   src: wallFront2nor,
 }))`
   position: absolute;
-  top: ${40 * SCALE}px;
-  left: ${120 * SCALE}px;
-  width: ${208 * SCALE}px;
-  height: ${142 * SCALE}px;
+  top: ${scale(40)}px;
+  left: ${scale(120)}px;
+  width: ${scale(208)}px;
+  height: ${scale(142)}px;
   z-index: 201;
 `;
 
@@ -111,10 +111,10 @@ const WallFront3 = styled.img.attrs(() => ({
   src: wallFront3nor,
 }))`
   position: absolute;
-  top: ${48 * SCALE}px;
-  right: ${148 * SCALE}px;
-  width: ${152 * SCALE}px;
-  height: ${102 * SCALE}px;
+  top: ${scale(48)}px;
+  right: ${scale(148)}px;
+  width: ${scale(152)}px;
+  height: ${scale(102)}px;
   z-index: 101;
 `;
 
@@ -127,9 +127,9 @@ const WallSide1_1 = styled.img.attrs(() => ({
 }))`
   position: absolute;
   left: 0;
-  top: ${18 * SCALE}px;
-  width: ${64 * SCALE}px;
-  height: ${222 * SCALE}px;
+  top: ${scale(18)}px;
+  width: ${scale(64)}px;
+  height: ${scale(222)}px;
   z-index: 300;
 `;
 
@@ -138,9 +138,9 @@ const WallSide2_1 = styled.img.attrs(() => ({
 }))`
   position: absolute;
   left: 0;
-  top: ${40 * SCALE}px;
-  width: ${120 * SCALE}px;
-  height: ${142 * SCALE}px;
+  top: ${scale(40)}px;
+  width: ${scale(120)}px;
+  height: ${scale(142)}px;
   z-index: 200;
 `;
 
@@ -149,9 +149,9 @@ const WallSide3_1 = styled.img.attrs(() => ({
 }))`
   position: absolute;
   left: 0;
-  top: ${48 * SCALE}px;
-  width: ${148 * SCALE}px;
-  height: ${102 * SCALE}px;
+  top: ${scale(48)}px;
+  width: ${scale(148)}px;
+  height: ${scale(102)}px;
   z-index: 100;
 `;
 
