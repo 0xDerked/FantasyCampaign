@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "web:start": "craco start",
+    "web:build": "craco build",
+    "web:test": "craco test",
+    "web:eject": "craco eject",
     "lint": "eslint --ext .js,.ts,.tsx src/",
     "lint:fix": "eslint --fix --ext .js,.ts,.tsx test/",
     "circuits:test": "yarn jest ./circuits/circuits.test.ts",
@@ -16,6 +16,7 @@
     "node:start": "npx hardhat node"
   },
   "dependencies": {
+    "@craco/craco": "^6.4.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",

@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { characterStats } from "../constants";
 import { useWallet } from "../providers/WalletProvider";
 import { ethers } from "ethers";
-import FantasyCharacter from "../../artifacts/contracts/FantasyCharacter.json";
+import FantasyCharacter from "../../artifacts/contracts/FantasyCharacter.sol/FantasyCharacter.json";
 
 const Button = styled.button<{ selected: boolean }>`
   font-size: 10px;
@@ -47,7 +47,7 @@ export const CreateCharacter = () => {
     }
     try {
       const contract = new ethers.Contract(
-        thingAddress,
+        "Asdasd",
         FantasyCharacter.abi,
         signer
       );
