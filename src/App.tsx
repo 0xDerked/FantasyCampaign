@@ -4,7 +4,6 @@ import { ViewPort } from "./Maze/ViewPort";
 import { Map } from "./Maze/Map";
 import { GameDataProvider, useGameData } from "./providers/GameData";
 import {
-  SCALE,
   UNSCALED_VIEWPORT_HEIGHT,
   UNSCALED_VIEWPORT_WIDTH,
 } from "./Maze/constants";
@@ -13,6 +12,7 @@ import { useInterfaceEventsListeners } from "./hooks/useInterfaceEventsListeners
 import { CreateCharacter } from "./CreateCharacter";
 import { useWallet, WalletProvider } from "./providers/WalletProvider";
 import { SplashScreen } from "./SplashScreen";
+import { scale } from "./utils/scale";
 
 const GameScreenContainer = styled.div`
   display: flex;
@@ -44,8 +44,8 @@ const GameScreen = () => {
 
 const ViewPortContainer = styled.div`
   position: relative;
-  height: ${UNSCALED_VIEWPORT_HEIGHT * SCALE}px;
-  width: ${UNSCALED_VIEWPORT_WIDTH * SCALE}px;
+  height: ${scale(UNSCALED_VIEWPORT_HEIGHT)}px;
+  width: ${scale(UNSCALED_VIEWPORT_WIDTH)}px;
 `;
 
 const Listeners = () => {
