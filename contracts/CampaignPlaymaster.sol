@@ -184,6 +184,17 @@ abstract contract CampaignPlaymaster {
 
    }
 
+	function applyItemSpell(uint256 _tokenId, uint256 _itemId) external virtual
+	controlsCharacter(_tokenId) {
+		uint256 currentNonce = playerNonce[_tokenId];
+	  	FantasyThings.Item memory applyItem = campaignInventory[_tokenId][currentNonce][_itemId];
+		require(applyItem.item == FantasyThings.ItemType.Spell, "Can't apply spells with this Item");
+	  	require(applyItem.numUses > 0, "This item is expired");
+		campaignInventory[_tokenId][playerNonce[_tokenId]][_itemId].numUses--;
+
+		characterPower[_tokenId][applyItem.attr] + applyItem.power > 255 ? characterPower[_tokenId][applyItem.attr] = 255 : characterPower[_tokenId][applyItem.attr]+=applyItem.power;
+	}
+
 	function castHealAbility(uint256 _tokenId, uint256 _abilityIndex) 
 		external virtual controlsCharacter(_tokenId) isCombatTurn(_tokenId) turnActive(_tokenId) {
 		

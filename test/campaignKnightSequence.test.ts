@@ -15,7 +15,6 @@ import {
   MockVRF__factory,
   MockVRF,
 } from "../typechain";
-import { AbilityStruct } from "../typechain/CampaignPlaymaster";
 
 let owner: SignerWithAddress;
 let user1: SignerWithAddress;
@@ -58,8 +57,8 @@ describe("Deploy contracts, mint character, progress through campaign", function
     );
     await CastleCampaignContract.deployed();
 
-    //mints a Wizard
-    await FantasyCharacterContract.connect(user1).createCharacter(2);
+    //mints a Knight
+    await FantasyCharacterContract.connect(user1).createCharacter(0);
 
     await MockVRFContract.setCampaignAddress(CastleCampaignContract.address);
 
@@ -95,7 +94,7 @@ describe("Deploy contracts, mint character, progress through campaign", function
     expect(await CastleCampaignContract.turnTypes(0, 1)).to.equal(0);
     const user1CampaignStatus =
       await CastleCampaignContract.getCurrentCampaignStats(0);
-    expect(user1CampaignStatus.health).to.equal(90);
+    expect(user1CampaignStatus.health).to.equal(100);
   });
 
   it("Generates a turn, changes state, creates expected values", async () => {

@@ -47,4 +47,8 @@ contract FantasyCharacter is ERC721URIStorage,Ownable {
 		s_StatsManager = IFantasyAttributesManager(s_StatsManagerAddress);
 	}
 
+	function getAllCharacters(address _user) external view returns(uint256[] memory) {
+		return s_allCharacters[_user];
+	}
+
 }
