@@ -41,8 +41,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		bigBossDragonAbilities[1] = FantasyThings.Ability(FantasyThings.AbilityType.Strength,1, "Tail Whip");
 		_setMob(150, [15,20,10,10,20,15,0,100], "Draco", bigBossDragonAbilities, 1);
 
-		//create some items -- maybe separate file for this somehow?
-
+		//push the items into the campaign
 		CampaignItems.push(iceLance);
 		CampaignItems.push(scrollOfProtection);
 		CampaignItems.push(scrollOfStrength);

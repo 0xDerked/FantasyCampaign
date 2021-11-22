@@ -58,8 +58,8 @@ describe("Deploy contracts, mint character, progress through campaign", function
     );
     await CastleCampaignContract.deployed();
 
-    //mints a Wizard
-    await FantasyCharacterContract.connect(user1).createCharacter(2);
+    //mints a Shaman
+    await FantasyCharacterContract.connect(user1).createCharacter(3);
 
     await MockVRFContract.setCampaignAddress(CastleCampaignContract.address);
 
@@ -95,7 +95,9 @@ describe("Deploy contracts, mint character, progress through campaign", function
     expect(await CastleCampaignContract.turnTypes(0, 1)).to.equal(0);
     const user1CampaignStatus =
       await CastleCampaignContract.getCurrentCampaignStats(0);
-    expect(user1CampaignStatus.health).to.equal(90);
+    expect(user1CampaignStatus.health).to.equal(110);
+    expect(user1CampaignStatus.abilities[0].name).to.equal("Lightning Bolt");
+    expect(user1CampaignStatus.abilities[1].name).to.equal("Nature Heal");
   });
 
   it("Generates a turn, changes state, creates expected values", async () => {
@@ -120,7 +122,12 @@ describe("Deploy contracts, mint character, progress through campaign", function
     let turnFinished = false;
 
     while (!turnFinished) {
-      await CastleCampaignContract.connect(user1).attackWithAbility(0, 0, 0);
+      const ability = Math.floor(Math.random() * 10000) % 2;
+      if (ability === 0) {
+        await CastleCampaignContract.connect(user1).attackWithAbility(0, 0, 0);
+      } else {
+        await CastleCampaignContract.connect(user1).castHealAbility(0, 1);
+      }
       const mobsAfter = await CastleCampaignContract.getMobsForTurn(
         0,
         playerTurn
@@ -181,7 +188,12 @@ describe("Deploy contracts, mint character, progress through campaign", function
     let turnFinished = false;
 
     while (!turnFinished) {
-      await CastleCampaignContract.connect(user1).attackWithAbility(0, 0, 0);
+      const ability = Math.floor(Math.random() * 10000) % 2;
+      if (ability === 0) {
+        await CastleCampaignContract.connect(user1).attackWithAbility(0, 0, 0);
+      } else {
+        await CastleCampaignContract.connect(user1).castHealAbility(0, 1);
+      }
       const mobsAfter = await CastleCampaignContract.getMobsForTurn(
         0,
         playerTurn
@@ -201,7 +213,12 @@ describe("Deploy contracts, mint character, progress through campaign", function
     turnFinished = false;
 
     while (!turnFinished) {
-      await CastleCampaignContract.connect(user1).attackWithAbility(0, 0, 1);
+      const ability = Math.floor(Math.random() * 10000) % 2;
+      if (ability === 0) {
+        await CastleCampaignContract.connect(user1).attackWithAbility(0, 0, 1);
+      } else {
+        await CastleCampaignContract.connect(user1).castHealAbility(0, 1);
+      }
       const mobsAfter = await CastleCampaignContract.getMobsForTurn(
         0,
         playerTurn
@@ -254,7 +271,12 @@ describe("Deploy contracts, mint character, progress through campaign", function
     let turnFinished = false;
 
     while (!turnFinished) {
-      await CastleCampaignContract.connect(user1).attackWithAbility(0, 0, 0);
+      const ability = Math.floor(Math.random() * 10000) % 2;
+      if (ability === 0) {
+        await CastleCampaignContract.connect(user1).attackWithAbility(0, 0, 0);
+      } else {
+        await CastleCampaignContract.connect(user1).castHealAbility(0, 1);
+      }
       const mobsAfter = await CastleCampaignContract.getMobsForTurn(
         0,
         playerTurn
@@ -274,7 +296,12 @@ describe("Deploy contracts, mint character, progress through campaign", function
     turnFinished = false;
 
     while (!turnFinished) {
-      await CastleCampaignContract.connect(user1).attackWithAbility(0, 0, 1);
+      const ability = Math.floor(Math.random() * 10000) % 2;
+      if (ability === 0) {
+        await CastleCampaignContract.connect(user1).attackWithAbility(0, 0, 1);
+      } else {
+        await CastleCampaignContract.connect(user1).castHealAbility(0, 1);
+      }
       const mobsAfter = await CastleCampaignContract.getMobsForTurn(
         0,
         playerTurn
@@ -321,7 +348,12 @@ describe("Deploy contracts, mint character, progress through campaign", function
     let turnFinished = false;
 
     while (!turnFinished) {
-      await CastleCampaignContract.connect(user1).attackWithAbility(0, 0, 0);
+      const ability = Math.floor(Math.random() * 10000) % 2;
+      if (ability === 0) {
+        await CastleCampaignContract.connect(user1).attackWithAbility(0, 0, 0);
+      } else {
+        await CastleCampaignContract.connect(user1).castHealAbility(0, 1);
+      }
       const mobsAfter = await CastleCampaignContract.getMobsForTurn(
         0,
         playerTurn
@@ -371,6 +403,7 @@ describe("Deploy contracts, mint character, progress through campaign", function
 
     while (!turnFinished) {
       await CastleCampaignContract.connect(user1).attackWithAbility(0, 0, 0);
+
       const bossAfter = await CastleCampaignContract.combatTurnToMobs(
         0,
         0,
