@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useRef } from "react";
 import { useGameData } from "../providers/GameData";
-import { CastleCampaign } from "../../typechain";
 
 enum Events {
   CampaignStarted = "CampaignStarted",

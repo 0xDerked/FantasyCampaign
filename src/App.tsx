@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import { ViewPort } from "./Maze/ViewPort";
 import { Map } from "./Maze/Map";
-import { GameDataProvider } from "./providers/GameData";
+import { GameDataProvider, useGameData } from "./providers/GameData";
 import {
   SCALE,
   UNSCALED_VIEWPORT_HEIGHT,
@@ -10,6 +10,9 @@ import {
 } from "./Maze/constants";
 import { useContractListeners } from "./hooks/useContractListeners";
 import { useInterfaceEventsListeners } from "./hooks/useInterfaceEventsListeners";
+import { CreateCharacter } from "./CreateCharacter";
+import { useWallet, WalletProvider } from "./providers/WalletProvider";
+import { SplashScreen } from "./SplashScreen";
 
 const GameScreenContainer = styled.div`
   display: flex;
@@ -21,6 +24,23 @@ const GameScreenContainer = styled.div`
   overflow: hidden;
   transform: scale(3);
 `;
+
+const GameScreen = () => {
+  const [gameData] = useGameData();
+  const { signer } = useWallet();
+  if (!signer) {
+    return <SplashScreen />;
+  }
+  if (gameData.characterClass === null) {
+    return <CreateCharacter />;
+  }
+  return (
+    <ViewPortContainer>
+      <ViewPort />
+      <Map rotateMap={false} />
+    </ViewPortContainer>
+  );
+};
 
 const ViewPortContainer = styled.div`
   position: relative;
@@ -37,13 +57,12 @@ const Listeners = () => {
 function App() {
   return (
     <GameDataProvider>
-      <Listeners />
-      <GameScreenContainer>
-        <ViewPortContainer>
-          <ViewPort />
-          <Map rotateMap={false} />
-        </ViewPortContainer>
-      </GameScreenContainer>
+      <WalletProvider>
+        <Listeners />
+        <GameScreenContainer>
+          <GameScreen />
+        </GameScreenContainer>
+      </WalletProvider>
     </GameDataProvider>
   );
 }
