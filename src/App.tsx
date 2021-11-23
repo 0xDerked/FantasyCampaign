@@ -27,7 +27,19 @@ const GameScreenContainer = styled.div`
   transform: scale(3);
 `;
 
-const GameScreen = () => {
+const ClearStorageButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 18px;
+  color: red;
+  background-color: transparent;
+  font-family: inherit;
+  border: none;
+  outline: none;
+`;
+
+const Router = () => {
   const [gameData] = useGameData();
   switch (gameData.route) {
     case Routes.Splash:
@@ -59,14 +71,26 @@ const Listeners = () => {
   return <div />;
 };
 
+const ClearStorage = () => {
+  const handleClearStorage = () => {
+    localStorage.clear();
+  };
+  return (
+    <ClearStorageButton onClick={handleClearStorage}>
+      Clear storage
+    </ClearStorageButton>
+  );
+};
+
 function App() {
   return (
     <GameDataProvider>
       <WalletProvider>
         <Listeners />
         <GameScreenContainer>
-          <GameScreen />
+          <Router />
         </GameScreenContainer>
+        <ClearStorage />
       </WalletProvider>
     </GameDataProvider>
   );
