@@ -6,6 +6,7 @@ import { useWallet } from "../providers/WalletProvider";
 import { ethers } from "ethers";
 import CastleCampaign from "../../artifacts/contracts/CastleCampaign.sol/CastleCampaign.json";
 import { useGetSelectedCharacter } from "../hooks/useGetSelectedCharacter";
+import { Button } from "../components/Button";
 
 const Container = styled.div`
   display: flex;
@@ -46,7 +47,7 @@ export const StartCampaign = () => {
   return (
     <Container>
       {selectedCharacter?.name}
-      <button onClick={submit}>Start campaign</button>
+      <Button onClick={submit}>Start campaign</Button>
     </Container>
   );
 };

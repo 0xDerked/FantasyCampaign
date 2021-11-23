@@ -7,24 +7,22 @@ import { ethers } from "ethers";
 import FantasyCharacter from "../../artifacts/contracts/FantasyCharacter.sol/FantasyCharacter.json";
 import { useGetCharactersForPlayer } from "../hooks/useGetCharactersForPlayer";
 import { useGetAllCharacters } from "../hooks/useGetAllCharacters";
+import { Button } from "../components/Button";
+import { CenterFill } from "../components/Layout";
 
-const Button = styled.button<{ selected: boolean; exists: boolean }>`
+const SelectedCharacterButton = styled.button<{
+  selected: boolean;
+  exists: boolean;
+}>`
   font-size: 10px;
   height: 50px;
   width: 50px;
   margin: 10px;
   border-width: 2px;
   border-style: solid;
-  background-color: ${props => (props.exists ? "red" : "transparent")};
+  background-color: ${props => (props.exists ? "green" : "black")};
   border-color: ${props => (props.selected ? "dodgerblue" : "transparent")};
-`;
-
-const Container = styled.div`
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  font-family: inherit;
 `;
 
 const CharacterContainer = styled.div`
@@ -33,6 +31,7 @@ const CharacterContainer = styled.div`
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  margin-bottom: 20px;
 `;
 
 export const CreateCharacter = () => {
@@ -83,32 +82,32 @@ export const CreateCharacter = () => {
   };
 
   return (
-    <Container>
+    <CenterFill>
       <CharacterContainer>
         {allCharacters.map(char => (
-          <Button
+          <SelectedCharacterButton
             key={char.name}
             selected={selectedCharacterId === char.id}
             onClick={() => handleSelectCharacter(char.id)}
             exists={char.id in playerCharacterIds}
           >
             {char.name}
-          </Button>
+          </SelectedCharacterButton>
         ))}
       </CharacterContainer>
       {selectedCharacterId !== null &&
       selectedCharacterId in playerCharacterIds ? (
-        <button onClick={handleUseExistingCharacter}>
+        <Button onClick={handleUseExistingCharacter}>
           Use Existing Character
-        </button>
+        </Button>
       ) : (
-        <button
+        <Button
           onClick={handleCreateCharacter}
           disabled={selectedCharacterId === null}
         >
-          Create Character
-        </button>
+          Create New Character
+        </Button>
       )}
-    </Container>
+    </CenterFill>
   );
 };

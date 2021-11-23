@@ -3,6 +3,8 @@ import * as React from "react";
 import { useWallet } from "../providers/WalletProvider";
 import { useGameData } from "../providers/GameData";
 import { Routes } from "../types";
+import { Button } from "../components/Button";
+import { CenterFill } from "../components/Layout";
 
 export const SplashScreen = () => {
   const { connectWallet } = useWallet();
@@ -16,9 +18,9 @@ export const SplashScreen = () => {
     }
   };
   return (
-    <div>
+    <CenterFill>
       <h1>Fantasy Campaign</h1>
-      <button onClick={connect}>Connect Wallet</button>
-    </div>
+      <Button onClick={connect}>Connect Wallet</Button>
+    </CenterFill>
   );
 };
