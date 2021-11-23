@@ -8,21 +8,6 @@ import { useDoorsWithTransforms } from "../hooks/useDoorsWithTransforms";
 import { useGameData } from "../providers/GameData";
 import clone from "lodash/clone";
 import { useCallback } from "react";
-import styled from "styled-components";
-import { UNSCALED_VIEWPORT_HEIGHT, UNSCALED_VIEWPORT_WIDTH } from "./constants";
-
-import match from "../assets/scaled/match.png";
-import { scale as scaleDims } from "../utils/scale";
-
-const Match = styled.img.attrs(() => ({
-  src: match,
-}))`
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  height: ${scaleDims(UNSCALED_VIEWPORT_HEIGHT)}px;
-  width: ${scaleDims(UNSCALED_VIEWPORT_WIDTH)}px;
-`;
 
 export const ViewPort = () => {
   const walls = useWallsWithTransforms();
@@ -71,10 +56,6 @@ export const ViewPort = () => {
     },
     [doors]
   );
-
-  if (gameData.isFighting) {
-    return <Match />;
-  }
 
   return (
     <Outer>

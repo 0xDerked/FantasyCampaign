@@ -9,6 +9,7 @@ export enum Routes {
   CreateCharacter = "CreateCharacter",
   StartCampaign = "StartCampaign",
   Maze = "Maze",
+  Fight = "Fight",
 }
 
 export type GameData = {
@@ -16,7 +17,6 @@ export type GameData = {
   walls: WallCoords[];
   doors: DoorCoords[];
   spawnPoints: SpawnPointCoords[];
-  isFighting: boolean;
   selectedCharacterId: number | null;
   route: Routes;
 };
