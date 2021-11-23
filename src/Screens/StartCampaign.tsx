@@ -32,22 +32,17 @@ export const StartCampaign = () => {
         signer
       );
       const tokenId = selectedCharacter?.id;
-      await contract.enterCampaign(tokenId);
+      const turn = await contract.playerTurn(tokenId);
+      const turnNumber = turn.toNumber();
+      if (turnNumber === 0) {
+        await contract.startCampaign(tokenId);
+      }
       setGameData({
         ...gameData,
         route: Routes.Maze,
       });
     } catch (e: any) {
-      const rpcErrorMessage: string = e?.data?.message;
-      if (rpcErrorMessage?.match(/Campaign Previously Started/)) {
-        // It's fine: session's started so we can just resume
-        setGameData({
-          ...gameData,
-          route: Routes.Maze,
-        });
-      } else {
-        alert(`Error starting campaign: ${e.message}`);
-      }
+      alert(`Error starting campaign: ${e.message}`);
     } finally {
       //
     }
