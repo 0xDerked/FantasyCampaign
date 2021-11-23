@@ -23,6 +23,7 @@ const SelectedCharacterButton = styled.button<{
   background-color: ${props => (props.exists ? "green" : "black")};
   border-color: ${props => (props.selected ? "dodgerblue" : "transparent")};
   font-family: inherit;
+  color: white;
 `;
 
 const CharacterContainer = styled.div`

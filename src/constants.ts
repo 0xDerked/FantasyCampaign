@@ -63,6 +63,7 @@ export const characterStats: CharacterStats = {
   [CharacterClass.Shaman]: mapStatsToDict([CharacterClass.Shaman, "Shaman", 110, 10, 15, 10, 10, 20, 15, 10, ]),
   [CharacterClass.Cleric]: null,
   [CharacterClass.Rogue]: null,
-  [CharacterClass.Ranger]: null,
+  // eslint-disable-next-line prettier/prettier
+  [CharacterClass.Ranger]: mapStatsToDict([ CharacterClass.Ranger, "Ranger", 100, 10, 15, 10, 35, 0, 5, 0, ]),
   [CharacterClass.Warlock]: null,
 };

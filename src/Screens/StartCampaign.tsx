@@ -7,6 +7,7 @@ import { ethers } from "ethers";
 import CastleCampaign from "../../artifacts/contracts/CastleCampaign.sol/CastleCampaign.json";
 import { useGetSelectedCharacter } from "../hooks/useGetSelectedCharacter";
 import { Button } from "../components/Button";
+import { useGetCharactersForPlayer } from "../hooks/useGetCharactersForPlayer";
 
 const Container = styled.div`
   display: flex;
@@ -20,6 +21,7 @@ export const StartCampaign = () => {
   const { signer } = useWallet();
   const selectedCharacter = useGetSelectedCharacter();
   const [gameData, setGameData] = useGameData();
+  useGetCharactersForPlayer();
 
   const startCampaign = async () => {
     if (!signer) {
@@ -35,7 +37,7 @@ export const StartCampaign = () => {
       const turn = await contract.playerTurn(tokenId);
       const turnNumber = turn.toNumber();
       if (turnNumber === 0) {
-        await contract.startCampaign(tokenId);
+        await contract.enterCampaign(tokenId);
       }
       setGameData({
         ...gameData,

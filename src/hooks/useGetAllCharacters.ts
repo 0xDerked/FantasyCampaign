@@ -1,7 +1,13 @@
 import { CharacterAttributes, characterStats } from "../constants";
+import { CharacterClass } from "../types";
 
 export const useGetAllCharacters = (): CharacterAttributes[] => {
-  const availableCharacterIds = [0, 1, 2, 3];
+  const availableCharacterIds = [
+    CharacterClass.Warlord,
+    CharacterClass.Shaman,
+    CharacterClass.Ranger,
+    CharacterClass.Wizard,
+  ];
   const stats = [];
   if (availableCharacterIds?.length) {
     for (let i = 0; i < availableCharacterIds.length; i++) {

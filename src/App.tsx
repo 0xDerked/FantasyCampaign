@@ -2,7 +2,11 @@ import * as React from "react";
 import styled from "styled-components";
 import { ViewPort } from "./Maze/ViewPort";
 import { Map } from "./Maze/Map";
-import { GameDataProvider, useGameData } from "./providers/GameData";
+import {
+  GameDataProvider,
+  initialGameData,
+  useGameData,
+} from "./providers/GameData";
 import {
   UNSCALED_VIEWPORT_HEIGHT,
   UNSCALED_VIEWPORT_WIDTH,
@@ -76,8 +80,10 @@ const Listeners = () => {
 };
 
 const ClearStorage = () => {
+  const [, setGameData] = useGameData();
   const handleClearStorage = () => {
     localStorage.clear();
+    setGameData(initialGameData);
   };
   return (
     <ClearStorageButton onClick={handleClearStorage}>
