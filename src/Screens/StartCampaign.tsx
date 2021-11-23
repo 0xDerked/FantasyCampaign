@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Routes, GameMode } from "../types";
+import { Routes } from "../types";
 import { useGameData } from "../providers/GameData";
 import styled from "styled-components";
 import { useWallet } from "../providers/WalletProvider";
@@ -21,7 +21,7 @@ export const StartCampaign = () => {
   const selectedCharacter = useGetSelectedCharacter();
   const [gameData, setGameData] = useGameData();
 
-  const submit = async () => {
+  const startCampaign = async () => {
     if (!signer) {
       return;
     }
@@ -32,14 +32,22 @@ export const StartCampaign = () => {
         signer
       );
       const tokenId = selectedCharacter?.id;
-      const data = await contract.enterCampaign(tokenId);
+      await contract.enterCampaign(tokenId);
       setGameData({
         ...gameData,
-        gameMode: GameMode.Navigation,
         route: Routes.Maze,
       });
     } catch (e: any) {
-      alert(`Error starting campaign: ${e.message}`);
+      const rpcErrorMessage: string = e?.data?.message;
+      if (rpcErrorMessage?.match(/Campaign Previously Started/)) {
+        // It's fine: session's started so we can just resume
+        setGameData({
+          ...gameData,
+          route: Routes.Maze,
+        });
+      } else {
+        alert(`Error starting campaign: ${e.message}`);
+      }
     } finally {
       //
     }
@@ -47,7 +55,7 @@ export const StartCampaign = () => {
   return (
     <Container>
       {selectedCharacter?.name}
-      <Button onClick={submit}>Start campaign</Button>
+      <Button onClick={startCampaign}>Start/Resume campaign</Button>
     </Container>
   );
 };

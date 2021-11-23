@@ -17,7 +17,6 @@ export type GameData = {
   doors: DoorCoords[];
   spawnPoints: SpawnPointCoords[];
   isFighting: boolean;
-  gameMode: GameMode;
   selectedCharacterId: number | null;
   route: Routes;
 };
@@ -31,14 +30,6 @@ export enum CharacterClass {
   Rogue = 5,
   Ranger = 6,
   Warlock = 7,
-}
-
-export enum GameMode {
-  CreateCharacter = "CreateCharacter",
-  Navigation = "Navigation",
-  Fight = "Fight",
-  Puzzle = "Puzzle",
-  Looting = "Looting",
 }
 
 export enum WallType {
