@@ -9,10 +9,13 @@ import {
 } from "./Maze/constants";
 import { useContractListeners } from "./hooks/useContractListeners";
 import { useInterfaceEventsListeners } from "./hooks/useInterfaceEventsListeners";
-import { CreateCharacter } from "./CreateCharacter";
-import { useWallet, WalletProvider } from "./providers/WalletProvider";
-import { SplashScreen } from "./SplashScreen";
+import { CreateCharacter } from "./Screens/CreateCharacter";
+import { WalletProvider } from "./providers/WalletProvider";
+import { SplashScreen } from "./Screens/SplashScreen";
 import { scale } from "./utils/scale";
+import { Routes } from "./types";
+import { StartCampaign } from "./Screens/StartCampaign";
+import { Fight } from "./Screens/Fight";
 
 const GameScreenContainer = styled.div`
   display: flex;
@@ -23,23 +26,41 @@ const GameScreenContainer = styled.div`
   position: relative;
   overflow: hidden;
   transform: scale(3);
+  user-select: none;
 `;
 
-const GameScreen = () => {
+const ClearStorageButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 18px;
+  color: red;
+  background-color: transparent;
+  font-family: inherit;
+  border: none;
+  outline: none;
+`;
+
+const Router = () => {
   const [gameData] = useGameData();
-  const { signer } = useWallet();
-  if (!signer) {
-    return <SplashScreen />;
+  switch (gameData.route) {
+    case Routes.Splash:
+      return <SplashScreen />;
+    case Routes.CreateCharacter:
+      return <CreateCharacter />;
+    case Routes.StartCampaign:
+      return <StartCampaign />;
+    case Routes.Fight:
+      return <Fight />;
+    case Routes.Maze:
+    default:
+      return (
+        <>
+          <ViewPort />
+          <Map rotateMap={false} />
+        </>
+      );
   }
-  if (gameData.characterClass === null) {
-    return <CreateCharacter />;
-  }
-  return (
-    <ViewPortContainer>
-      <ViewPort />
-      <Map rotateMap={false} />
-    </ViewPortContainer>
-  );
 };
 
 const ViewPortContainer = styled.div`
@@ -54,14 +75,28 @@ const Listeners = () => {
   return <div />;
 };
 
+const ClearStorage = () => {
+  const handleClearStorage = () => {
+    localStorage.clear();
+  };
+  return (
+    <ClearStorageButton onClick={handleClearStorage}>
+      Clear storage
+    </ClearStorageButton>
+  );
+};
+
 function App() {
   return (
     <GameDataProvider>
       <WalletProvider>
         <Listeners />
         <GameScreenContainer>
-          <GameScreen />
+          <ViewPortContainer>
+            <Router />
+          </ViewPortContainer>
         </GameScreenContainer>
+        <ClearStorage />
       </WalletProvider>
     </GameDataProvider>
   );

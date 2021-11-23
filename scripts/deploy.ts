@@ -9,8 +9,8 @@ import {
 
 const main = async () => {
   const [owner] = await ethers.getSigners();
-  const FantastyCharacterFactory = new FantasyCharacter__factory(owner);
-  const FantasyCharacterContract = await FantastyCharacterFactory.deploy();
+  const FantasyCharacterFactory = new FantasyCharacter__factory(owner);
+  const FantasyCharacterContract = await FantasyCharacterFactory.deploy();
   await FantasyCharacterContract.deployed();
 
   console.log(

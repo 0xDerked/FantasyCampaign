@@ -10,11 +10,12 @@ import wallFront1nor from "../assets/scaled/wallFront1nor.png";
 import wallFront2nor from "../assets/scaled/wallFront2nor.png";
 import wallFront3nor from "../assets/scaled/wallFront3nor.png";
 import { scale } from "../utils/scale";
+import { Image } from "../components/Image";
 
 // --------------------------------------------------------------------------------
 // Angled walls
 
-const WallLSide0 = styled.img.attrs(() => ({
+const WallLSide0 = styled(Image).attrs(() => ({
   src: wallLSide0alt,
 }))`
   position: absolute;
@@ -25,7 +26,7 @@ const WallLSide0 = styled.img.attrs(() => ({
   z-index: 400;
 `;
 
-const WallLSide1 = styled.img.attrs(() => ({
+const WallLSide1 = styled(Image).attrs(() => ({
   src: wallLSide1alt,
 }))`
   position: absolute;
@@ -36,7 +37,7 @@ const WallLSide1 = styled.img.attrs(() => ({
   z-index: 300;
 `;
 
-const WallLSide2 = styled.img.attrs(() => ({
+const WallLSide2 = styled(Image).attrs(() => ({
   src: wallLSide2alt,
 }))`
   position: absolute;
@@ -47,7 +48,7 @@ const WallLSide2 = styled.img.attrs(() => ({
   z-index: 200;
 `;
 
-const WallLSide3 = styled.img.attrs(() => ({
+const WallLSide3 = styled(Image).attrs(() => ({
   src: wallLSide3alt,
 }))`
   position: absolute;
@@ -85,7 +86,7 @@ const WallRSide3 = styled(WallLSide3)`
 // --------------------------------------------------------------------------------
 // Center front-facing walls
 
-const WallFront1 = styled.img.attrs(() => ({
+const WallFront1 = styled(Image).attrs(() => ({
   src: wallFront1nor,
 }))`
   position: absolute;
@@ -96,7 +97,7 @@ const WallFront1 = styled.img.attrs(() => ({
   z-index: 301;
 `;
 
-const WallFront2 = styled.img.attrs(() => ({
+const WallFront2 = styled(Image).attrs(() => ({
   src: wallFront2nor,
 }))`
   position: absolute;
@@ -107,7 +108,7 @@ const WallFront2 = styled.img.attrs(() => ({
   z-index: 201;
 `;
 
-const WallFront3 = styled.img.attrs(() => ({
+const WallFront3 = styled(Image).attrs(() => ({
   src: wallFront3nor,
 }))`
   position: absolute;
@@ -122,7 +123,7 @@ const WallFront3 = styled.img.attrs(() => ({
 // Non-center front-facing walls
 
 // Left
-const WallSide1_1 = styled.img.attrs(() => ({
+const WallSide1_1 = styled(Image).attrs(() => ({
   src: wallSide1alt,
 }))`
   position: absolute;
@@ -133,7 +134,7 @@ const WallSide1_1 = styled.img.attrs(() => ({
   z-index: 300;
 `;
 
-const WallSide2_1 = styled.img.attrs(() => ({
+const WallSide2_1 = styled(Image).attrs(() => ({
   src: wallSide2alt,
 }))`
   position: absolute;
@@ -144,7 +145,7 @@ const WallSide2_1 = styled.img.attrs(() => ({
   z-index: 200;
 `;
 
-const WallSide3_1 = styled.img.attrs(() => ({
+const WallSide3_1 = styled(Image).attrs(() => ({
   src: wallFront3nor,
 }))`
   position: absolute;
@@ -177,7 +178,7 @@ const WallSide3_2 = styled(WallSide3_1)`
 
 export const wallTextureMaps: Record<
   `${number},${number},${number},${number}`,
-  StyledComponent<"img", any>
+  StyledComponent<typeof Image, any>
 > = {
   // Ahead
   "-0.5,-0.5,0.5,-0.5": WallFront1,

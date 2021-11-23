@@ -1,6 +1,6 @@
 import { rotate } from "./rotate";
 import { round } from "./round";
-import { GameData, Position } from "../types";
+import { GameData, Position, Routes } from "../types";
 import {
   generateDoorCollisions,
   generateSpawnCollisions,
@@ -27,6 +27,9 @@ export const setRow = (pos: Position, delta: number) => ({
 });
 
 export const rotLeft = (gameData: GameData): GameData => {
+  if (gameData.route === Routes.Fight) {
+    return gameData;
+  }
   const newPos = {
     ...gameData.position,
     dir: (gameData.position.dir + 3) % 4,
@@ -38,6 +41,9 @@ export const rotLeft = (gameData: GameData): GameData => {
 };
 
 export const rotRight = (gameData: GameData): GameData => {
+  if (gameData.route === Routes.Fight) {
+    return gameData;
+  }
   const newPos = {
     ...gameData.position,
     dir: (gameData.position.dir + 1) % 4,
@@ -159,25 +165,25 @@ export const strafeLeft = (pos: Position, currentState: GameData): Position => {
 };
 
 type PosFunction = (position: Position, currentState: GameData) => Position;
-export const setPos = (fn: PosFunction) => (state: GameData) => {
-  if (state.isFighting) {
-    return state;
+export const setPos = (fn: PosFunction) => (gameData: GameData) => {
+  if (gameData.route === Routes.Fight) {
+    return gameData;
   }
-  const newPosition = fn(state.position, state);
+  const newPosition = fn(gameData.position, gameData);
   // Check if the new position runs over a spawn point
-  const spawnPointsDict = generateSpawnCollisions(state.spawnPoints);
+  const spawnPointsDict = generateSpawnCollisions(gameData.spawnPoints);
   const spawnPoint =
     spawnPointsDict[`${round(newPosition.col)},${round(newPosition.row)}`];
   if (typeof spawnPoint !== "undefined") {
     return {
-      ...state,
+      ...gameData,
+      route: Routes.Fight,
       isFighting: true,
       position: newPosition,
     };
   }
   return {
-    ...state,
-    isFighting: false,
+    ...gameData,
     position: newPosition,
   };
 };

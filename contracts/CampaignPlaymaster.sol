@@ -47,14 +47,14 @@ abstract contract CampaignPlaymaster {
 	//tokenId -> Turn in Progress
 	mapping(uint256 => bool) public turnInProgress;
 
-	event CampaignStarted(address indexed _user, address indexed _campaign, uint256 _tokenId);
-	event CampaignEnded(address indexed _campaign, uint256 _tokenId, bool _success);
+	event CampaignStarted(uint256 indexed _tokenId);
+	event CampaignEnded(uint256 indexed _tokenId, bool _success);
 
-	event TurnSet(uint256 _tokenId, uint256 _turnNumber);
-	event TurnStarted(address indexed _campaign, uint256 _tokenId, uint256 _turnNumber, FantasyThings.TurnType _turnType);
-	event TurnCompleted(address indexed _campaign, uint256 _tokenId, uint256 _turnNumber);
+	event TurnSet(uint256 indexed _tokenId);
+	event TurnStarted(uint256 indexed _tokenId);
+	event TurnCompleted(uint256 indexed _tokenId);
 
-	event MobAttack(uint256 _mobTurnIndex, uint256 _mobAbilityIndex);
+	event CombatSequence(uint256 indexed _tokenId, uint8 indexed _damageDone);
 
 	IERC721Metadata public fantasyCharacters;
 	FantasyAttributesManager attributesManager;
@@ -156,6 +156,9 @@ abstract contract CampaignPlaymaster {
 			combatTurnToMobs[_tokenId][currentNonce][currentTurn][_target].health-=uint16(damageTotal);
 			_retaliate(_tokenId, currentTurn, currentNonce, _target);
 		}
+
+		emit CombatSequence(_tokenId, damageTotal);
+
 	}
 
 	function attackWithItem(
@@ -182,6 +185,7 @@ abstract contract CampaignPlaymaster {
 			_retaliate(_tokenId, currentTurn, currentNonce, _target);
 		}
 
+		emit CombatSequence(_tokenId, damageTotal);
    }
 
 	function applyItemSpell(uint256 _tokenId, uint256 _itemId) external virtual
@@ -250,7 +254,7 @@ abstract contract CampaignPlaymaster {
 			_endCampaign(_tokenId, true);
 		} else {
 			playerStatus[_tokenId][_currentNonce].health = baseHealth;
-			emit TurnCompleted(address(this),_tokenId, playerTurn[_tokenId]-1);
+			emit TurnCompleted(_tokenId);
 		}
 	}
 	
@@ -332,7 +336,6 @@ abstract contract CampaignPlaymaster {
 		}
 		
 		totalDamage >= playerStatus[_tokenId][currentNonce].health ? playerStatus[_tokenId][currentNonce].health = 0 : playerStatus[_tokenId][currentNonce].health -= totalDamage;
-		emit MobAttack(_mobIndex, _mobAbilityIndex);
      }
 
 	function _getDamageToPlayerPhysical(uint256 _tokenId, uint8 _baseDamage) internal view returns(uint8) {
@@ -373,7 +376,7 @@ abstract contract CampaignPlaymaster {
 		playerTurn[_tokenId] = 0;
 		turnInProgress[_tokenId] = false;
 		playerNonce[_tokenId]++;
-		emit CampaignEnded(address(this), _tokenId, _campaignSuccess);
+		emit CampaignEnded(_tokenId, _campaignSuccess);
 	}
 
 	function inspectMob(uint256 _mobId) public view returns(FantasyThings.Mob memory) {

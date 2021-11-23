@@ -13,6 +13,8 @@
     "circuits:compile": "node ./circuits/compile.js",
     "circuits:ptau": "sh ./circuits/ptau.sh",
     "contracts:compile": "npx hardhat compile",
+    "contracts:typechain": "npx hardhat typechain",
+    "contracts:deploy": "npx hardhat run ./scripts/deploy.ts --network localhost",
     "node:start": "npx hardhat node"
   },
   "dependencies": {
