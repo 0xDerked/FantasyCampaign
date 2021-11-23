@@ -5,6 +5,7 @@ import doorFront2 from "../assets/scaled/doorFront2.png";
 import doorInnerDefault from "../assets/scaled/doorinner_default.png";
 import doorInnerDefault2 from "../assets/scaled/doorinner_default2.png";
 import { scale } from "../utils/scale";
+import { Image } from "../components/Image";
 
 const DOOR_FRAME_FAR_WIDTH = 127;
 const DOOR_FRAME_MEDIUM_LEFT = -38;
@@ -20,12 +21,12 @@ type OpenState = {
 
 // Close
 
-const DoorFront1 = styled.img.attrs(() => ({
+const DoorFront1 = styled(Image).attrs(() => ({
   src: doorFront1,
 }))`
   width: ${scale(DOOR_FRAME_NEAR_WIDTH)}px;
 `;
-const DoorFront1Inner = styled.img.attrs(() => ({
+const DoorFront1Inner = styled(Image).attrs(() => ({
   src: doorInnerDefault,
 }))<OpenState>`
   position: absolute;
@@ -47,12 +48,12 @@ const DoorFront1Container = styled.div.attrs(({ open }: OpenState) => ({
 // --------------------------------------------------------------------------------
 // Ahead medium
 
-const DoorFront2 = styled.img.attrs(() => ({
+const DoorFront2 = styled(Image).attrs(() => ({
   src: doorFront2,
 }))`
   width: ${scale(DOOR_FRAME_MEDIUM_WIDTH)}px;
 `;
-const DoorFront2Inner = styled.img.attrs(() => ({
+const DoorFront2Inner = styled(Image).attrs(() => ({
   src: doorInnerDefault2,
 }))<OpenState>`
   position: absolute;
@@ -75,12 +76,12 @@ const DoorFront2Container = styled.div.attrs(({ open }: OpenState) => ({
 // --------------------------------------------------------------------------------
 // Ahead far
 
-const DoorFront3 = styled.img.attrs(() => ({
+const DoorFront3 = styled(Image).attrs(() => ({
   src: doorFront2,
 }))`
   width: ${scale(DOOR_FRAME_FAR_WIDTH)}px;
 `;
-const DoorFront3Inner = styled.img.attrs(() => ({
+const DoorFront3Inner = styled(Image).attrs(() => ({
   src: doorInnerDefault2,
 }))<OpenState>`
   position: absolute;
@@ -139,7 +140,7 @@ const DoorSide2_1Container = styled(DoorFront2Container)`
 
 export const doorTextureMaps: Record<
   `${number},${number},${number},${number}`,
-  StyledComponent<"img" | "div", any>
+  StyledComponent<typeof Image | "div", any>
 > = {
   "-0.5,-1,0.5,-1": DoorFront1Container, // Ahead close
   "-0.5,-2,0.5,-2": DoorFront2Container, // Ahead medium

@@ -8,7 +8,6 @@ const defaultValue: GameData = {
   walls: wallCoords,
   doors: doorsCoords,
   spawnPoints: spawnPointCoords,
-  isFighting: false,
   selectedCharacterId: null,
   route: Routes.Splash,
 };

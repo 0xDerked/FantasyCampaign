@@ -15,6 +15,7 @@ import { SplashScreen } from "./Screens/SplashScreen";
 import { scale } from "./utils/scale";
 import { Routes } from "./types";
 import { StartCampaign } from "./Screens/StartCampaign";
+import { Fight } from "./Screens/Fight";
 
 const GameScreenContainer = styled.div`
   display: flex;
@@ -25,6 +26,7 @@ const GameScreenContainer = styled.div`
   position: relative;
   overflow: hidden;
   transform: scale(3);
+  user-select: none;
 `;
 
 const ClearStorageButton = styled.button`
@@ -48,13 +50,15 @@ const Router = () => {
       return <CreateCharacter />;
     case Routes.StartCampaign:
       return <StartCampaign />;
+    case Routes.Fight:
+      return <Fight />;
     case Routes.Maze:
     default:
       return (
-        <ViewPortContainer>
+        <>
           <ViewPort />
           <Map rotateMap={false} />
-        </ViewPortContainer>
+        </>
       );
   }
 };
@@ -88,7 +92,9 @@ function App() {
       <WalletProvider>
         <Listeners />
         <GameScreenContainer>
-          <Router />
+          <ViewPortContainer>
+            <Router />
+          </ViewPortContainer>
         </GameScreenContainer>
         <ClearStorage />
       </WalletProvider>

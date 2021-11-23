@@ -4,6 +4,7 @@ import ceiling from "../assets/scaled/roofalt.png";
 import flooralt from "../assets/scaled/flooralt.png";
 import { UNSCALED_VIEWPORT_HEIGHT, UNSCALED_VIEWPORT_WIDTH } from "./constants";
 import { scale } from "../utils/scale";
+import { Image } from "../components/Image";
 
 export const Outer = styled.div`
   width: ${scale(UNSCALED_VIEWPORT_WIDTH)}px;
@@ -12,7 +13,7 @@ export const Outer = styled.div`
   position: relative;
   overflow: hidden;
 `;
-export const Floor = styled.img.attrs(() => ({
+export const Floor = styled(Image).attrs(() => ({
   src: flooralt,
 }))`
   position: absolute;
@@ -22,7 +23,7 @@ export const Floor = styled.img.attrs(() => ({
   height: ${scale(140)}px;
 `;
 
-export const Ceiling = styled.img.attrs(() => ({
+export const Ceiling = styled(Image).attrs(() => ({
   src: ceiling,
 }))`
   position: absolute;
