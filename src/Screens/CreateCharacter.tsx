@@ -2,21 +2,21 @@ import * as React from "react";
 import { CharacterClass, Routes } from "../types";
 import { useGameData } from "../providers/GameData";
 import styled from "styled-components";
-import { characterStats } from "../constants";
 import { useWallet } from "../providers/WalletProvider";
 import { ethers } from "ethers";
 import FantasyCharacter from "../../artifacts/contracts/FantasyCharacter.sol/FantasyCharacter.json";
+import { useGetCharactersForPlayer } from "../hooks/useGetCharactersForPlayer";
+import { useGetAllCharacters } from "../hooks/useGetAllCharacters";
 
-const Button = styled.button<{ selected: boolean }>`
+const Button = styled.button<{ selected: boolean; exists: boolean }>`
   font-size: 10px;
-  font-family: PixeBoy;
   height: 50px;
   width: 50px;
   margin: 10px;
   border-width: 2px;
   border-style: solid;
-  background-color: dodgerblue;
-  border-color: ${props => (props.selected ? "white" : "dodgerblue")};
+  background-color: ${props => (props.exists ? "red" : "transparent")};
+  border-color: ${props => (props.selected ? "dodgerblue" : "transparent")};
 `;
 
 const Container = styled.div`
@@ -37,11 +37,15 @@ const CharacterContainer = styled.div`
 
 export const CreateCharacter = () => {
   const [gameData, setGameData] = useGameData();
+  const playerCharacters = useGetCharactersForPlayer();
+  const playerCharacterIds =
+    playerCharacters?.map(character => character.id) || [];
+  const allCharacters = useGetAllCharacters();
   const { signer } = useWallet();
-  const [characterClass, setCharacterClass] =
+  const [selectedCharacterId, setSelectedCharacterId] =
     React.useState<CharacterClass | null>(null);
 
-  const submit = async () => {
+  const handleCreateCharacter = async () => {
     if (!signer) {
       return;
     }
@@ -51,12 +55,12 @@ export const CreateCharacter = () => {
         FantasyCharacter.abi,
         signer
       );
-      const transaction = await contract.createCharacter(characterClass);
+      const transaction = await contract.createCharacter(selectedCharacterId);
       await transaction.wait();
 
       setGameData({
         ...gameData,
-        characterClass,
+        selectedCharacterId: selectedCharacterId,
         route: Routes.StartCampaign,
       });
     } catch (e: any) {
@@ -65,31 +69,46 @@ export const CreateCharacter = () => {
       //
     }
   };
-  const selectCharacter = (char: CharacterClass) => {
-    setCharacterClass(char);
+
+  const handleUseExistingCharacter = () => {
+    setGameData({
+      ...gameData,
+      selectedCharacterId: selectedCharacterId,
+      route: Routes.StartCampaign,
+    });
+  };
+
+  const handleSelectCharacter = (char: CharacterClass) => {
+    setSelectedCharacterId(char);
   };
 
   return (
     <Container>
       <CharacterContainer>
-        {[
-          CharacterClass.Shaman,
-          CharacterClass.Warlord,
-          CharacterClass.Knight,
-          CharacterClass.Wizard,
-        ].map(char => (
+        {allCharacters.map(char => (
           <Button
-            key={char}
-            selected={characterClass === char}
-            onClick={() => selectCharacter(char)}
+            key={char.name}
+            selected={selectedCharacterId === char.id}
+            onClick={() => handleSelectCharacter(char.id)}
+            exists={char.id in playerCharacterIds}
           >
-            {characterStats[char]?.name}
+            {char.name}
           </Button>
         ))}
       </CharacterContainer>
-      <button onClick={submit} disabled={characterClass === null}>
-        Create Character
-      </button>
+      {selectedCharacterId !== null &&
+      selectedCharacterId in playerCharacterIds ? (
+        <button onClick={handleUseExistingCharacter}>
+          Use Existing Character
+        </button>
+      ) : (
+        <button
+          onClick={handleCreateCharacter}
+          disabled={selectedCharacterId === null}
+        >
+          Create Character
+        </button>
+      )}
     </Container>
   );
 };

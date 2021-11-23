@@ -18,7 +18,7 @@ export type GameData = {
   spawnPoints: SpawnPointCoords[];
   isFighting: boolean;
   gameMode: GameMode;
-  characterClass: CharacterClass | null;
+  selectedCharacterId: number | null;
   route: Routes;
 };
 
@@ -32,6 +32,7 @@ export enum CharacterClass {
   Ranger = 6,
   Warlock = 7,
 }
+
 export enum GameMode {
   CreateCharacter = "CreateCharacter",
   Navigation = "Navigation",

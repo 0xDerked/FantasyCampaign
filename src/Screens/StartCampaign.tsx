@@ -3,11 +3,9 @@ import { Routes, GameMode } from "../types";
 import { useGameData } from "../providers/GameData";
 import styled from "styled-components";
 import { useWallet } from "../providers/WalletProvider";
-import { ethers, BigNumber } from "ethers";
+import { ethers } from "ethers";
 import CastleCampaign from "../../artifacts/contracts/CastleCampaign.sol/CastleCampaign.json";
-import FantasyCharacter from "../../artifacts/contracts/FantasyCharacter.sol/FantasyCharacter.json";
-import FantasyAttributesManager from "../../artifacts/contracts/FantasyAttributesManager.sol/FantasyAttributesManager.json";
-import { useEffect, useState } from "react";
+import { useGetSelectedCharacter } from "../hooks/useGetSelectedCharacter";
 
 const Container = styled.div`
   display: flex;
@@ -19,37 +17,8 @@ const Container = styled.div`
 
 export const StartCampaign = () => {
   const { signer } = useWallet();
-  const [characters, setCharacters] = useState<any>();
+  const selectedCharacter = useGetSelectedCharacter();
   const [gameData, setGameData] = useGameData();
-
-  useEffect(() => {
-    (async () => {
-      if (!signer) {
-        return;
-      }
-      try {
-        const address = await signer.getAddress();
-        const contract = new ethers.Contract(
-          "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-          FantasyCharacter.abi,
-          signer
-        );
-        const attributesManager = new ethers.Contract(
-          "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
-          FantasyAttributesManager.abi,
-          signer
-        );
-        const data: BigNumber[] = await contract.getAllCharacters(address);
-        const charIDs = data.map(id => ethers.utils.formatUnits(id, "wei"));
-        //   const charData = await Promise.all(
-        //     charIDs.map(async id => await attributesManager.getPlayer(id))
-        //   );
-        setCharacters(charIDs);
-      } catch (e: any) {
-        alert(`Failed to get characters: ${e.message}`);
-      }
-    })();
-  }, [signer]);
 
   const submit = async () => {
     if (!signer) {
@@ -61,7 +30,7 @@ export const StartCampaign = () => {
         CastleCampaign.abi,
         signer
       );
-      const tokenId = characters[0]; //just taking the first character we own for now
+      const tokenId = selectedCharacter?.id;
       const data = await contract.enterCampaign(tokenId);
       setGameData({
         ...gameData,
@@ -76,8 +45,8 @@ export const StartCampaign = () => {
   };
   return (
     <Container>
+      {selectedCharacter?.name}
       <button onClick={submit}>Start campaign</button>
-      {JSON.stringify(characters)}
     </Container>
   );
 };

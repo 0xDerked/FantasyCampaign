@@ -9,7 +9,7 @@ const defaultValue: GameData = {
   spawnPoints: spawnPointCoords,
   isFighting: false,
   gameMode: GameMode.CreateCharacter,
-  characterClass: null,
+  selectedCharacterId: null,
   route: Routes.Splash,
 };
 
