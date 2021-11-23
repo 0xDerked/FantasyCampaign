@@ -98,7 +98,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		}
 
 		playerTurn[_tokenId]++;
-		emit CampaignStarted(msg.sender, address(this), _tokenId);
+		emit CampaignStarted(_tokenId);
 	}
 
 	function generateTurn(uint256 _tokenId) external override controlsCharacter(_tokenId) {
@@ -124,8 +124,8 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 			} else {
 				//set puzzle
 			}
-			emit TurnStarted(address(this), _tokenId, playerTurn[_tokenId], turnTypes[_tokenId][playerTurn[_tokenId]]);
-			emit TurnSet(_tokenId, playerTurn[_tokenId]);
+			emit TurnStarted(_tokenId);
+			emit TurnSet(_tokenId);
 		}
 	}
 
@@ -154,8 +154,8 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 				//set up puzzle turn
 				turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Puzzle;
 			}
-		emit TurnStarted(address(this), tokenId, playerTurn[tokenId], turnTypes[tokenId][playerTurn[tokenId]]);
-		emit TurnSet(tokenId, playerTurn[tokenId]);
+		emit TurnStarted(tokenId);
+		emit TurnSet(tokenId);
 	}
   
 
