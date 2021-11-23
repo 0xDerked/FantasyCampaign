@@ -9,7 +9,7 @@ type WalletContextType = {
   signer: null | JsonRpcSigner;
 };
 
-const WalletContext = React.createContext<WalletContextType | undefined>(
+export const WalletContext = React.createContext<WalletContextType | undefined>(
   undefined
 );
 
@@ -33,12 +33,4 @@ export const WalletProvider: React.FC = ({ children }) => {
   return (
     <WalletContext.Provider value={value}>{children}</WalletContext.Provider>
   );
-};
-
-export const useWallet = () => {
-  const context = React.useContext(WalletContext);
-  if (context === undefined) {
-    throw new Error("useWalletContext must be used within a WalletProvider");
-  }
-  return context;
 };

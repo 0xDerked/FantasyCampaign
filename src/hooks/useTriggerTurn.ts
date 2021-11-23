@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
-import { useGameData } from "../providers/GameData";
 import { Routes } from "../types";
+import { useGameData } from "./useGameData";
 
 const contractMock = {
   async generateTurn() {

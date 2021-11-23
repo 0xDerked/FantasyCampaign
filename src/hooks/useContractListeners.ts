@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useRef } from "react";
-import { useGameData } from "../providers/GameData";
 import CastleCampaign from "../../artifacts/contracts/CastleCampaign.sol/CastleCampaign.json";
 import { ethers } from "ethers";
-import { useWallet } from "../providers/WalletProvider";
+import { useGameData } from "./useGameData";
+import { useWallet } from "./useWallet";
 
 // enum Events {
 //   CampaignStarted = "CampaignStarted",

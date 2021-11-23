@@ -1,10 +1,10 @@
 import * as React from "react";
 
-import { useWallet } from "../providers/WalletProvider";
-import { useGameData } from "../providers/GameData";
 import { Routes } from "../types";
 import { Button } from "../components/Button";
 import { CenterFill } from "../components/Layout";
+import { useWallet } from "../hooks/useWallet";
+import { useGameData } from "../hooks/useGameData";
 
 export const SplashScreen = () => {
   const { connectWallet } = useWallet();

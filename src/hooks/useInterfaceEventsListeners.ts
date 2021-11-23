@@ -9,7 +9,7 @@ import {
   strafeLeft,
   strafeRight,
 } from "../utils/positionHelpers";
-import { useGameData } from "../providers/GameData";
+import { useGameData } from "./useGameData";
 
 export const useInterfaceEventsListeners = () => {
   const [gameData, setGameData] = useGameData();

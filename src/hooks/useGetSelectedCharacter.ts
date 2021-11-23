@@ -1,6 +1,6 @@
 import { CharacterAttributes } from "../constants";
 import { useGetAllCharacters } from "./useGetAllCharacters";
-import { useGameData } from "../providers/GameData";
+import { useGameData } from "./useGameData";
 
 export const useGetSelectedCharacter = (): null | CharacterAttributes => {
   const [gameData] = useGameData();

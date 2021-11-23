@@ -1,8 +1,8 @@
-import { useWallet } from "../providers/WalletProvider";
 import { useEffect, useState } from "react";
 import { BigNumber, ethers } from "ethers";
 import FantasyCharacter from "../../artifacts/contracts/FantasyCharacter.sol/FantasyCharacter.json";
 import { CharacterAttributes, characterStats } from "../constants";
+import { useWallet } from "./useWallet";
 
 export const useGetCharactersForPlayer = (): CharacterAttributes[] | null => {
   const { signer } = useWallet();

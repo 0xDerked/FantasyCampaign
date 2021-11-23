@@ -1,14 +1,14 @@
 import * as React from "react";
 import { CharacterClass, Routes } from "../types";
-import { useGameData } from "../providers/GameData";
 import styled from "styled-components";
-import { useWallet } from "../providers/WalletProvider";
 import { ethers } from "ethers";
 import FantasyCharacter from "../../artifacts/contracts/FantasyCharacter.sol/FantasyCharacter.json";
 import { useGetCharactersForPlayer } from "../hooks/useGetCharactersForPlayer";
 import { useGetAllCharacters } from "../hooks/useGetAllCharacters";
 import { Button } from "../components/Button";
 import { CenterFill } from "../components/Layout";
+import { useGameData } from "../hooks/useGameData";
+import { useWallet } from "../hooks/useWallet";
 
 const SelectedCharacterButton = styled.button<{
   selected: boolean;

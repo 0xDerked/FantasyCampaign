@@ -1,13 +1,13 @@
 import * as React from "react";
 import { Routes } from "../types";
-import { useGameData } from "../providers/GameData";
 import styled from "styled-components";
-import { useWallet } from "../providers/WalletProvider";
 import { ethers } from "ethers";
 import CastleCampaign from "../../artifacts/contracts/CastleCampaign.sol/CastleCampaign.json";
 import { useGetSelectedCharacter } from "../hooks/useGetSelectedCharacter";
 import { Button } from "../components/Button";
 import { useGetCharactersForPlayer } from "../hooks/useGetCharactersForPlayer";
+import { useGameData } from "../hooks/useGameData";
+import { useWallet } from "../hooks/useWallet";
 
 const Container = styled.div`
   display: flex;

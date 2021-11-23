@@ -2,8 +2,8 @@ import * as React from "react";
 import { ReactElement } from "react";
 import styled from "styled-components";
 import { rotate } from "../utils/rotate";
-import { useGameData } from "../providers/GameData";
 import { spawnPointCoords } from "./mapData";
+import { useGameData } from "../hooks/useGameData";
 
 const CELL_PX = 7;
 

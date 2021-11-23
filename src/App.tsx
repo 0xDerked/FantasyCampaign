@@ -2,16 +2,11 @@ import * as React from "react";
 import styled from "styled-components";
 import { ViewPort } from "./Maze/ViewPort";
 import { Map } from "./Maze/Map";
-import {
-  GameDataProvider,
-  initialGameData,
-  useGameData,
-} from "./providers/GameData";
+
 import {
   UNSCALED_VIEWPORT_HEIGHT,
   UNSCALED_VIEWPORT_WIDTH,
 } from "./Maze/constants";
-import { useContractListeners } from "./hooks/useContractListeners";
 import { useInterfaceEventsListeners } from "./hooks/useInterfaceEventsListeners";
 import { CreateCharacter } from "./Screens/CreateCharacter";
 import { WalletProvider } from "./providers/WalletProvider";
@@ -20,6 +15,8 @@ import { scale } from "./utils/scale";
 import { Routes } from "./types";
 import { StartCampaign } from "./Screens/StartCampaign";
 import { Fight } from "./Screens/Fight";
+import { useGameData } from "./hooks/useGameData";
+import { GameDataProvider, initialGameData } from "./providers/GameData";
 
 const GameScreenContainer = styled.div`
   display: flex;
@@ -74,7 +71,7 @@ const ViewPortContainer = styled.div`
 `;
 
 const Listeners = () => {
-  useContractListeners();
+  // useContractListeners();
   useInterfaceEventsListeners();
   return <div />;
 };

@@ -12,7 +12,7 @@ export const initialGameData: GameData = {
   route: Routes.Splash,
 };
 
-const GameDataContext = React.createContext<
+export const GameDataContext = React.createContext<
   [GameData, React.Dispatch<React.SetStateAction<GameData>>]
 >([initialGameData, () => {}]);
 
@@ -34,14 +34,4 @@ export const GameDataProvider: React.FC = ({ children }) => {
       {children}
     </GameDataContext.Provider>
   );
-};
-
-export const useGameData = () => {
-  const context = React.useContext(GameDataContext);
-  if (context === undefined) {
-    throw new Error(
-      "useGameDataContext must be used within a GameDataProvider"
-    );
-  }
-  return context;
 };

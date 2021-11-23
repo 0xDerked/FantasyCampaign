@@ -1,6 +1,6 @@
 import { rotate } from "../utils/rotate";
 import { round } from "../utils/round";
-import { useGameData } from "../providers/GameData";
+import { useGameData } from "./useGameData";
 
 export const useDoorsWithTransforms = () => {
   const [gameData] = useGameData();

@@ -5,9 +5,9 @@ import { Ceiling, Floor, Outer } from "./EnvironmentTextures";
 import { DoorCoords, WallType } from "../types";
 import { useWallsWithTransforms } from "../hooks/useWallsWithTransforms";
 import { useDoorsWithTransforms } from "../hooks/useDoorsWithTransforms";
-import { useGameData } from "../providers/GameData";
 import clone from "lodash/clone";
 import { useCallback } from "react";
+import { useGameData } from "../hooks/useGameData";
 
 export const ViewPort = () => {
   const walls = useWallsWithTransforms();
