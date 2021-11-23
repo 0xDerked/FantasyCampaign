@@ -1,11 +1,12 @@
 import * as React from "react";
-import { Routes } from "../types";
+import { Routes, GameMode } from "../types";
 import { useGameData } from "../providers/GameData";
 import styled from "styled-components";
 import { useWallet } from "../providers/WalletProvider";
 import { ethers, BigNumber } from "ethers";
 import CastleCampaign from "../../artifacts/contracts/CastleCampaign.sol/CastleCampaign.json";
 import FantasyCharacter from "../../artifacts/contracts/FantasyCharacter.sol/FantasyCharacter.json";
+import FantasyAttributesManager from "../../artifacts/contracts/FantasyAttributesManager.sol/FantasyAttributesManager.json";
 import { useEffect, useState } from "react";
 
 const Container = styled.div`
@@ -33,9 +34,17 @@ export const StartCampaign = () => {
           FantasyCharacter.abi,
           signer
         );
+        const attributesManager = new ethers.Contract(
+          "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512",
+          FantasyAttributesManager.abi,
+          signer
+        );
         const data: BigNumber[] = await contract.getAllCharacters(address);
-        const charData = data.map(id => ethers.utils.formatUnits(id, "wei"));
-        setCharacters(charData);
+        const charIDs = data.map(id => ethers.utils.formatUnits(id, "wei"));
+        //   const charData = await Promise.all(
+        //     charIDs.map(async id => await attributesManager.getPlayer(id))
+        //   );
+        setCharacters(charIDs);
       } catch (e: any) {
         alert(`Failed to get characters: ${e.message}`);
       }
@@ -56,6 +65,7 @@ export const StartCampaign = () => {
       const data = await contract.enterCampaign(tokenId);
       setGameData({
         ...gameData,
+        gameMode: GameMode.Navigation,
         route: Routes.Maze,
       });
     } catch (e: any) {
