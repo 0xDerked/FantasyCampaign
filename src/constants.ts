@@ -1,19 +1,97 @@
 import { CharacterAttributes, CharacterClass } from "./types";
-import { mapStatsToAttributesDict } from "./utils/mapStatsToAttributesDict";
 
 export const characterStats: Record<number, CharacterAttributes | null> = {
-  // eslint-disable-next-line prettier/prettier
-  [CharacterClass.Warlord]: mapStatsToAttributesDict([CharacterClass.Warlord, "Warlord", 100, 30, 20, 20, 20, 0, 5, 0 ]),
-  // eslint-disable-next-line prettier/prettier
-  [CharacterClass.Knight]: mapStatsToAttributesDict([CharacterClass.Knight, "Knight", 100, 20, 30, 25, 15, 0, 5, 0, ]),
-  // eslint-disable-next-line prettier/prettier
-  [CharacterClass.Wizard]: mapStatsToAttributesDict([CharacterClass.Wizard, "Wizard", 90, 5, 10, 5, 5, 30, 20, 0, ]),
-  // eslint-disable-next-line prettier/prettier
-  [CharacterClass.Shaman]: mapStatsToAttributesDict([CharacterClass.Shaman, "Shaman", 110, 10, 15, 10, 10, 20, 15, 10, ]),
+  [CharacterClass.Warlord]: {
+    // abilities: [[0, 1, "Strike"]],
+    id: CharacterClass.Warlord,
+    name: "Warlord",
+    experience: 0,
+    health: 100,
+    strength: 30,
+    armor: 20,
+    physicalblock: 20,
+    agility: 20,
+    spellpower: 0,
+    spellresistance: 5,
+    healingpower: 0,
+    abilities: [
+      {
+        abilityType: 0,
+        action: 1,
+        name: "Strike",
+      },
+    ],
+  },
+  [CharacterClass.Knight]: null,
+  [CharacterClass.Wizard]: {
+    // abilities: [[0, 1, "Strike"]],
+    id: CharacterClass.Wizard,
+    name: "Wizard",
+    experience: 0,
+    health: 90,
+    strength: 5,
+    armor: 10,
+    physicalblock: 5,
+    agility: 5,
+    spellpower: 30,
+    spellresistance: 20,
+    healingpower: 0,
+    abilities: [
+      {
+        abilityType: 4,
+        action: 1,
+        name: "Fireball",
+      },
+    ],
+  },
+  [CharacterClass.Shaman]: {
+    id: CharacterClass.Shaman,
+    name: "Shaman",
+    experience: 0,
+    health: 110,
+    strength: 10,
+    armor: 15,
+    physicalblock: 10,
+    agility: 10,
+    spellpower: 20,
+    spellresistance: 15,
+    healingpower: 10,
+    abilities: [
+      {
+        abilityType: 4,
+        action: 1,
+        name: "Lightning Bolt",
+      },
+      {
+        abilityType: 6,
+        action: 2,
+        name: "Nature Heal",
+      },
+    ],
+  },
   [CharacterClass.Cleric]: null,
   [CharacterClass.Rogue]: null,
-  // eslint-disable-next-line prettier/prettier
-  [CharacterClass.Ranger]: mapStatsToAttributesDict([ CharacterClass.Ranger, "Ranger", 100, 10, 15, 10, 35, 0, 5, 0, ]),
+  [CharacterClass.Ranger]: {
+    // abilities: [[0, 1, "Strike"]],
+    id: CharacterClass.Ranger,
+    name: "Ranger",
+    experience: 0,
+    health: 100,
+    strength: 10,
+    armor: 15,
+    physicalblock: 10,
+    agility: 35,
+    spellpower: 0,
+    spellresistance: 5,
+    healingpower: 0,
+    abilities: [
+      {
+        abilityType: 3,
+        action: 1,
+        name: "Fire Bow",
+      },
+    ],
+  },
   [CharacterClass.Warlock]: null,
 };
 

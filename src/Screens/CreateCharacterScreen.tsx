@@ -6,7 +6,7 @@ import { Button } from "../components/Button";
 import { CenterFill } from "../components/Layout";
 import { useGameData } from "../hooks/useGameData";
 import { useWallet } from "../hooks/useWallet";
-import { createCharacter, fetchAllMintedCharacters } from "../api/api";
+import { createCharacter } from "../api/api";
 import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
 
 const SelectedCharacterButton = styled.button<{
@@ -85,7 +85,6 @@ export const CreateCharacterScreen = () => {
         {charactersWithLiveData.map(character => (
           <SelectedCharacterButton
             key={character.id}
-            // @TODO make this token id!!!
             selected={selectedCharacterId === character.id}
             onClick={() => handleSelectCharacter(character.id)}
             exists={typeof character.tokenId === "number"}

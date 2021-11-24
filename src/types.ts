@@ -22,19 +22,26 @@ export type GameData = {
   selectedTokenId: number | null;
   route: Routes;
 };
+export type CharacterAbilities = {
+  abilityType: number;
+  action: number;
+  name: string;
+};
 
 export type CharacterAttributes = {
   tokenId?: number;
   id: number;
-  name: string;
-  health: number;
-  strength: number;
-  armor: number;
-  block: number;
   agility: number;
-  spellPower: number;
-  spellResistance: number;
-  healingPower: number;
+  armor: number;
+  experience: number;
+  healingpower: number;
+  health: number;
+  name: string;
+  physicalblock: number;
+  spellpower: number;
+  spellresistance: number;
+  strength: number;
+  abilities: CharacterAbilities[];
 };
 
 export type CharacterStatsDictionary = Record<string, CharacterAttributes>;

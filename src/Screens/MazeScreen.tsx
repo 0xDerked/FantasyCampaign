@@ -9,11 +9,13 @@ import clone from "lodash/clone";
 import { useCallback } from "react";
 import { useGameData } from "../hooks/useGameData";
 import { useTriggerTurn } from "../hooks/useTriggerTurn";
+import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
 
 export const MazeScreen = () => {
   useTriggerTurn();
   const walls = useWallsWithTransforms();
   const doors = useDoorsWithTransforms();
+  useQueryAllMintedCharacters();
   const [gameData, setGameData] = useGameData();
 
   const wallSurfaces = walls
