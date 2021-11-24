@@ -7,26 +7,15 @@ import "./FantasyThings.sol";
 import "./CastleCampaignItems.sol";
 import "./CampaignPlaymaster.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "./PuzzleVerifier.sol";
 
-interface IVerifier {
-	   function verifyProof(
-            uint[2] memory a,
-            uint[2][2] memory b,
-            uint[2] memory c,
-            uint[1] memory input
-        ) external view returns (bool r);
-}
-
-contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignItems, Ownable {
+contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignItems, Verifier {
 
 	bytes32 public keyHash;
 	uint256 public fee;
 
 	mapping(bytes32 => uint256) private requestToTokenId;
 	mapping(bytes32 => bool) internal proofHashUsed;
-
-	IVerifier verifier;
 
 	constructor(address _fantasyCharacters, address _attributesManager, uint256 _numTurns) VRFConsumerBase(
 		0x8C7382F9D8f56b33781fE506E897a4F1e2d17255, //vrfCoordinator
@@ -64,16 +53,12 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		lootGuaranteedItemIds[_numTurns - 1] = itemIdsForTurn;
 	}
 
-	function setVerifier(address _verifier) external onlyOwner {
-		verifier = IVerifier(_verifier);
-	}
-
 	function unlockFinalTurn(uint256 _tokenId, uint[2] memory a, uint[2][2] memory b, uint[2] memory c, uint[1] memory input) 
 		external controlsCharacter(_tokenId) {
 			bytes32 proofHash = keccak256(abi.encodePacked(a,b,c,input));
 			require(!proofHashUsed[proofHash], "Stop Cheating");
 			proofHashUsed[proofHash] = true;
-			bool validProof = verifier.verifyProof(a,b,c,input);
+			bool validProof = verifyProof(a,b,c,input);
 			uint256 currentTurn = playerTurn[_tokenId];
 			if(validProof && currentTurn == numberOfTurns) {
 				bossFightAvailable[_tokenId] = true;
