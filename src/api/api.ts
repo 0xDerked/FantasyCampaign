@@ -18,7 +18,7 @@ export const fetchAllMintedCharacters = async (
   );
   const rawTokenIds: BigNumber[] = await contract.getAllCharacters(address);
   const tokenIds = rawTokenIds.map(id => id.toNumber());
-  const promises = tokenIds.map(tokenId => contract.getCharacter(tokenId));
+  const promises = tokenIds.map(tokenId => contract.getPlayer(tokenId));
   const characters: CharacterAttributes[] = await Promise.all(promises);
   const characterMap: CharacterStatsDictionary = {};
   for (let character of characters) {

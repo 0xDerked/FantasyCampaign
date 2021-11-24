@@ -18,6 +18,7 @@ import { GameDataProvider, initialGameData } from "./providers/GameData";
 import { MazeScreen } from "./Screens/MazeScreen";
 import { Map } from "./Maze/Map";
 import { QueryClient, QueryClientProvider } from "react-query";
+import { Router } from "./routes/Router";
 
 export const queryClient = new QueryClient();
 
@@ -44,28 +45,6 @@ const ClearStorageButton = styled.button`
   border: none;
   outline: none;
 `;
-
-const Router = () => {
-  const [gameData] = useGameData();
-  switch (gameData.route) {
-    case Routes.SplashScreen:
-      return <SplashScreen />;
-    case Routes.CreateCharacterScreen:
-      return <CreateCharacterScreen />;
-    case Routes.EnterCampaignScreen:
-      return <EnterCampaignScreen />;
-    case Routes.Turn:
-      return <FightScreen />;
-    case Routes.MazeScreen:
-    default:
-      return (
-        <>
-          <MazeScreen />
-          <Map rotateMap={false} />
-        </>
-      );
-  }
-};
 
 const ViewPortContainer = styled.div`
   position: relative;
