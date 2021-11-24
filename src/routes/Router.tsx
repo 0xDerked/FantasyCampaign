@@ -27,7 +27,7 @@ export const Router = () => {
           <EnterCampaignScreen />
         </Web3Gate>
       );
-    case Routes.Turn:
+    case Routes.FightScreen:
       return (
         <Web3Gate>
           <FightScreen />

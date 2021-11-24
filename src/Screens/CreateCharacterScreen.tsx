@@ -70,7 +70,7 @@ export const CreateCharacterScreen = () => {
   };
 
   const handleUseExistingCharacter = () => {
-    if (selectedCharacterTokenId) {
+    if (typeof selectedCharacterTokenId === "number") {
       setGameData({
         ...gameData,
         selectedTokenId: selectedCharacterTokenId,

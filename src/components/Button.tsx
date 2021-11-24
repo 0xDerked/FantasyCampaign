@@ -13,4 +13,5 @@ export const Button = styled.button`
   align-items: center;
   justify-content: inherit;
   color: white;
+  opacity: ${props => (props.disabled ? 0.2 : 1)};
 `;

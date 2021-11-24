@@ -8,8 +8,10 @@ import { useDoorsWithTransforms } from "../hooks/useDoorsWithTransforms";
 import clone from "lodash/clone";
 import { useCallback } from "react";
 import { useGameData } from "../hooks/useGameData";
+import { useTriggerTurn } from "../hooks/useTriggerTurn";
 
 export const MazeScreen = () => {
+  useTriggerTurn();
   const walls = useWallsWithTransforms();
   const doors = useDoorsWithTransforms();
   const [gameData, setGameData] = useGameData();

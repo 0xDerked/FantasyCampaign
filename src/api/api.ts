@@ -9,6 +9,8 @@ import Web3Modal from "web3modal";
 import { characterStats } from "../constants";
 import { CharacterAttributesStructOutput } from "../../typechain/FantasyAttributesManager";
 
+// --------------------------------------------------------------------------------
+
 export const fetchAllMintedCharacters = async (
   signer: JsonRpcSigner | undefined
 ): Promise<CharacterStatsDictionary | null> => {
@@ -63,6 +65,8 @@ export const fetchAllMintedCharacters = async (
 };
 export const FETCH_MINTED_CACHE_KEY = "allMintedCharacters";
 
+// --------------------------------------------------------------------------------
+
 export const createCharacter = async (
   signer: JsonRpcSigner | undefined,
   characterId: number | null
@@ -83,6 +87,8 @@ export const createCharacter = async (
 };
 export const CREATE_CHARACTER_CACHE_KEY = "createCharacter";
 
+// --------------------------------------------------------------------------------
+
 export const enterCampaign = async (
   signer: JsonRpcSigner | undefined,
   characterToken: number
@@ -102,6 +108,26 @@ export const enterCampaign = async (
   }
 };
 export const ENTER_CAMPAIGN_CACHE_KEY = "enterCampaign";
+
+// --------------------------------------------------------------------------------
+
+export const generateTurn = async (
+  signer: JsonRpcSigner | undefined,
+  characterToken: number
+) => {
+  if (!signer) {
+    return null;
+  }
+  const contract = new ethers.Contract(
+    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+    CastleCampaign.abi,
+    signer
+  );
+  await contract.generateTurn(characterToken);
+};
+export const GENERATE_TURN_CACHE_KEY = "generateTurn";
+
+// --------------------------------------------------------------------------------
 
 export const fetchSigner = async (): Promise<JsonRpcSigner> => {
   const web3Modal = new Web3Modal();
