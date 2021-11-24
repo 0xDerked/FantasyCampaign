@@ -137,3 +137,109 @@ export const fetchSigner = async (): Promise<JsonRpcSigner> => {
   return signerResponse;
 };
 export const FETCH_SIGNER_CACHE_KEY = "fetchSigner";
+
+// --------------------------------------------------------------------------------
+export const attackWithAbility = async (
+  signer: JsonRpcSigner | undefined,
+  characterToken: number,
+  abilityIndex: number,
+  target: number
+) => {
+  if (!signer) {
+    return null;
+  }
+  const contract = new ethers.Contract(
+    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+    CastleCampaign.abi,
+    signer
+  );
+  await contract.attackWithAbility(characterToken, abilityIndex, target);
+};
+export const ATTACK_ABILITY_CACHE_KEY = "attackWithAbility";
+// --------------------------------------------------------------------------------
+export const attackWithItem = async (
+  signer: JsonRpcSigner | undefined,
+  characterToken: number,
+  itemIndex: number,
+  target: number
+) => {
+  if (!signer) {
+    return null;
+  }
+  const contract = new ethers.Contract(
+    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+    CastleCampaign.abi,
+    signer
+  );
+  await contract.attackWithItem(characterToken, itemIndex, target);
+};
+export const ATTACK_ITEM_CACHE_KEY = "attackWithItem";
+// --------------------------------------------------------------------------------
+export const castHealAbility = async (
+  signer: JsonRpcSigner | undefined,
+  characterToken: number,
+  abilityIndex: number
+) => {
+  if (!signer) {
+    return null;
+  }
+  const contract = new ethers.Contract(
+    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+    CastleCampaign.abi,
+    signer
+  );
+  await contract.castHealAbility(characterToken, abilityIndex);
+};
+export const HEAL_ABILITY_CACHE_KEY = "castHealAbility";
+// --------------------------------------------------------------------------------
+export const endExploreLoot = async (
+  signer: JsonRpcSigner | undefined,
+  characterToken: number
+) => {
+  if (!signer) {
+    return null;
+  }
+  const contract = new ethers.Contract(
+    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+    CastleCampaign.abi,
+    signer
+  );
+  await contract.endExploreLoot(characterToken);
+};
+export const END_LOOT_CACHE_KEY = "endExploreLoot";
+// --------------------------------------------------------------------------------
+export const getCampaignInventory = async (
+  signer: JsonRpcSigner | undefined,
+  characterToken: number,
+  characterNonce: number
+) => {
+  if (!signer) {
+    return null;
+  }
+  const contract = new ethers.Contract(
+    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+    CastleCampaign.abi,
+    signer
+  );
+  await contract.campaignInventory(characterToken, characterNonce);
+};
+export const GET_INVENTORY_CACHE_KEY = "getCampaignInventory";
+// --------------------------------------------------------------------------------
+//unlock final turn
+// --------------------------------------------------------------------------------
+
+export const getCurrentCampaignStatus = async (
+  signer: JsonRpcSigner | undefined,
+  characterToken: number
+) => {
+  if (!signer) {
+    return null;
+  }
+  const contract = new ethers.Contract(
+    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
+    CastleCampaign.abi,
+    signer
+  );
+  await contract.getCurrentCampaignStatus(characterToken);
+};
+export const GET_STATUS_CACHE_KEY = "getCurrentCampaignStatus";
