@@ -1,20 +1,5 @@
 import { CharacterClass } from "./types";
 
-export type CharacterAttributes = {
-  id: number;
-  name: string;
-  health: number;
-  strength: number;
-  armor: number;
-  block: number;
-  agility: number;
-  spellPower: number;
-  spellResistance: number;
-  healingPower: number;
-};
-
-export type CharacterStats = Record<number, CharacterAttributes | null>;
-
 const mapStatsToDict = ([
   id,
   name,

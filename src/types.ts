@@ -5,11 +5,13 @@ export type Position = {
 };
 
 export enum Routes {
-  Splash = "Splash",
-  CreateCharacter = "CreateCharacter",
-  StartCampaign = "StartCampaign",
-  Maze = "Maze",
-  Fight = "Fight",
+  SplashScreen = "SplashScreen",
+  CreateCharacterScreen = "CreateCharacterScreen",
+  StartCampaignScreen = "StartCampaignScreen",
+  MazeScreen = "MazeScreen",
+  Turn = "TurnTrigger",
+  FightScreen = "FightScreen",
+  LootScreen = "LootScreen",
 }
 
 export type GameData = {
@@ -17,10 +19,25 @@ export type GameData = {
   walls: WallCoords[];
   doors: DoorCoords[];
   spawnPoints: SpawnPointCoords[];
-  selectedCharacterId: number | null;
+  selectedTokenId: number | null;
   route: Routes;
+  mintedCharacters: null | Record<string, CharacterStats>;
 };
 
+export type CharacterAttributes = {
+  id: number;
+  name: string;
+  health: number;
+  strength: number;
+  armor: number;
+  block: number;
+  agility: number;
+  spellPower: number;
+  spellResistance: number;
+  healingPower: number;
+};
+
+export type CharacterStats = Record<number, CharacterAttributes | null>;
 export enum CharacterClass {
   Knight = 0,
   Warlord = 1,

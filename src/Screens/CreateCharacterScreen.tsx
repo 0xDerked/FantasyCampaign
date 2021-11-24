@@ -1,10 +1,10 @@
 import * as React from "react";
 import { CharacterClass, Routes } from "../types";
 import styled from "styled-components";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import FantasyCharacter from "../../artifacts/contracts/FantasyCharacter.sol/FantasyCharacter.json";
-import { useGetCharactersForPlayer } from "../hooks/useGetCharactersForPlayer";
-import { useGetAllCharacters } from "../hooks/useGetAllCharacters";
+import { useGetMintedCharacters } from "../hooks/useGetMintedCharacters";
+import { useGetAvailableCharacters } from "../hooks/useGetAvailableCharacters";
 import { Button } from "../components/Button";
 import { CenterFill } from "../components/Layout";
 import { useGameData } from "../hooks/useGameData";
@@ -35,15 +35,14 @@ const CharacterContainer = styled.div`
   margin-bottom: 20px;
 `;
 
-export const CreateCharacter = () => {
+export const CreateCharacterScreen = () => {
   const [gameData, setGameData] = useGameData();
-  const playerCharacters = useGetCharactersForPlayer();
-  const playerCharacterIds =
-    playerCharacters?.map(character => character.id) || [];
-  const allCharacters = useGetAllCharacters();
+  const playerCharacters = useGetMintedCharacters();
+  const allCharacters = useGetAvailableCharacters();
   const { signer } = useWallet();
-  const [selectedCharacterId, setSelectedCharacterId] =
-    React.useState<CharacterClass | null>(null);
+  const [selectedCharacterId, setSelectedCharacterId] = React.useState<
+    number | null
+  >(null);
 
   const handleCreateCharacter = async () => {
     if (!signer) {
@@ -57,11 +56,18 @@ export const CreateCharacter = () => {
       );
       const transaction = await contract.createCharacter(selectedCharacterId);
       await transaction.wait();
+      const address = await signer.getAddress();
+      const data: BigNumber[] = await contract.getAllCharacters(address);
+      const tokenIds = data.map(id => id.toNumber());
+      const promises = tokenIds.map(id => contract.getCharacter(id));
 
       setGameData({
         ...gameData,
-        selectedCharacterId: selectedCharacterId,
-        route: Routes.StartCampaign,
+        mintedCharacters: {
+          ...gameData.mintedCharacters,
+          [tokenId]: theDataWeJustGotBack,
+        },
+        route: Routes.StartCampaignScreen,
       });
     } catch (e: any) {
       alert(`Error creating character: ${e.message}`);
@@ -74,7 +80,7 @@ export const CreateCharacter = () => {
     setGameData({
       ...gameData,
       selectedCharacterId: selectedCharacterId,
-      route: Routes.StartCampaign,
+      route: Routes.StartCampaignScreen,
     });
   };
 
@@ -102,12 +108,7 @@ export const CreateCharacter = () => {
           Use Existing Character
         </Button>
       ) : (
-        <Button
-          onClick={handleCreateCharacter}
-          disabled={selectedCharacterId === null}
-        >
-          Create New Character
-        </Button>
+        <Button onClick={handleCreateCharacter}>Create New Character</Button>
       )}
     </CenterFill>
   );

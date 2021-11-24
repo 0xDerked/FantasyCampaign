@@ -1,7 +1,7 @@
 import * as React from "react";
-import { doorTextureMaps } from "./DoorTextures";
-import { wallTextureMaps } from "./WallTextures";
-import { Ceiling, Floor, Outer } from "./EnvironmentTextures";
+import { doorTextureMaps } from "../Maze/DoorTextures";
+import { wallTextureMaps } from "../Maze/WallTextures";
+import { Ceiling, Floor, Outer } from "../Maze/EnvironmentTextures";
 import { DoorCoords, WallType } from "../types";
 import { useWallsWithTransforms } from "../hooks/useWallsWithTransforms";
 import { useDoorsWithTransforms } from "../hooks/useDoorsWithTransforms";
@@ -9,7 +9,7 @@ import clone from "lodash/clone";
 import { useCallback } from "react";
 import { useGameData } from "../hooks/useGameData";
 
-export const ViewPort = () => {
+export const MazeScreen = () => {
   const walls = useWallsWithTransforms();
   const doors = useDoorsWithTransforms();
   const [gameData, setGameData] = useGameData();

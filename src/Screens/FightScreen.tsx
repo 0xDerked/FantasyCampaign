@@ -7,7 +7,7 @@ import {
 } from "../Maze/constants";
 import { Image } from "../components/Image";
 
-export const Fight = styled(Image).attrs(() => ({
+export const FightScreen = styled(Image).attrs(() => ({
   src: match,
 }))`
   position: absolute;

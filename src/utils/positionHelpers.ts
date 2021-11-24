@@ -27,7 +27,7 @@ export const setRow = (pos: Position, delta: number) => ({
 });
 
 export const rotLeft = (gameData: GameData): GameData => {
-  if (gameData.route === Routes.Fight) {
+  if (gameData.route === Routes.Turn) {
     return gameData;
   }
   const newPos = {
@@ -41,7 +41,7 @@ export const rotLeft = (gameData: GameData): GameData => {
 };
 
 export const rotRight = (gameData: GameData): GameData => {
-  if (gameData.route === Routes.Fight) {
+  if (gameData.route === Routes.Turn) {
     return gameData;
   }
   const newPos = {
@@ -166,7 +166,7 @@ export const strafeLeft = (pos: Position, currentState: GameData): Position => {
 
 type PosFunction = (position: Position, currentState: GameData) => Position;
 export const setPos = (fn: PosFunction) => (gameData: GameData) => {
-  if (gameData.route === Routes.Fight) {
+  if (gameData.route === Routes.Turn) {
     return gameData;
   }
   const newPosition = fn(gameData.position, gameData);
@@ -177,7 +177,7 @@ export const setPos = (fn: PosFunction) => (gameData: GameData) => {
   if (typeof spawnPoint !== "undefined") {
     return {
       ...gameData,
-      route: Routes.Fight,
+      route: Routes.Turn,
       isFighting: true,
       position: newPosition,
     };

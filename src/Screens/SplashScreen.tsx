@@ -12,7 +12,10 @@ export const SplashScreen = () => {
   const connect = async () => {
     try {
       await connectWallet();
-      setGameData(gameData => ({ ...gameData, route: Routes.CreateCharacter }));
+      setGameData(gameData => ({
+        ...gameData,
+        route: Routes.CreateCharacterScreen,
+      }));
     } catch (e: any) {
       alert(`Something went wrong connecting wallet: ${e.message}`);
     }

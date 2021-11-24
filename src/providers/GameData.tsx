@@ -8,8 +8,9 @@ export const initialGameData: GameData = {
   walls: wallCoords,
   doors: doorsCoords,
   spawnPoints: spawnPointCoords,
-  selectedCharacterId: null,
-  route: Routes.Splash,
+  selectedTokenId: null,
+  mintedCharacters: null,
+  route: Routes.SplashScreen,
 };
 
 export const GameDataContext = React.createContext<

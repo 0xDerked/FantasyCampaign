@@ -10,15 +10,15 @@ const contractMock = {
 
 export const useTriggerTurn = () => {
   const [gameState] = useGameData();
-  const isFighting = gameState.route === Routes.Fight;
+  const isInTurnMode = gameState.route === Routes.Turn;
+  const wasInTurnMode = useRef<boolean | null>(null);
 
-  const wasFighting = useRef(isFighting);
   useEffect(() => {
-    if (isFighting && !wasFighting.current) {
-      (async () => {
+    (async () => {
+      if (isInTurnMode && !wasInTurnMode.current) {
         await contractMock.generateTurn();
-      })();
-    }
-    wasFighting.current = isFighting;
-  }, [isFighting]);
+      }
+    })();
+    wasInTurnMode.current = isInTurnMode;
+  }, [isInTurnMode]);
 };

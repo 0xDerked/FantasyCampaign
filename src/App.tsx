@@ -8,13 +8,13 @@ import {
   UNSCALED_VIEWPORT_WIDTH,
 } from "./Maze/constants";
 import { useInterfaceEventsListeners } from "./hooks/useInterfaceEventsListeners";
-import { CreateCharacter } from "./Screens/CreateCharacter";
+import { CreateCharacterScreen } from "./Screens/CreateCharacter";
 import { WalletProvider } from "./providers/WalletProvider";
 import { SplashScreen } from "./Screens/SplashScreen";
 import { scale } from "./utils/scale";
 import { Routes } from "./types";
-import { StartCampaign } from "./Screens/StartCampaign";
-import { Fight } from "./Screens/Fight";
+import { StartCampaignScreen } from "./Screens/StartCampaign";
+import { FightScreen } from "./Screens/FightScreen";
 import { useGameData } from "./hooks/useGameData";
 import { GameDataProvider, initialGameData } from "./providers/GameData";
 
@@ -45,15 +45,15 @@ const ClearStorageButton = styled.button`
 const Router = () => {
   const [gameData] = useGameData();
   switch (gameData.route) {
-    case Routes.Splash:
+    case Routes.SplashScreen:
       return <SplashScreen />;
-    case Routes.CreateCharacter:
-      return <CreateCharacter />;
-    case Routes.StartCampaign:
-      return <StartCampaign />;
-    case Routes.Fight:
-      return <Fight />;
-    case Routes.Maze:
+    case Routes.CreateCharacterScreen:
+      return <CreateCharacterScreen />;
+    case Routes.StartCampaignScreen:
+      return <StartCampaignScreen />;
+    case Routes.Turn:
+      return <FightScreen />;
+    case Routes.MazeScreen:
     default:
       return (
         <>

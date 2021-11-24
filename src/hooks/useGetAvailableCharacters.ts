@@ -1,7 +1,7 @@
 import { CharacterAttributes, characterStats } from "../constants";
 import { CharacterClass } from "../types";
 
-export const useGetAllCharacters = (): CharacterAttributes[] => {
+export const useGetAvailableCharacters = (): CharacterAttributes[] => {
   const availableCharacterIds = [
     CharacterClass.Warlord,
     CharacterClass.Shaman,

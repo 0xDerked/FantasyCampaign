@@ -1,10 +1,10 @@
 import { CharacterAttributes } from "../constants";
-import { useGetAllCharacters } from "./useGetAllCharacters";
+import { useGetAvailableCharacters } from "./useGetAvailableCharacters";
 import { useGameData } from "./useGameData";
 
 export const useGetSelectedCharacter = (): null | CharacterAttributes => {
   const [gameData] = useGameData();
-  const allCharacters = useGetAllCharacters();
+  const allCharacters = useGetAvailableCharacters();
   const { selectedCharacterId } = gameData;
   const selectedCharacter = allCharacters.find(
     character => character.id === selectedCharacterId

@@ -5,7 +5,7 @@ import { ethers } from "ethers";
 import CastleCampaign from "../../artifacts/contracts/CastleCampaign.sol/CastleCampaign.json";
 import { useGetSelectedCharacter } from "../hooks/useGetSelectedCharacter";
 import { Button } from "../components/Button";
-import { useGetCharactersForPlayer } from "../hooks/useGetCharactersForPlayer";
+import { useGetMintedCharacters } from "../hooks/useGetMintedCharacters";
 import { useGameData } from "../hooks/useGameData";
 import { useWallet } from "../hooks/useWallet";
 
@@ -17,11 +17,12 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-export const StartCampaign = () => {
+export const StartCampaignScreen = () => {
   const { signer } = useWallet();
   const selectedCharacter = useGetSelectedCharacter();
   const [gameData, setGameData] = useGameData();
-  useGetCharactersForPlayer();
+  console.log(222, selectedCharacter);
+  useGetMintedCharacters();
 
   const startCampaign = async () => {
     if (!signer) {
@@ -41,7 +42,7 @@ export const StartCampaign = () => {
       }
       setGameData({
         ...gameData,
-        route: Routes.Maze,
+        route: Routes.MazeScreen,
       });
     } catch (e: any) {
       alert(`Error starting campaign: ${e.message}`);
