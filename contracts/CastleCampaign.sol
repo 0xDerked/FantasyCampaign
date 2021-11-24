@@ -8,10 +8,6 @@ import "./CastleCampaignItems.sol";
 import "./CampaignPlaymaster.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
 
-interface IMockVRF {
-	function requestRandomness(uint256 _num, string calldata _letters, bytes32 _requestId) external;
-}
-
 contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignItems {
 
 	bytes32 public keyHash;
@@ -19,17 +15,12 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 
 	mapping(bytes32 => uint256) private requestToTokenId;
 
-
-	IMockVRF mockVRF;
-
-	constructor(address _fantasyCharacters, address _mockVRF, address _attributesManager, uint256 _numTurns) VRFConsumerBase(
+	constructor(address _fantasyCharacters, address _attributesManager, uint256 _numTurns) VRFConsumerBase(
 		0x8C7382F9D8f56b33781fE506E897a4F1e2d17255, //vrfCoordinator
       0x326C977E6efc84E512bB9C30f76E30c160eD06FB //LINK token
 	) CampaignPlaymaster(_numTurns, _fantasyCharacters, _attributesManager) {
 		keyHash = 0x6e75b569a01ef56d18cab6a8e71e6600d6ce853834d4a5748b720d06f878b3a4; //oracle keyhash;
       fee = 0.0001 * 10**18; //0.0001 LINK //link token fee; 
-
-		mockVRF = IMockVRF(_mockVRF);
 
 		//set up some mobs
 		FantasyThings.Ability[] memory henchmanAbilities = new FantasyThings.Ability[](1);
@@ -110,11 +101,8 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		//generate the turn if it's not a guaranteed turn type
 		//start the turn for both guaranteed and generated turns
 		if(turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.NotSet) {
-			//In the real VRF, the request Id is returned from the request and we pass different params to request randomness
-			bytes32 requestId = keccak256(abi.encodePacked(msg.sender, _tokenId, playerTurn[_tokenId], playerNonce[_tokenId]));
-		   //bytes32 requestId = requestRandomness(keyHash, fee);
+		   bytes32 requestId = requestRandomness(keyHash, fee);
 			requestToTokenId[requestId] = _tokenId;
-			mockVRF.requestRandomness(uint256(keccak256(abi.encodePacked(playerTurn[_tokenId],playerNonce[_tokenId]))),"abc",requestId);
 		} else {
 			turnTypes[_tokenId][playerTurn[_tokenId]]  = turnGuaranteedTypes[playerTurn[_tokenId]];
 			if(turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.Combat) {
@@ -130,16 +118,10 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 	}
 
 	function fulfillRandomness(bytes32 requestId, uint256 randomness) internal override {
-		//later for use with the chainlinkVRF
-		//can we use some sort of mapping combined with the requestId to do multiple things?!
-	}
-
-	//to expose a mock callback for testing VRF process
-	function mockFulfillRandomness(bytes32 requestId, uint256 randomness) external {
 		uint256 tokenId = requestToTokenId[requestId];
 		currentRandomSeed[tokenId] = randomness;
 
-		if(randomness % 100 < 101) {
+		if(randomness % 100 < 101 ) {
 			//set up combat turn
 			uint256[] memory mobIdsForTurn = new uint256[](randomness%2+1);
 			for(uint256 i=0; i<mobIdsForTurn.length; i++) {
@@ -147,16 +129,40 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 			}
 			_setMobsForTurn(tokenId,mobIdsForTurn,playerTurn[tokenId]);
 			turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Combat;
-			} else if(randomness % 100 < 95) {
+			} else if(randomness % 100 > 101) {
 				//set up looting turn
 				turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Loot;
 			} else {
-				//set up puzzle turn
+				//set up puzzle turn -- not triggering right now
 				turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Puzzle;
 			}
 		emit TurnStarted(tokenId);
 		emit TurnSet(tokenId);
 	}
+
+	//to expose a mock callback for testing VRF process
+	// function mockFulfillRandomness(bytes32 requestId, uint256 randomness) external {
+	// 	uint256 tokenId = requestToTokenId[requestId];
+	// 	currentRandomSeed[tokenId] = randomness;
+
+	// 	if(randomness % 100 < 101) {
+	// 		//set up combat turn
+	// 		uint256[] memory mobIdsForTurn = new uint256[](randomness%2+1);
+	// 		for(uint256 i=0; i<mobIdsForTurn.length; i++) {
+	// 			mobIdsForTurn[i] = 0; //we could randomly generate this from some sort of data model and spawn rate
+	// 		}
+	// 		_setMobsForTurn(tokenId,mobIdsForTurn,playerTurn[tokenId]);
+	// 		turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Combat;
+	// 		} else if(randomness % 100 < 95) {
+	// 			//set up looting turn
+	// 			turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Loot;
+	// 		} else {
+	// 			//set up puzzle turn
+	// 			turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Puzzle;
+	// 		}
+	// 	emit TurnStarted(tokenId);
+	// 	emit TurnSet(tokenId);
+	// }
   
 
 }

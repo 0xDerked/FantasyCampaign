@@ -34,13 +34,13 @@ const config = {
     hardhat: {
       chainId: 1337,
     },
-    localhost: {
-      url: "http://localhost:8545",
-      chainId: 1337,
-    },
     mumbai: {
       url: process.env.MUMBAI_RPC_URL,
-      accounts: [process.env.PRIVATE_KEY || ""],
+      accounts: [
+        process.env.PRIVATE_KEY,
+        process.env.PRIVATE_KEY2,
+        process.env.PRIVATE_KEY3,
+      ],
     },
   },
   typechain: {
