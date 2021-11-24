@@ -7,9 +7,17 @@ import "./FantasyThings.sol";
 import "./CastleCampaignItems.sol";
 import "./CampaignPlaymaster.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
-import "./PuzzleVerifier.sol";
 
-contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignItems, Verifier {
+interface IVerifier {
+	 function verifyProof(
+            uint[2] memory a,
+            uint[2][2] memory b,
+            uint[2] memory c,
+            uint[1] memory input
+        ) external view returns (bool r);
+}
+
+contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignItems {
 
 	bytes32 public keyHash;
 	uint256 public fee;
@@ -17,7 +25,9 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 	mapping(bytes32 => uint256) private requestToTokenId;
 	mapping(bytes32 => bool) internal proofHashUsed;
 
-	constructor(address _fantasyCharacters, address _attributesManager, uint256 _numTurns) VRFConsumerBase(
+	IVerifier verifier;
+
+	constructor(address _fantasyCharacters, address _attributesManager, uint256 _numTurns, address _verifier) VRFConsumerBase(
 		0x8C7382F9D8f56b33781fE506E897a4F1e2d17255, //vrfCoordinator
       0x326C977E6efc84E512bB9C30f76E30c160eD06FB //LINK token
 	) CampaignPlaymaster(_numTurns, _fantasyCharacters, _attributesManager) {
@@ -36,8 +46,6 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 
 		//push the items into the campaign
 		CampaignItems.push(iceLance);
-		CampaignItems.push(scrollOfProtection);
-		CampaignItems.push(scrollOfStrength);
 
 		//set up some guaranteed events with the mobs/puzzles/loot and turn types
 		//last turn will be a boss fight against the dragon
@@ -51,6 +59,8 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		uint256[] memory itemIdsForTurn = new uint256[](1);
 		itemIdsForTurn[0] = 0; 
 		lootGuaranteedItemIds[_numTurns - 1] = itemIdsForTurn;
+
+		verifier = IVerifier(_verifier);
 	}
 
 	function unlockFinalTurn(uint256 _tokenId, uint[2] memory a, uint[2][2] memory b, uint[2] memory c, uint[1] memory input) 
@@ -58,7 +68,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 			bytes32 proofHash = keccak256(abi.encodePacked(a,b,c,input));
 			require(!proofHashUsed[proofHash], "Stop Cheating");
 			proofHashUsed[proofHash] = true;
-			bool validProof = verifyProof(a,b,c,input);
+			bool validProof = verifier.verifyProof(a,b,c,input);
 			uint256 currentTurn = playerTurn[_tokenId];
 			if(validProof && currentTurn == numberOfTurns) {
 				bossFightAvailable[_tokenId] = true;
