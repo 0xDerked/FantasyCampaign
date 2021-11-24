@@ -7,13 +7,15 @@ import "./FantasyThings.sol";
 import "./CastleCampaignItems.sol";
 import "./CampaignPlaymaster.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/IERC721Metadata.sol";
+import "./PuzzleVerifier.sol";
 
-contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignItems {
+contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignItems, PuzzleVerifier {
 
 	bytes32 public keyHash;
 	uint256 public fee;
 
 	mapping(bytes32 => uint256) private requestToTokenId;
+	mapping(bytes32 => bool) internal proofHashUsed;
 
 	constructor(address _fantasyCharacters, address _attributesManager, uint256 _numTurns) VRFConsumerBase(
 		0x8C7382F9D8f56b33781fE506E897a4F1e2d17255, //vrfCoordinator
@@ -49,6 +51,18 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		uint256[] memory itemIdsForTurn = new uint256[](1);
 		itemIdsForTurn[0] = 0; 
 		lootGuaranteedItemIds[_numTurns - 1] = itemIdsForTurn;
+	}
+
+	function unlockFinalTurn(uint256 _tokenId, uint[2] memory a, uint[2][2] memory b, uint[2] memory c, uint[1] memory input) 
+		external controlsCharacter(_tokenId) {
+			bytes32 proofHash = keccak256(abi.encodePacked(a,b,c,input));
+			require(!proofHashUsed(proofHash), "Stop Cheating");
+			proofHashUsed[proofHash] = true;
+			bool validProof = verifyProof(a,b,c,input);
+			uint256 currentTurn = playerTurn[_tokenId];
+			if(validProof && currentTurn == numberOfTurns) {
+				bossFightAvailable[_tokenId] = true;
+			}
 	}
 
 	function enterCampaign(uint256 _tokenId) external override controlsCharacter(_tokenId) {
@@ -98,6 +112,10 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 
 		turnInProgress[_tokenId] = true;
 
+		if(playerTurn[_tokenId] == numberOfTurns) {
+			require(bossFightAvailable[_tokenId], "Not at the end of the maze!");
+		}
+
 		//generate the turn if it's not a guaranteed turn type
 		//start the turn for both guaranteed and generated turns
 		if(turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.NotSet) {
@@ -113,7 +131,6 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 				//set puzzle
 			}
 			emit TurnStarted(_tokenId);
-			emit TurnSet(_tokenId);
 		}
 	}
 

@@ -16,6 +16,9 @@ abstract contract CampaignPlaymaster {
 	mapping(uint256 => uint256) internal currentRandomSeed;
 	uint16 public baseHealth;
 
+	//tokenId -> bool
+	mapping(uint256=>bool) public bossFightAvailable;
+
 
 	//tokenId -> playerNonce -> playerStatus
 	mapping(uint256 => mapping(uint256 => FantasyThings.CampaignAttributes)) public playerStatus;
