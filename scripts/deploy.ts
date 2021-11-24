@@ -43,9 +43,11 @@ const main = async () => {
     FantasyCharacterContract.address,
     MockVRFContract.address,
     FantasyAttributesManagerContract.address,
-    5
+    4
   );
   await CastleCampaignContract.deployed();
+
+  await MockVRFContract.setCampaignAddress(CastleCampaignContract.address);
 
   console.log(
     "Castle Campaign Contract Address: ",
