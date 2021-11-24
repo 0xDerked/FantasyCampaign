@@ -86,3 +86,12 @@ export type SpawnPointCoords = {
 };
 
 export type SpawnPointsDict = Record<`${number},${number}`, boolean>;
+
+export type RPCError = {
+  code: number;
+  message: string;
+  data: {
+    code: number;
+    message: number;
+  };
+};

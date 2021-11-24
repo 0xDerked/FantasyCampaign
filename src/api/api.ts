@@ -64,7 +64,7 @@ export const fetchAllMintedCharacters = async (
 export const FETCH_MINTED_CACHE_KEY = "allMintedCharacters";
 
 export const createCharacter = async (
-  signer: JsonRpcSigner | null,
+  signer: JsonRpcSigner | undefined,
   characterId: number | null
 ) => {
   if (!signer) {
@@ -84,7 +84,7 @@ export const createCharacter = async (
 export const CREATE_CHARACTER_CACHE_KEY = "createCharacter";
 
 export const enterCampaign = async (
-  signer: JsonRpcSigner | null,
+  signer: JsonRpcSigner | undefined,
   characterToken: number
 ) => {
   if (!signer) {

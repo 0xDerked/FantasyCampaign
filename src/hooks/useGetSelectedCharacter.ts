@@ -6,8 +6,12 @@ export const useGetSelectedCharacter = (): null | CharacterAttributes => {
   const [gameData] = useGameData();
   const { data: mintedCharacters } = useQueryAllMintedCharacters();
   const { selectedTokenId } = gameData;
-  if (selectedTokenId && mintedCharacters) {
-    return mintedCharacters[selectedTokenId];
+  if (typeof selectedTokenId == "number" && mintedCharacters) {
+    for (let [, mintedCharacter] of Object.entries(mintedCharacters)) {
+      if (mintedCharacter.tokenId === selectedTokenId) {
+        return mintedCharacter;
+      }
+    }
   }
   return null;
 };

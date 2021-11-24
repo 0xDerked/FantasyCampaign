@@ -6,17 +6,9 @@ import {
   UNSCALED_VIEWPORT_WIDTH,
 } from "./Maze/constants";
 import { useInterfaceEventsListeners } from "./hooks/useInterfaceEventsListeners";
-import { CreateCharacterScreen } from "./Screens/CreateCharacterScreen";
-import { WalletProvider } from "./providers/WalletProvider";
-import { SplashScreen } from "./Screens/SplashScreen";
 import { scale } from "./utils/scale";
-import { Routes } from "./types";
-import { EnterCampaignScreen } from "./Screens/EnterCampaignScreen";
-import { FightScreen } from "./Screens/FightScreen";
 import { useGameData } from "./hooks/useGameData";
 import { GameDataProvider, initialGameData } from "./providers/GameData";
-import { MazeScreen } from "./Screens/MazeScreen";
-import { Map } from "./Maze/Map";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Router } from "./routes/Router";
 
@@ -74,17 +66,15 @@ const ClearStorage = () => {
 function App() {
   return (
     <GameDataProvider>
-      <WalletProvider>
-        <QueryClientProvider client={queryClient}>
-          <Listeners />
-          <GameScreenContainer>
-            <ViewPortContainer>
-              <Router />
-            </ViewPortContainer>
-          </GameScreenContainer>
-          <ClearStorage />
-        </QueryClientProvider>
-      </WalletProvider>
+      <QueryClientProvider client={queryClient}>
+        <Listeners />
+        <GameScreenContainer>
+          <ViewPortContainer>
+            <Router />
+          </ViewPortContainer>
+        </GameScreenContainer>
+        <ClearStorage />
+      </QueryClientProvider>
     </GameDataProvider>
   );
 }

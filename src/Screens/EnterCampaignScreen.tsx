@@ -24,11 +24,11 @@ export const EnterCampaignScreen = () => {
     if (!signer) {
       return;
     }
-    if (!selectedCharacter) {
+    if (typeof selectedCharacter?.tokenId !== "number") {
       return;
     }
     try {
-      await enterCampaign(signer, selectedCharacter.id);
+      await enterCampaign(signer, selectedCharacter.tokenId);
       setGameData({
         ...gameData,
         route: Routes.MazeScreen,
