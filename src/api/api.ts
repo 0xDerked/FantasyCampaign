@@ -91,7 +91,7 @@ export const CREATE_CHARACTER_CACHE_KEY = "createCharacter";
 
 export const enterCampaign = async (
   signer: JsonRpcSigner | undefined,
-  characterToken: number
+  characterTokenId: number
 ) => {
   if (!signer) {
     return null;
@@ -101,10 +101,10 @@ export const enterCampaign = async (
     CastleCampaign.abi,
     signer
   );
-  const turn = await contract.playerTurn(characterToken);
+  const turn = await contract.playerTurn(characterTokenId);
   const turnNumber = turn.toNumber();
   if (turnNumber === 0) {
-    await contract.enterCampaign(characterToken);
+    await contract.enterCampaign(characterTokenId);
   }
 };
 export const ENTER_CAMPAIGN_CACHE_KEY = "enterCampaign";
@@ -113,7 +113,7 @@ export const ENTER_CAMPAIGN_CACHE_KEY = "enterCampaign";
 
 export const generateTurn = async (
   signer: JsonRpcSigner | undefined,
-  characterToken: number
+  characterTokenId: number
 ) => {
   if (!signer) {
     return null;
@@ -123,7 +123,7 @@ export const generateTurn = async (
     CastleCampaign.abi,
     signer
   );
-  await contract.generateTurn(characterToken);
+  await contract.generateTurn(characterTokenId);
 };
 export const GENERATE_TURN_CACHE_KEY = "generateTurn";
 
