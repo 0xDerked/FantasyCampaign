@@ -18,7 +18,6 @@ library Pairing {
         uint Y;
     }
     // Encoding of field elements is: X[0] * z + X[1]
-    s
     struct G2Point {
         uint[2] X;
         uint[2] Y;
