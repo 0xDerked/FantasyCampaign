@@ -8,6 +8,7 @@ import { useGameData } from "../hooks/useGameData";
 import { useWallet } from "../hooks/useWallet";
 import { createCharacter } from "../api/api";
 import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
+import { StatsTable } from "../components/StatsTable";
 
 const SelectedCharacterButton = styled.button<{
   selected: boolean;
@@ -50,9 +51,11 @@ export const CreateCharacterScreen = () => {
     number | null
   >(null);
 
-  const selectedCharacterTokenId = charactersWithLiveData?.find(
+  const selectedCharacter = charactersWithLiveData?.find(
     character => character.id === selectedCharacterId
-  )?.tokenId;
+  );
+
+  const selectedCharacterTokenId = selectedCharacter?.tokenId;
 
   const handleCreateCharacter = async () => {
     try {
@@ -93,6 +96,7 @@ export const CreateCharacterScreen = () => {
           </SelectedCharacterButton>
         ))}
       </CharacterContainer>
+      {selectedCharacter ? <StatsTable character={selectedCharacter} /> : null}
       {typeof selectedCharacterTokenId == "number" ? (
         <Button onClick={handleUseExistingCharacter}>
           Start/Resume Campaign

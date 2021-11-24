@@ -36,29 +36,39 @@ export const fetchAllMintedCharacters = async (
     const character: CharacterAttributesStructOutput =
       await attributesManagerContract.getPlayer(tokenId);
     const {
-      health,
-      strength,
-      armor,
-      physicalblock,
+      abilities,
       agility,
+      armor,
+      class: id,
+      experience,
+      healingpower,
+      health,
+      physicalblock,
       spellpower,
       spellresistance,
-      healingpower,
-      class: id,
-    } = character;
-    characterMap[id] = {
-      name: characterStats[id]?.name || "Unknown",
-      health,
       strength,
-      armor,
-      block: physicalblock,
-      agility,
-      spellPower: spellpower,
-      spellResistance: spellresistance,
-      healingPower: healingpower,
-      tokenId,
+    } = character;
+    const mappedAbilities = abilities.map(({ abilityType, action, name }) => ({
+      abilityType,
+      action,
+      name,
+    }));
+    characterMap[id] = {
       id,
+      name: characterStats[id]?.name || "Unknown",
+      agility,
+      armor,
+      experience: experience.toNumber(),
+      healingpower,
+      health,
+      physicalblock,
+      spellpower,
+      spellresistance,
+      strength,
+      tokenId,
+      abilities: mappedAbilities,
     };
+    console.log(characterMap);
   });
   await Promise.all(promises);
   return characterMap;
@@ -139,6 +149,7 @@ export const fetchSigner = async (): Promise<JsonRpcSigner> => {
 export const FETCH_SIGNER_CACHE_KEY = "fetchSigner";
 
 // --------------------------------------------------------------------------------
+
 export const attackWithAbility = async (
   signer: JsonRpcSigner | undefined,
   characterToken: number,
@@ -156,7 +167,9 @@ export const attackWithAbility = async (
   await contract.attackWithAbility(characterToken, abilityIndex, target);
 };
 export const ATTACK_ABILITY_CACHE_KEY = "attackWithAbility";
+
 // --------------------------------------------------------------------------------
+
 export const attackWithItem = async (
   signer: JsonRpcSigner | undefined,
   characterToken: number,
@@ -174,7 +187,9 @@ export const attackWithItem = async (
   await contract.attackWithItem(characterToken, itemIndex, target);
 };
 export const ATTACK_ITEM_CACHE_KEY = "attackWithItem";
+
 // --------------------------------------------------------------------------------
+
 export const castHealAbility = async (
   signer: JsonRpcSigner | undefined,
   characterToken: number,
@@ -191,7 +206,9 @@ export const castHealAbility = async (
   await contract.castHealAbility(characterToken, abilityIndex);
 };
 export const HEAL_ABILITY_CACHE_KEY = "castHealAbility";
+
 // --------------------------------------------------------------------------------
+
 export const endExploreLoot = async (
   signer: JsonRpcSigner | undefined,
   characterToken: number
@@ -207,7 +224,9 @@ export const endExploreLoot = async (
   await contract.endExploreLoot(characterToken);
 };
 export const END_LOOT_CACHE_KEY = "endExploreLoot";
+
 // --------------------------------------------------------------------------------
+
 export const getCampaignInventory = async (
   signer: JsonRpcSigner | undefined,
   characterToken: number,
@@ -224,6 +243,7 @@ export const getCampaignInventory = async (
   await contract.campaignInventory(characterToken, characterNonce);
 };
 export const GET_INVENTORY_CACHE_KEY = "getCampaignInventory";
+
 // --------------------------------------------------------------------------------
 //unlock final turn
 // --------------------------------------------------------------------------------
