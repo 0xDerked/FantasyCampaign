@@ -12,9 +12,6 @@ import { FantasyCharacter } from "../typechain";
 
 const main = async () => {
   const [owner, user1, user2] = await ethers.getSigners();
-  console.log(owner.address);
-  console.log(user1.address);
-  console.log(user2.address);
 
   //const FantasyCharacterFactory = new FantasyCharacter__factory(owner);
   //const deployTx = FantasyCharacterFactory.getDeployTransaction();
@@ -32,7 +29,7 @@ const main = async () => {
   const FantasyCharAddress = "0x8b4bF31d1e528e3a316dB7650CB971b2503afb12";
   const attributesAddress = "0x20ad458c2db93cae343755D5A13044BcF6421e36";
   const verifierAddress = "0x36d1FeB0926b65191557eb43EcE4a40A83Cf5CdA";
-  const campaignAddress = "0xD7597560b02adC18fc18FE9A0DED9e6BBFb8b3Ef";
+  //const campaignAddress = "0xD7597560b02adC18fc18FE9A0DED9e6BBFb8b3Ef";
 
   //   const FantasyAttributesFactory = new FantasyAttributesManager__factory(owner);
   //   const FantasyAttributesManagerContract =
@@ -61,19 +58,19 @@ const main = async () => {
 
   //   console.log("Verifier Address: ", VerifierContract.address);
 
-  //   const CastleCampaignFactory = new CastleCampaign__factory(owner);
-  //   const CastleCampaignContract = await CastleCampaignFactory.deploy(
-  //     FantasyCharAddress,
-  //     attributesAddress,
-  //     4,
-  //     verifierAddress
-  //   );
-  //   await CastleCampaignContract.deployed();
+    const CastleCampaignFactory = new CastleCampaign__factory(owner);
+    const CastleCampaignContract = await CastleCampaignFactory.deploy(
+      FantasyCharAddress,
+      attributesAddress,
+      4,
+      verifierAddress
+    );
+    await CastleCampaignContract.deployed();
 
-  //   console.log(
-  //     "Castle Campaign Contract Address: ",
-  //     CastleCampaignContract.address
-  //   );
+    console.log(
+      "Castle Campaign Contract Address: ",
+      CastleCampaignContract.address
+    );
 };
 
 main()

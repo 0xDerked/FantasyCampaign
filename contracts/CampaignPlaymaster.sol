@@ -14,7 +14,7 @@ abstract contract CampaignPlaymaster {
 	//tokenId -> Nonce (# of times player has played campaign)
 	mapping(uint256 => uint256) public playerNonce; 
 	mapping(uint256 => uint256) internal currentRandomSeed;
-	uint16 public baseHealth;
+	mapping(uint256 => uint16) public baseHealth;
 
 	//tokenId -> bool
 	mapping(uint256=>bool) public bossFightAvailable;
@@ -208,7 +208,7 @@ abstract contract CampaignPlaymaster {
 		uint8 healingPower = characterPower[_tokenId][userAbility.abilityType];
 		uint16 currentHealth = playerStatus[_tokenId][currentNonce].health;
 
-		uint16(healingPower) + currentHealth >= baseHealth ? playerStatus[_tokenId][currentNonce].health = baseHealth : 
+		uint16(healingPower) + currentHealth >= baseHealth[_tokenId] ? playerStatus[_tokenId][currentNonce].health = baseHealth[_tokenId] : 
 			playerStatus[_tokenId][currentNonce].health+=uint16(healingPower);
 
 		uint256 index;
@@ -251,7 +251,7 @@ abstract contract CampaignPlaymaster {
 		if(playerTurn[_tokenId] > numberOfTurns) {
 			_endCampaign(_tokenId, true);
 		} else {
-			playerStatus[_tokenId][_currentNonce].health = baseHealth;
+			playerStatus[_tokenId][_currentNonce].health = baseHealth[_tokenId];
 			emit TurnCompleted(_tokenId);
 		}
 	}

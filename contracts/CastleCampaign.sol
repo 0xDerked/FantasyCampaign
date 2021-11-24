@@ -84,7 +84,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		//update the campaign attributes and character power
 
 		campaignPlayer.health = playerCopy.health;
-		baseHealth = playerCopy.health;
+		baseHealth[_tokenId] = playerCopy.health;
 
 		campaignPlayer.strength = playerCopy.strength;
 		characterPower[_tokenId][FantasyThings.AbilityType.Strength] = playerCopy.strength;
@@ -135,10 +135,13 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 			turnTypes[_tokenId][playerTurn[_tokenId]]  = turnGuaranteedTypes[playerTurn[_tokenId]];
 			if(turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.Combat) {
 				_setMobsForTurn(_tokenId, combatGuaranteedMobIds[playerTurn[_tokenId]], playerTurn[_tokenId]);
+				emit TurnSet(_tokenId);
 			} else if (turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.Loot) {
 				_setItemsForTurn(_tokenId, lootGuaranteedItemIds[playerTurn[_tokenId]]);
+				emit TurnSet(_tokenId);
 			} else {
-				//set puzzle
+				//puzzle
+				//emit TurnSet(_tokenId);
 			}
 			emit TurnStarted(_tokenId);
 		}
