@@ -19,21 +19,18 @@ const MAZE = [
 
 describe("Circuit tests", () => {
   test("Maze array circuit works", async () => {
-    const file = path.resolve(__dirname, "../circuits/Maze.circom");
+    const file = path.resolve(__dirname, "./fixtures/Maze.circom");
     const circuit = await wasmTester(file);
 
     const witness = await circuit.calculateWitness({}, true);
-    const outputs: number[] = witness.slice(1, 25);
+    const outputs = witness.slice(1, 25);
     outputs.forEach((output, i) => {
       expect(Fr.eq(Fr.e(MAZE[i]), output)).toBe(true);
     });
   });
 
   test("TileCodeFromIndex circuit works", async () => {
-    const file = path.resolve(
-      __dirname,
-      "../circuits/TileCodeFromIndex.circom"
-    );
+    const file = path.resolve(__dirname, "./fixtures/TileCodeFromIndex.circom");
     const circuit = await wasmTester(file);
 
     const promises = MAZE.map((_, i) => async () => {
@@ -47,7 +44,7 @@ describe("Circuit tests", () => {
   test("GetNextIndexForMove circuit works", async () => {
     const file = path.resolve(
       __dirname,
-      "../circuits/GetNextIndexForMove.circom"
+      "./fixtures/GetNextIndexForMove.circom"
     );
     const circuit = await wasmTester(file);
 
@@ -82,10 +79,7 @@ describe("Circuit tests", () => {
   });
 
   test("IsTileOpenForSide circuit works", async () => {
-    const file = path.resolve(
-      __dirname,
-      "../circuits/IsTileOpenForSide.circom"
-    );
+    const file = path.resolve(__dirname, "./fixtures/IsTileOpenForSide.circom");
     const circuit = await wasmTester(file);
 
     {
@@ -119,7 +113,7 @@ describe("Circuit tests", () => {
   });
 
   test("Game circuit works", async () => {
-    const file = path.resolve(__dirname, "../circuits/circuit.circom");
+    const file = path.resolve(__dirname, "circuit.circom");
     const circuit = await wasmTester(file);
 
     const INVALID = 0;
