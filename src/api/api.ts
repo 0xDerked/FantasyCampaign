@@ -29,6 +29,26 @@ export const fetchAllMintedCharacters = async (
 };
 export const FETCH_MINTED_CACHE_KEY = "allMintedCharacters";
 
+export const createCharacter = async (
+  signer: JsonRpcSigner | null,
+  characterId: number | null
+) => {
+  if (!signer) {
+    return null;
+  }
+  if (!signer) {
+    return null;
+  }
+  const contract = new ethers.Contract(
+    "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    FantasyCharacter.abi,
+    signer
+  );
+  const transaction = await contract.createCharacter(characterId);
+  await transaction.wait();
+};
+export const CREATE_CHARACTER_CACHE_KEY = "createCharacter";
+
 export const enterCampaign = async (
   signer: JsonRpcSigner | null,
   characterToken: number

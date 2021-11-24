@@ -6,7 +6,7 @@ import { Button } from "../components/Button";
 import { CenterFill } from "../components/Layout";
 import { useGameData } from "../hooks/useGameData";
 import { useWallet } from "../hooks/useWallet";
-import { fetchAllMintedCharacters } from "../api/api";
+import { createCharacter, fetchAllMintedCharacters } from "../api/api";
 import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
 
 const SelectedCharacterButton = styled.button<{
@@ -49,13 +49,9 @@ export const CreateCharacterScreen = () => {
 
   const handleCreateCharacter = async () => {
     try {
-      const mintedCharactersDictionary = await fetchAllMintedCharacters(signer);
+      await createCharacter(signer, selectedCharacterId);
       setGameData({
         ...gameData,
-        mintedCharacters: {
-          ...gameData.mintedCharacters,
-          ...mintedCharactersDictionary,
-        },
         route: Routes.EnterCampaignScreen,
       });
     } catch (e: any) {
