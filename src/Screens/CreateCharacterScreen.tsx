@@ -58,10 +58,6 @@ export const CreateCharacterScreen = () => {
     try {
       await createCharacter(signer, selectedCharacterId);
       await refetchMintedCharacterData();
-      setGameData({
-        ...gameData,
-        route: Routes.EnterCampaignScreen,
-      });
     } catch (e: any) {
       alert(`Error creating character: ${e.data?.message || e.message}`);
     } finally {
