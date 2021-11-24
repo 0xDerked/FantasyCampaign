@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Routes, RPCError } from "../types";
+import { Routes } from "../types";
 import { useGameData } from "./useGameData";
 import { useQuerySigner } from "../api/useQuerySigner";
 import { generateTurn } from "../api/api";
