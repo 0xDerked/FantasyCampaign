@@ -5,6 +5,7 @@ import {
   FantasyAttributesManager__factory,
   CastleCampaign__factory,
   MockVRF__factory,
+  Verifier__factory,
 } from "../typechain";
 
 import { FantasyCharacter } from "../typechain";
@@ -16,10 +17,10 @@ const main = async () => {
   console.log(user2.address);
 
   //const FantasyCharacterFactory = new FantasyCharacter__factory(owner);
-  //   const deployTx = FantasyCharacterFactory.getDeployTransaction();
-  //   const gas = await owner.estimateGas(deployTx);
-  //   console.log(ethers.utils.formatUnits(gas, "ether"));
-  //   //console.log(deployTx);
+  //const deployTx = FantasyCharacterFactory.getDeployTransaction();
+  //const gas = await owner.estimateGas(deployTx);
+  //console.log(ethers.utils.formatUnits(gas, "ether"));
+  //console.log(deployTx);
   //   const FantasyCharacterContract = await FantasyCharacterFactory.deploy();
   //   await FantasyCharacterContract.deployed();
 
@@ -30,22 +31,23 @@ const main = async () => {
 
   const FantasyCharAddress = "0x8b4bF31d1e528e3a316dB7650CB971b2503afb12";
   const attributesAddress = "0x20ad458c2db93cae343755D5A13044BcF6421e36";
-  const campaignAddress = "0x07F1988015197bc49bF30851c0221656ec50C740";
+  const verifierAddress = "0x36d1FeB0926b65191557eb43EcE4a40A83Cf5CdA";
+  const campaignAddress = "0xD7597560b02adC18fc18FE9A0DED9e6BBFb8b3Ef";
 
   //   const FantasyAttributesFactory = new FantasyAttributesManager__factory(owner);
   //   const FantasyAttributesManagerContract =
   //     await FantasyAttributesFactory.deploy(FantasyCharAddress);
   //   await FantasyAttributesManagerContract.deployed();
 
-  const FantasyCharacterContract = FantasyCharacter__factory.connect(
-    FantasyCharAddress,
-    owner
-  );
+  //   const FantasyCharacterContract = FantasyCharacter__factory.connect(
+  //     FantasyCharAddress,
+  //     owner
+  //   );
 
-  const attributesContract = FantasyAttributesManager__factory.connect(
-    attributesAddress,
-    owner
-  );
+  //   const attributesContract = FantasyAttributesManager__factory.connect(
+  //     attributesAddress,
+  // //     owner
+  //   );
 
   //   const setStats = await FantasyCharacterContract.setStatsManager(
   //     FantasyAttributesManagerContract.address
@@ -53,11 +55,18 @@ const main = async () => {
 
   //   await setStats.wait();
 
+  //   const VerifierFactory = new Verifier__factory(owner);
+  //   const VerifierContract = await VerifierFactory.deploy();
+  //   await VerifierContract.deployed();
+
+  //   console.log("Verifier Address: ", VerifierContract.address);
+
   //   const CastleCampaignFactory = new CastleCampaign__factory(owner);
   //   const CastleCampaignContract = await CastleCampaignFactory.deploy(
   //     FantasyCharAddress,
   //     attributesAddress,
-  //     4
+  //     4,
+  //     verifierAddress
   //   );
   //   await CastleCampaignContract.deployed();
 

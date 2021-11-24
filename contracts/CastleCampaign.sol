@@ -163,33 +163,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 				//set up puzzle turn -- not triggering right now
 				turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Puzzle;
 			}
-		emit TurnStarted(tokenId);
 		emit TurnSet(tokenId);
 	}
-
-	//to expose a mock callback for testing VRF process
-	// function mockFulfillRandomness(bytes32 requestId, uint256 randomness) external {
-	// 	uint256 tokenId = requestToTokenId[requestId];
-	// 	currentRandomSeed[tokenId] = randomness;
-
-	// 	if(randomness % 100 < 101) {
-	// 		//set up combat turn
-	// 		uint256[] memory mobIdsForTurn = new uint256[](randomness%2+1);
-	// 		for(uint256 i=0; i<mobIdsForTurn.length; i++) {
-	// 			mobIdsForTurn[i] = 0; //we could randomly generate this from some sort of data model and spawn rate
-	// 		}
-	// 		_setMobsForTurn(tokenId,mobIdsForTurn,playerTurn[tokenId]);
-	// 		turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Combat;
-	// 		} else if(randomness % 100 < 95) {
-	// 			//set up looting turn
-	// 			turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Loot;
-	// 		} else {
-	// 			//set up puzzle turn
-	// 			turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Puzzle;
-	// 		}
-	// 	emit TurnStarted(tokenId);
-	// 	emit TurnSet(tokenId);
-	// }
   
-
 }
