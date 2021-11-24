@@ -7,15 +7,11 @@ import { useGameData } from "../hooks/useGameData";
 
 export const SplashScreen = () => {
   const [_, setGameData] = useGameData();
-  const connect = async () => {
-    try {
-      setGameData(gameData => ({
-        ...gameData,
-        route: Routes.CreateCharacterScreen,
-      }));
-    } catch (e: any) {
-      alert(`Something went wrong connecting wallet: ${e.message}`);
-    }
+  const connect = () => {
+    setGameData(gameData => ({
+      ...gameData,
+      route: Routes.CreateCharacterScreen,
+    }));
   };
   return (
     <CenterFill>

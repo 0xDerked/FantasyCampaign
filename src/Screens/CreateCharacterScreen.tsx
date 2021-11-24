@@ -63,7 +63,7 @@ export const CreateCharacterScreen = () => {
         route: Routes.EnterCampaignScreen,
       });
     } catch (e: any) {
-      alert(`Error creating character: ${e.message}`);
+      alert(`Error creating character: ${e.data?.message || e.message}`);
     } finally {
       //
     }

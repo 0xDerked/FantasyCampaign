@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Routes } from "../types";
+import { Routes, RPCError } from "../types";
 import { useGameData } from "./useGameData";
 import { useQuerySigner } from "../api/useQuerySigner";
 import { generateTurn } from "../api/api";
@@ -20,7 +20,11 @@ export const useTriggerTurn = () => {
         signer &&
         typeof selectedTokenId === "number"
       ) {
-        await generateTurn(signer, selectedTokenId);
+        try {
+          await generateTurn(signer, selectedTokenId);
+        } catch (e: any) {
+          alert(`Failed to trigger turn ${e.data?.message || e.message}`);
+        }
       }
     })();
     wasInTurnMode.current = isInTurnMode;

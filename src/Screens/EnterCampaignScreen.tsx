@@ -34,7 +34,7 @@ export const EnterCampaignScreen = () => {
         route: Routes.MazeScreen,
       });
     } catch (e: any) {
-      alert(`Error starting campaign: ${e.message}`);
+      alert(`Error starting campaign:  ${e.data?.message || e.message}`);
     }
   };
   return (
