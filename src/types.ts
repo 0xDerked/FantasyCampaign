@@ -24,6 +24,7 @@ export type GameData = {
 };
 
 export type CharacterAttributes = {
+  tokenId?: number;
   id: number;
   name: string;
   health: number;

@@ -35,21 +35,29 @@ const CharacterContainer = styled.div`
 `;
 
 export const CreateCharacterScreen = () => {
-  const { data: mintedCharacterData } = useQueryAllMintedCharacters();
-  const allCharacters = useGetAvailableCharacters();
-  const [gameData, setGameData] = useGameData();
-  const { selectedTokenId } = gameData;
   const { signer } = useWallet();
+  const [gameData, setGameData] = useGameData();
+  const { data: mintedCharacterData, refetch: refetchMintedCharacterData } =
+    useQueryAllMintedCharacters();
+
+  const allCharacters = useGetAvailableCharacters();
+  const charactersWithLiveData = allCharacters.map(character => {
+    const mintedCharacter = mintedCharacterData?.[character.id];
+    return mintedCharacter || character;
+  });
+
   const [selectedCharacterId, setSelectedCharacterId] = React.useState<
     number | null
   >(null);
-  const mintedCharacterIds = Object.keys(mintedCharacterData || {}).map(id =>
-    parseInt(id, 10)
-  );
+
+  const selectedCharacterTokenId = charactersWithLiveData?.find(
+    character => character.id === selectedCharacterId
+  )?.tokenId;
 
   const handleCreateCharacter = async () => {
     try {
       await createCharacter(signer, selectedCharacterId);
+      await refetchMintedCharacterData();
       setGameData({
         ...gameData,
         route: Routes.EnterCampaignScreen,
@@ -62,39 +70,42 @@ export const CreateCharacterScreen = () => {
   };
 
   const handleUseExistingCharacter = () => {
-    setGameData({
-      ...gameData,
-      selectedTokenId,
-      route: Routes.EnterCampaignScreen,
-    });
+    if (selectedCharacterTokenId) {
+      setGameData({
+        ...gameData,
+        selectedTokenId: selectedCharacterTokenId,
+        route: Routes.EnterCampaignScreen,
+      });
+    }
   };
 
-  const handleSelectCharacter = (char: CharacterClass) => {
-    setSelectedCharacterId(char);
+  const handleSelectCharacter = (id: number) => {
+    setSelectedCharacterId(id);
   };
 
   return (
     <CenterFill>
       <CharacterContainer>
-        {Object.values(allCharacters).map(char => (
+        {charactersWithLiveData.map(character => (
           <SelectedCharacterButton
-            key={char.name}
+            key={character.id}
             // @TODO make this token id!!!
-            selected={selectedCharacterId === char.id}
-            onClick={() => handleSelectCharacter(char.id)}
-            exists={char.id in mintedCharacterIds}
+            selected={selectedCharacterId === character.id}
+            onClick={() => handleSelectCharacter(character.id)}
+            exists={typeof character.tokenId === "number"}
           >
-            {char.name}
+            {character.name}
           </SelectedCharacterButton>
         ))}
       </CharacterContainer>
-      {selectedCharacterId !== null &&
-      selectedCharacterId in mintedCharacterIds ? (
+      {typeof selectedCharacterTokenId == "number" ? (
         <Button onClick={handleUseExistingCharacter}>
-          Use Existing Character
+          Start/Resume Campaign
         </Button>
       ) : (
-        <Button onClick={handleCreateCharacter}>Create New Character</Button>
+        <Button onClick={handleCreateCharacter} disabled={!selectedCharacterId}>
+          Create New Character
+        </Button>
       )}
     </CenterFill>
   );

@@ -1,9 +1,9 @@
 import { useQuery } from "react-query";
 import { FETCH_MINTED_CACHE_KEY, fetchAllMintedCharacters } from "./api";
-import { useWallet } from "../hooks/useWallet";
+import { useQuerySigner } from "./useQuerySigner";
 
 export const useQueryAllMintedCharacters = () => {
-  const { signer } = useWallet();
+  const { data: signer } = useQuerySigner();
   return useQuery(
     FETCH_MINTED_CACHE_KEY,
     async () => await fetchAllMintedCharacters(signer),

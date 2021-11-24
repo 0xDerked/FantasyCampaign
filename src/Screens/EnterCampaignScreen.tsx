@@ -35,8 +35,6 @@ export const EnterCampaignScreen = () => {
       });
     } catch (e: any) {
       alert(`Error starting campaign: ${e.message}`);
-    } finally {
-      //
     }
   };
   return (

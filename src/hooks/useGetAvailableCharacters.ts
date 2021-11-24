@@ -1,21 +1,13 @@
-import { characterStats } from "../constants";
-import { CharacterClass, CharacterStatsDictionary } from "../types";
+import { availableCharacterIds, characterStats } from "../constants";
+import { CharacterAttributes } from "../types";
 
-export const useGetAvailableCharacters = (): CharacterStatsDictionary => {
-  const availableCharacterIds = [
-    CharacterClass.Warlord,
-    CharacterClass.Shaman,
-    CharacterClass.Ranger,
-    CharacterClass.Wizard,
-  ];
-  const characterMap: CharacterStatsDictionary = {};
-  if (availableCharacterIds?.length) {
-    for (let i = 0; i < availableCharacterIds.length; i++) {
-      const stat = characterStats[availableCharacterIds[i]];
-      if (stat) {
-        characterMap[i] = stat;
-      }
+export const useGetAvailableCharacters = (): CharacterAttributes[] => {
+  const stats: CharacterAttributes[] = [];
+  for (const id of availableCharacterIds) {
+    const stat = characterStats[id];
+    if (stat !== null) {
+      stats.push(stat);
     }
   }
-  return characterMap;
+  return stats;
 };
