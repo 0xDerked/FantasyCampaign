@@ -1,22 +1,25 @@
 import * as React from "react";
 import styled from "styled-components";
-import { ViewPort } from "./Maze/ViewPort";
-import { Map } from "./Maze/Map";
 
 import {
   UNSCALED_VIEWPORT_HEIGHT,
   UNSCALED_VIEWPORT_WIDTH,
 } from "./Maze/constants";
 import { useInterfaceEventsListeners } from "./hooks/useInterfaceEventsListeners";
-import { CreateCharacterScreen } from "./Screens/CreateCharacter";
+import { CreateCharacterScreen } from "./Screens/CreateCharacterScreen";
 import { WalletProvider } from "./providers/WalletProvider";
 import { SplashScreen } from "./Screens/SplashScreen";
 import { scale } from "./utils/scale";
 import { Routes } from "./types";
-import { StartCampaignScreen } from "./Screens/StartCampaign";
+import { EnterCampaignScreen } from "./Screens/EnterCampaignScreen";
 import { FightScreen } from "./Screens/FightScreen";
 import { useGameData } from "./hooks/useGameData";
 import { GameDataProvider, initialGameData } from "./providers/GameData";
+import { MazeScreen } from "./Screens/MazeScreen";
+import { Map } from "./Maze/Map";
+import { QueryClient, QueryClientProvider } from "react-query";
+
+export const queryClient = new QueryClient();
 
 const GameScreenContainer = styled.div`
   display: flex;
@@ -49,15 +52,15 @@ const Router = () => {
       return <SplashScreen />;
     case Routes.CreateCharacterScreen:
       return <CreateCharacterScreen />;
-    case Routes.StartCampaignScreen:
-      return <StartCampaignScreen />;
+    case Routes.EnterCampaignScreen:
+      return <EnterCampaignScreen />;
     case Routes.Turn:
       return <FightScreen />;
     case Routes.MazeScreen:
     default:
       return (
         <>
-          <ViewPort />
+          <MazeScreen />
           <Map rotateMap={false} />
         </>
       );
@@ -93,13 +96,15 @@ function App() {
   return (
     <GameDataProvider>
       <WalletProvider>
-        <Listeners />
-        <GameScreenContainer>
-          <ViewPortContainer>
-            <Router />
-          </ViewPortContainer>
-        </GameScreenContainer>
-        <ClearStorage />
+        <QueryClientProvider client={queryClient}>
+          <Listeners />
+          <GameScreenContainer>
+            <ViewPortContainer>
+              <Router />
+            </ViewPortContainer>
+          </GameScreenContainer>
+          <ClearStorage />
+        </QueryClientProvider>
       </WalletProvider>
     </GameDataProvider>
   );

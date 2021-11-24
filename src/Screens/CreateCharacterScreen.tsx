@@ -1,14 +1,13 @@
 import * as React from "react";
 import { CharacterClass, Routes } from "../types";
 import styled from "styled-components";
-import { BigNumber, ethers } from "ethers";
-import FantasyCharacter from "../../artifacts/contracts/FantasyCharacter.sol/FantasyCharacter.json";
-import { useGetMintedCharacters } from "../hooks/useGetMintedCharacters";
 import { useGetAvailableCharacters } from "../hooks/useGetAvailableCharacters";
 import { Button } from "../components/Button";
 import { CenterFill } from "../components/Layout";
 import { useGameData } from "../hooks/useGameData";
 import { useWallet } from "../hooks/useWallet";
+import { fetchAllMintedCharacters } from "../api/api";
+import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
 
 const SelectedCharacterButton = styled.button<{
   selected: boolean;
@@ -36,38 +35,28 @@ const CharacterContainer = styled.div`
 `;
 
 export const CreateCharacterScreen = () => {
-  const [gameData, setGameData] = useGameData();
-  const playerCharacters = useGetMintedCharacters();
+  const { data: mintedCharacterData } = useQueryAllMintedCharacters();
   const allCharacters = useGetAvailableCharacters();
+  const [gameData, setGameData] = useGameData();
+  const { selectedTokenId } = gameData;
   const { signer } = useWallet();
   const [selectedCharacterId, setSelectedCharacterId] = React.useState<
     number | null
   >(null);
+  const mintedCharacterIds = Object.keys(mintedCharacterData || {}).map(id =>
+    parseInt(id, 10)
+  );
 
   const handleCreateCharacter = async () => {
-    if (!signer) {
-      return;
-    }
     try {
-      const contract = new ethers.Contract(
-        "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-        FantasyCharacter.abi,
-        signer
-      );
-      const transaction = await contract.createCharacter(selectedCharacterId);
-      await transaction.wait();
-      const address = await signer.getAddress();
-      const data: BigNumber[] = await contract.getAllCharacters(address);
-      const tokenIds = data.map(id => id.toNumber());
-      const promises = tokenIds.map(id => contract.getCharacter(id));
-
+      const mintedCharactersDictionary = await fetchAllMintedCharacters(signer);
       setGameData({
         ...gameData,
         mintedCharacters: {
           ...gameData.mintedCharacters,
-          [tokenId]: theDataWeJustGotBack,
+          ...mintedCharactersDictionary,
         },
-        route: Routes.StartCampaignScreen,
+        route: Routes.EnterCampaignScreen,
       });
     } catch (e: any) {
       alert(`Error creating character: ${e.message}`);
@@ -79,8 +68,8 @@ export const CreateCharacterScreen = () => {
   const handleUseExistingCharacter = () => {
     setGameData({
       ...gameData,
-      selectedCharacterId: selectedCharacterId,
-      route: Routes.StartCampaignScreen,
+      selectedTokenId,
+      route: Routes.EnterCampaignScreen,
     });
   };
 
@@ -91,19 +80,20 @@ export const CreateCharacterScreen = () => {
   return (
     <CenterFill>
       <CharacterContainer>
-        {allCharacters.map(char => (
+        {Object.values(allCharacters).map(char => (
           <SelectedCharacterButton
             key={char.name}
+            // @TODO make this token id!!!
             selected={selectedCharacterId === char.id}
             onClick={() => handleSelectCharacter(char.id)}
-            exists={char.id in playerCharacterIds}
+            exists={char.id in mintedCharacterIds}
           >
             {char.name}
           </SelectedCharacterButton>
         ))}
       </CharacterContainer>
       {selectedCharacterId !== null &&
-      selectedCharacterId in playerCharacterIds ? (
+      selectedCharacterId in mintedCharacterIds ? (
         <Button onClick={handleUseExistingCharacter}>
           Use Existing Character
         </Button>

@@ -9,7 +9,6 @@ export const initialGameData: GameData = {
   doors: doorsCoords,
   spawnPoints: spawnPointCoords,
   selectedTokenId: null,
-  mintedCharacters: null,
   route: Routes.SplashScreen,
 };
 

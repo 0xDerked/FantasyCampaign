@@ -7,7 +7,7 @@ export type Position = {
 export enum Routes {
   SplashScreen = "SplashScreen",
   CreateCharacterScreen = "CreateCharacterScreen",
-  StartCampaignScreen = "StartCampaignScreen",
+  EnterCampaignScreen = "EnterCampaignScreen",
   MazeScreen = "MazeScreen",
   Turn = "TurnTrigger",
   FightScreen = "FightScreen",
@@ -21,7 +21,6 @@ export type GameData = {
   spawnPoints: SpawnPointCoords[];
   selectedTokenId: number | null;
   route: Routes;
-  mintedCharacters: null | Record<string, CharacterStats>;
 };
 
 export type CharacterAttributes = {
@@ -37,7 +36,8 @@ export type CharacterAttributes = {
   healingPower: number;
 };
 
-export type CharacterStats = Record<number, CharacterAttributes | null>;
+export type CharacterStatsDictionary = Record<string, CharacterAttributes>;
+
 export enum CharacterClass {
   Knight = 0,
   Warlord = 1,

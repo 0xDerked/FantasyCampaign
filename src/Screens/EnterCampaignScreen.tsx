@@ -1,13 +1,11 @@
 import * as React from "react";
 import { Routes } from "../types";
 import styled from "styled-components";
-import { ethers } from "ethers";
-import CastleCampaign from "../../artifacts/contracts/CastleCampaign.sol/CastleCampaign.json";
 import { useGetSelectedCharacter } from "../hooks/useGetSelectedCharacter";
 import { Button } from "../components/Button";
-import { useGetMintedCharacters } from "../hooks/useGetMintedCharacters";
 import { useGameData } from "../hooks/useGameData";
 import { useWallet } from "../hooks/useWallet";
+import { enterCampaign } from "../api/api";
 
 const Container = styled.div`
   display: flex;
@@ -17,29 +15,20 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-export const StartCampaignScreen = () => {
+export const EnterCampaignScreen = () => {
   const { signer } = useWallet();
   const selectedCharacter = useGetSelectedCharacter();
   const [gameData, setGameData] = useGameData();
-  console.log(222, selectedCharacter);
-  useGetMintedCharacters();
 
-  const startCampaign = async () => {
+  const enterCampaignMode = async () => {
     if (!signer) {
       return;
     }
+    if (!selectedCharacter) {
+      return;
+    }
     try {
-      const contract = new ethers.Contract(
-        "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-        CastleCampaign.abi,
-        signer
-      );
-      const tokenId = selectedCharacter?.id;
-      const turn = await contract.playerTurn(tokenId);
-      const turnNumber = turn.toNumber();
-      if (turnNumber === 0) {
-        await contract.enterCampaign(tokenId);
-      }
+      await enterCampaign(signer, selectedCharacter.id);
       setGameData({
         ...gameData,
         route: Routes.MazeScreen,
@@ -53,7 +42,7 @@ export const StartCampaignScreen = () => {
   return (
     <Container>
       {selectedCharacter?.name}
-      <Button onClick={startCampaign}>Start/Resume campaign</Button>
+      <Button onClick={enterCampaignMode}>Start/Resume campaign</Button>
     </Container>
   );
 };

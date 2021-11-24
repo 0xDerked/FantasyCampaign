@@ -35,20 +35,18 @@ export const useContractListeners = () => {
     signer
   );
   const filterStarted = contract.filters.CampaignStarted(
-    gameState.selectedCharacterId
+    gameState.selectedTokenId
   );
-  const filterEnded = contract.filters.CampaignEnded(
-    gameState.selectedCharacterId
-  );
-  const filterTurnSet = contract.filters.TurnSet(gameState.selectedCharacterId);
+  const filterEnded = contract.filters.CampaignEnded(gameState.selectedTokenId);
+  const filterTurnSet = contract.filters.TurnSet(gameState.selectedTokenId);
   const filterTurnStart = contract.filters.TurnStarted(
-    gameState.selectedCharacterId
+    gameState.selectedTokenId
   );
   const filterTurnCompleted = contract.filters.TurnCompleted(
-    gameState.selectedCharacterId
+    gameState.selectedTokenId
   );
   const filterCombat = contract.filters.CombatSequence(
-    gameState.selectedCharacterId
+    gameState.selectedTokenId
   );
   const campaignStartedListener = useCallback(tokenId => {
     //

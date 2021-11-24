@@ -37,7 +37,7 @@ const mapStatsToDict = ([
   };
 };
 
-export const characterStats: CharacterStats = {
+export const characterStats = {
   // eslint-disable-next-line prettier/prettier
   [CharacterClass.Warlord]: mapStatsToDict([CharacterClass.Warlord, "Warlord", 100, 30, 20, 20, 20, 0, 5, 0 ]),
   // eslint-disable-next-line prettier/prettier
