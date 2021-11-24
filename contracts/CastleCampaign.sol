@@ -125,7 +125,6 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 				//set puzzle
 			}
 			emit TurnStarted(_tokenId);
-			emit TurnSet(_tokenId);
 		}
 	}
 
