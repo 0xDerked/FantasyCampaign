@@ -3,9 +3,9 @@ import { CharacterStatsDictionary, TurnType } from "../types";
 import { JsonRpcSigner } from "@ethersproject/providers/src.ts/json-rpc-provider";
 
 import Web3Modal from "web3modal";
-import { characterStats } from "../constants";
 import { CharacterAttributesStructOutput } from "../../typechain/FantasyAttributesManager";
 import { Contracts } from "../providers/ContractsProvider";
+import { mapCharacterAPIToLocalStats } from "../utils/mapCharacterAPIToLocalStats";
 
 // --------------------------------------------------------------------------------
 
@@ -29,39 +29,8 @@ export const fetchAllMintedCharacters = async ({
   const promises = tokenIds.map(async tokenId => {
     const character: CharacterAttributesStructOutput =
       await contracts.attributesManagerContract.getPlayer(tokenId);
-    const {
-      abilities,
-      agility,
-      armor,
-      class: id,
-      experience,
-      healingpower,
-      health,
-      physicalblock,
-      spellpower,
-      spellresistance,
-      strength,
-    } = character;
-    const mappedAbilities = abilities.map(({ abilityType, action, name }) => ({
-      abilityType,
-      action,
-      name,
-    }));
-    characterMap[id] = {
-      id,
-      name: characterStats[id]?.name || "Unknown",
-      agility,
-      armor,
-      experience: experience.toNumber(),
-      healingpower,
-      health,
-      physicalblock,
-      spellpower,
-      spellresistance,
-      strength,
-      tokenId,
-      abilities: mappedAbilities,
-    };
+    const stats = mapCharacterAPIToLocalStats(character, tokenId);
+    characterMap[stats.id] = stats;
   });
   await Promise.all(promises);
   return characterMap;
@@ -220,6 +189,37 @@ export const castHealAbility = async ({
   );
 };
 export const HEAL_ABILITY_CACHE_KEY = "castHealAbility";
+
+// --------------------------------------------------------------------------------
+
+export const getMobStats = async ({
+  signer,
+  characterTokenId,
+  contracts,
+}: {
+  signer: JsonRpcSigner | undefined;
+  characterTokenId: number;
+  contracts: Contracts;
+}) => {
+  if (!signer) {
+    return null;
+  }
+  const playerTurn = await contracts.castleCampaignContract.playerTurn(
+    characterTokenId
+  );
+  const mobStats: CharacterAttributesStructOutput[] =
+    await contracts.castleCampaignContract.getMobsForTurn(
+      characterTokenId,
+      playerTurn
+    );
+  return mobStats.map((stats, index) =>
+    mapCharacterAPIToLocalStats({
+      ...stats,
+      class: index,
+    })
+  );
+};
+export const GET_MOB_STATS_CACHE_KEY = "getMobStats";
 
 // --------------------------------------------------------------------------------
 

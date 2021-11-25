@@ -5,12 +5,14 @@ import { BigNumber } from "ethers";
 import { getTurnData } from "../api/api";
 import { useWallet } from "./useWallet";
 import { getGameModeFromTurnType } from "../utils/getGameModeFromTurnType";
+import { useQueryMobStats } from "../api/useQueryMobStats";
 
 export const useContractListeners = () => {
   const [gameData, setGameData] = useGameData();
   const { selectedTokenId } = gameData;
   const contracts = useContracts();
   const { signer } = useWallet();
+  const { refetch: refetchMobStats } = useQueryMobStats();
   const { castleCampaignContract } = contracts;
 
   const filterStarted =
@@ -61,8 +63,9 @@ export const useContractListeners = () => {
   const turnCompletedListener = useCallback((...args) => {
     console.log("turnCompletedListener");
   }, []);
-  const combatListener = useCallback((...args) => {
-    console.log("combatListener");
+  const combatListener = useCallback(async (...args) => {
+    console.log("combatListener", ...args);
+    await refetchMobStats();
   }, []);
 
   useEffect(() => {

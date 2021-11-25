@@ -32,7 +32,7 @@ export type CharacterAttributes = {
   id: number;
   agility: number;
   armor: number;
-  experience: number;
+  experience?: number;
   healingpower: number;
   health: number;
   name: string;

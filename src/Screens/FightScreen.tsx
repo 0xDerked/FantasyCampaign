@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import match from "../assets/scaled/match.png";
-import { scale as scaleDims } from "../utils/scale";
+import { scale } from "../utils/scale";
 import {
   UNSCALED_VIEWPORT_HEIGHT,
   UNSCALED_VIEWPORT_WIDTH,
@@ -9,10 +9,10 @@ import {
 import { Image } from "../components/Image";
 import { useGetSelectedCharacter } from "../hooks/useGetSelectedCharacter";
 import { ButtonAttack } from "../components/Button";
-import { CharacterAbilities } from "../types";
 import { attackWithAbility } from "../api/api";
 import { useWallet } from "../hooks/useWallet";
 import { useContracts } from "../hooks/useContracts";
+import { useQueryMobStats } from "../api/useQueryMobStats";
 
 const FightScreenMock = styled(Image).attrs(() => ({
   src: match,
@@ -20,28 +20,43 @@ const FightScreenMock = styled(Image).attrs(() => ({
   position: absolute;
   bottom: 0;
   left: 0;
-  height: ${scaleDims(UNSCALED_VIEWPORT_HEIGHT)}px;
-  width: ${scaleDims(UNSCALED_VIEWPORT_WIDTH)}px;
+  height: ${scale(UNSCALED_VIEWPORT_HEIGHT)}px;
+  width: ${scale(UNSCALED_VIEWPORT_WIDTH)}px;
 `;
 
 const Container = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
-  height: ${scaleDims(UNSCALED_VIEWPORT_HEIGHT)}px;
-  width: ${scaleDims(UNSCALED_VIEWPORT_WIDTH)}px;
+  height: ${scale(UNSCALED_VIEWPORT_HEIGHT)}px;
+  width: ${scale(UNSCALED_VIEWPORT_WIDTH)}px;
 `;
 
 const ButtonsContainer = styled.div`
   position: absolute;
-  right: ${scaleDims(20)}px;
-  bottom: ${scaleDims(20)}px;
+  right: ${scale(20)}px;
+  bottom: ${scale(20)}px;
+`;
+
+const MobStat = styled.div`
+  position: absolute;
+  right: ${scale(UNSCALED_VIEWPORT_WIDTH / 3)}px;
+  left: ${scale(UNSCALED_VIEWPORT_WIDTH / 3)}px;
+  top: ${scale(0)}px;
+  height: ${scale(40)}px;
+  font-size: ${scale(28)}px;
+  background-color: black;
+  border: ${scale(3)}px double red;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const FightScreen = () => {
   const character = useGetSelectedCharacter();
   const { signer } = useWallet();
   const contracts = useContracts();
+  const { data: mobStats } = useQueryMobStats();
 
   const handleAttack = async (abilityIndex: number) => {
     if (typeof character?.tokenId === "number" && signer && contracts) {
@@ -74,6 +89,7 @@ export const FightScreen = () => {
           );
         })}
       </ButtonsContainer>
+      <MobStat>{mobStats?.[0]?.health}</MobStat>
     </Container>
   );
 };
