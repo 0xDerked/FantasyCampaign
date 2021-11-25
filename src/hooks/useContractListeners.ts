@@ -11,24 +11,24 @@ import { GameModes } from "../types";
 
 export const useContractListeners = () => {
   const [gameData, setGameData] = useGameData();
-  const { selectedTokenId } = gameData;
   const contracts = useContracts();
   const { signer } = useWallet();
   const { refetch: refetchMobStats } = useQueryMobStats();
   const { refetch: refetchPlayerStats } = useQueryPlayerStats();
   const { castleCampaignContract } = contracts;
+  const playerTokenId = gameData?.selectedTokenId;
 
   const filterStarted =
-    castleCampaignContract.filters.CampaignStarted(selectedTokenId);
+    castleCampaignContract.filters.CampaignStarted(playerTokenId);
   const filterEnded =
-    castleCampaignContract.filters.CampaignEnded(selectedTokenId);
-  const filterTurnSet = castleCampaignContract.filters.TurnSet(selectedTokenId);
+    castleCampaignContract.filters.CampaignEnded(playerTokenId);
+  const filterTurnSet = castleCampaignContract.filters.TurnSet(playerTokenId);
   const filterTurnStart =
-    castleCampaignContract.filters.TurnStarted(selectedTokenId);
+    castleCampaignContract.filters.TurnStarted(playerTokenId);
   const filterTurnCompleted =
-    castleCampaignContract.filters.TurnCompleted(selectedTokenId);
+    castleCampaignContract.filters.TurnCompleted(playerTokenId);
   const filterCombat =
-    castleCampaignContract.filters.CombatSequence(selectedTokenId);
+    castleCampaignContract.filters.CombatSequence(playerTokenId);
 
   const campaignStartedListener = useCallback((...args) => {
     console.log("campaignStartedListener");
@@ -42,28 +42,33 @@ export const useContractListeners = () => {
     console.log("turnSetListener");
   }, []);
 
-  const turnStartedListener = useCallback(async (tokenId: BigNumber) => {
-    console.log("turnSetListener");
-    if (signer && contracts && typeof selectedTokenId === "number") {
-      try {
-        const turnType = await getTurnData({
-          signer,
-          contracts,
-          characterTokenId: selectedTokenId,
-        });
-        const gameMode = getGameModeFromTurnType(turnType);
-        if (gameMode !== null)
-          setGameData({
-            ...gameData,
-            mode: gameMode,
+  const turnStartedListener = useCallback(
+    async (tokenId: BigNumber) => {
+      const playerTokenId = gameData?.selectedTokenId;
+      console.log("turnStartedListener", playerTokenId);
+      if (signer && contracts && typeof playerTokenId === "number") {
+        try {
+          const turnType = await getTurnData({
+            signer,
+            contracts,
+            characterTokenId: playerTokenId,
           });
-      } catch (e: any) {
-        alert(`Something went wrong: ${e.message}`);
+          const gameMode = getGameModeFromTurnType(turnType);
+          if (gameMode !== null)
+            setGameData({
+              ...gameData,
+              mode: gameMode,
+            });
+        } catch (e: any) {
+          alert(`Something went wrong: ${e.data?.message || e.message}`);
+        }
       }
-    }
-  }, []);
+    },
+    [gameData]
+  );
 
   const turnCompletedListener = useCallback((...args) => {
+    console.log("turnCompletedListener");
     setGameData({
       ...gameData,
       message: `All done`,
@@ -85,15 +90,20 @@ export const useContractListeners = () => {
       ...gameData,
       message: `You dealt ${damage} damage!`,
     });
-    setTimeout(() => {
-      setGameData({
-        ...gameData,
-        message: null,
-      });
-    }, 1000);
   }, []);
 
   useEffect(() => {
+    const filterStarted =
+      castleCampaignContract.filters.CampaignStarted(playerTokenId);
+    const filterEnded =
+      castleCampaignContract.filters.CampaignEnded(playerTokenId);
+    const filterTurnSet = castleCampaignContract.filters.TurnSet(playerTokenId);
+    const filterTurnStart =
+      castleCampaignContract.filters.TurnStarted(playerTokenId);
+    const filterTurnCompleted =
+      castleCampaignContract.filters.TurnCompleted(playerTokenId);
+    const filterCombat =
+      castleCampaignContract.filters.CombatSequence(playerTokenId);
     castleCampaignContract.on(filterStarted, campaignStartedListener);
     castleCampaignContract.on(filterEnded, campaignEndedListener);
     castleCampaignContract.on(filterTurnSet, turnSetListener);

@@ -88,7 +88,7 @@ export const CreateCharacterScreen = () => {
           mode: GameModes.ExploringMaze,
         });
       } catch (e: any) {
-        alert(`Error starting campaign:  ${e.data?.message || e.message}`);
+        alert(`Error starting campaign: ${e.data?.message || e.message}`);
       }
     }
   };

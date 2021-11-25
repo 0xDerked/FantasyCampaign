@@ -78,7 +78,7 @@ export const FightScreen = () => {
   const { data: mobStats } = useQueryMobStats();
   const [localMessage, setLocalMessage] = React.useState<string | null>(null);
   const message = gameData?.message;
-  const tokenId = playerData?.tokenId;
+  const tokenId = gameData?.selectedTokenId;
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined = undefined;
@@ -119,7 +119,7 @@ export const FightScreen = () => {
           });
         }
       } catch (e: any) {
-        alert(`Something went wrong attacking ${e.message}`);
+        alert(`Something went wrong attacking ${e.data?.message || e.message}`);
         setGameData({
           ...gameData,
           mode: GameModes.ExploringMaze,
