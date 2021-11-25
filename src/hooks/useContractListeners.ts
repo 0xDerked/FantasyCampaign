@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react";
 import { useGameData } from "./useGameData";
 import { useContracts } from "./useContracts";
 import { BigNumber } from "ethers";
-import { getTurnData } from "../api/api";
+import { getMobStats, getTurnData } from "../api/api";
 import { useWallet } from "./useWallet";
 import { getGameModeFromTurnType } from "../utils/getGameModeFromTurnType";
 import { useQueryMobStats } from "../api/useQueryMobStats";
@@ -18,34 +18,9 @@ export const useContractListeners = () => {
   const { castleCampaignContract } = contracts;
   const playerTokenId = gameData?.selectedTokenId;
 
-  const filterStarted =
-    castleCampaignContract.filters.CampaignStarted(playerTokenId);
-  const filterEnded =
-    castleCampaignContract.filters.CampaignEnded(playerTokenId);
-  const filterTurnSet = castleCampaignContract.filters.TurnSet(playerTokenId);
-  const filterTurnStart =
-    castleCampaignContract.filters.TurnStarted(playerTokenId);
-  const filterTurnCompleted =
-    castleCampaignContract.filters.TurnCompleted(playerTokenId);
-  const filterCombat =
-    castleCampaignContract.filters.CombatSequence(playerTokenId);
-
-  const campaignStartedListener = useCallback((...args) => {
-    console.log("campaignStartedListener");
-  }, []);
-
-  const campaignEndedListener = useCallback((...args) => {
-    console.log("campaignEndedListener");
-  }, []);
-
-  const turnSetListener = useCallback((...args) => {
-    console.log("turnSetListener");
-  }, []);
-
   const turnStartedListener = useCallback(
     async (tokenId: BigNumber) => {
       const playerTokenId = gameData?.selectedTokenId;
-      console.log("turnStartedListener", playerTokenId);
       if (signer && contracts && typeof playerTokenId === "number") {
         try {
           const turnType = await getTurnData({
@@ -86,6 +61,7 @@ export const useContractListeners = () => {
     console.log("combatListener", damage);
     await refetchMobStats();
     await refetchPlayerStats();
+
     setGameData({
       ...gameData,
       message: `You dealt ${damage} damage!`,
@@ -93,20 +69,18 @@ export const useContractListeners = () => {
   }, []);
 
   useEffect(() => {
-    const filterStarted =
-      castleCampaignContract.filters.CampaignStarted(playerTokenId);
-    const filterEnded =
-      castleCampaignContract.filters.CampaignEnded(playerTokenId);
-    const filterTurnSet = castleCampaignContract.filters.TurnSet(playerTokenId);
+    // const filterStarted = castleCampaignContract.filters.CampaignStarted(playerTokenId);
+    // const filterEnded = //   castleCampaignContract.filters.CampaignEnded(playerTokenId);
+    // const filterTurnSet = castleCampaignContract.filters.TurnSet(playerTokenId);
     const filterTurnStart =
       castleCampaignContract.filters.TurnStarted(playerTokenId);
     const filterTurnCompleted =
       castleCampaignContract.filters.TurnCompleted(playerTokenId);
     const filterCombat =
       castleCampaignContract.filters.CombatSequence(playerTokenId);
-    castleCampaignContract.on(filterStarted, campaignStartedListener);
-    castleCampaignContract.on(filterEnded, campaignEndedListener);
-    castleCampaignContract.on(filterTurnSet, turnSetListener);
+    // castleCampaignContract.on(filterStarted, campaignStartedListener);
+    // castleCampaignContract.on(filterEnded, campaignEndedListener);
+    // castleCampaignContract.on(filterTurnSet, turnSetListener);
     castleCampaignContract.on(filterTurnStart, turnStartedListener);
     castleCampaignContract.on(filterTurnCompleted, turnCompletedListener);
     castleCampaignContract.on(filterCombat, combatListener);

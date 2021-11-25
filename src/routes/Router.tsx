@@ -4,6 +4,7 @@ import { CreateCharacterScreen } from "../Screens/CreateCharacterScreen";
 import { FightScreen } from "../Screens/FightScreen";
 import { SplashScreen } from "../Screens/SplashScreen";
 import { MazeScreen } from "../Screens/MazeScreen";
+import { LootScreen } from "../Screens/LootScreen";
 import { GameModes } from "../types";
 import { useGameData } from "../hooks/useGameData";
 import { Web3Gate } from "./Web3Gate";
@@ -15,7 +16,6 @@ import { ReactNode } from "react";
 const Core = ({ children }: { children: ReactNode }) => (
   <Web3Gate>
     <ContractsProvider>
-      <ContractListeners />
       {children}
       <Modal />
     </ContractsProvider>
@@ -37,6 +37,14 @@ export const Router = () => {
       return (
         <Core>
           <FightScreen />
+          <ContractListeners />
+        </Core>
+      );
+    case GameModes.Looting:
+      return (
+        <Core>
+          <LootScreen />
+          <ContractListeners />
         </Core>
       );
     case GameModes.ExploringMaze:
@@ -45,6 +53,7 @@ export const Router = () => {
       return (
         <Core>
           <MazeScreen />
+          <ContractListeners />
         </Core>
       );
   }
