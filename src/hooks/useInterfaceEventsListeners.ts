@@ -54,3 +54,8 @@ export const useInterfaceEventsListeners = () => {
 
   return gameData.position;
 };
+
+export const UserInterfaceListeners = () => {
+  useInterfaceEventsListeners();
+  return null;
+};

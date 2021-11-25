@@ -5,7 +5,10 @@ import {
   UNSCALED_VIEWPORT_HEIGHT,
   UNSCALED_VIEWPORT_WIDTH,
 } from "./Maze/constants";
-import { useInterfaceEventsListeners } from "./hooks/useInterfaceEventsListeners";
+import {
+  useInterfaceEventsListeners,
+  UserInterfaceListeners,
+} from "./hooks/useInterfaceEventsListeners";
 import { scale } from "./utils/scale";
 import { useGameData } from "./hooks/useGameData";
 import {
@@ -47,12 +50,6 @@ const ViewPortContainer = styled.div`
   width: ${scale(UNSCALED_VIEWPORT_WIDTH)}px;
 `;
 
-const Listeners = () => {
-  // useContractListeners();
-  useInterfaceEventsListeners();
-  return <div />;
-};
-
 const ClearStorage = () => {
   const [, setGameData] = useGameData();
   const handleClearStorage = () => {
@@ -70,7 +67,7 @@ function App() {
   return (
     <GameDataProvider>
       <QueryClientProvider client={queryClient}>
-        <Listeners />
+        <UserInterfaceListeners />
         <GameScreenContainer>
           <ViewPortContainer>
             <Router />

@@ -1,15 +1,11 @@
 import { useCallback, useEffect } from "react";
 import { useGameData } from "./useGameData";
-import { useWallet } from "./useWallet";
 import { useContracts } from "./useContracts";
 
 export const useContractListeners = () => {
   const [gameState] = useGameData();
-  const { signer } = useWallet();
   const { castleCampaignContract } = useContracts();
-  if (!signer) {
-    return;
-  }
+
   const filterStarted = castleCampaignContract.filters.CampaignStarted(
     gameState.selectedTokenId
   );
@@ -28,25 +24,28 @@ export const useContractListeners = () => {
   const filterCombat = castleCampaignContract.filters.CombatSequence(
     gameState.selectedTokenId
   );
+
   const campaignStartedListener = useCallback((...args) => {
     console.log("campaignStartedListener", ...args);
-    //
   }, []);
-  const campaignEndedListener = useCallback((tokenId, successful) => {}, []);
+
+  const campaignEndedListener = useCallback((...args) => {
+    console.log("campaignEndedListener", ...args);
+  }, []);
+
   const turnSetListener = useCallback((...args) => {
     console.log("turnSetListener", ...args);
-    //
   }, []);
+
   const turnStartedListener = useCallback((...args) => {
     console.log("turnStartedListener", ...args);
-    //
   }, []);
+
   const turnCompletedListener = useCallback((...args) => {
     console.log("turnCompletedListener", ...args);
-    //
   }, []);
-  const combatListener = useCallback((tokenId, damageDone) => {
-    //
+  const combatListener = useCallback((...args) => {
+    console.log("combatListener", ...args);
   }, []);
 
   useEffect(() => {
@@ -60,4 +59,9 @@ export const useContractListeners = () => {
       castleCampaignContract.removeAllListeners(); //no event provided unsubscribes for all events
     };
   }, []);
+};
+
+export const ContractListeners = () => {
+  useContractListeners();
+  return null;
 };
