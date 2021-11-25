@@ -2,7 +2,7 @@ import * as React from "react";
 import { doorTextureMaps } from "../Maze/DoorTextures";
 import { wallTextureMaps } from "../Maze/WallTextures";
 import { Ceiling, Floor, Outer } from "../Maze/EnvironmentTextures";
-import { DoorCoords, WallType } from "../types";
+import { DoorCoords, GameModes, WallType } from "../types";
 import { useWallsWithTransforms } from "../hooks/useWallsWithTransforms";
 import { useDoorsWithTransforms } from "../hooks/useDoorsWithTransforms";
 import clone from "lodash/clone";
@@ -10,6 +10,8 @@ import { useCallback } from "react";
 import { useGameData } from "../hooks/useGameData";
 import { useTriggerTurn } from "../hooks/useTriggerTurn";
 import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
+import { Modal } from "../components/Modal";
+import { Map } from "../Maze/Map";
 
 export const MazeScreen = () => {
   useTriggerTurn();
@@ -78,6 +80,8 @@ export const MazeScreen = () => {
           />
         ) : null;
       })}
+      <Map rotateMap={false} />
+      {gameData.mode === GameModes.TurnTrigger ? <Modal /> : null}
     </Outer>
   );
 };

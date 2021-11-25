@@ -4,12 +4,12 @@ export type Position = {
   dir: number; // up : 0, right: 1, down: 2, left: 3
 };
 
-export enum Routes {
+export enum GameModes {
   SplashScreen = "SplashScreen",
   CreateCharacterScreen = "CreateCharacterScreen",
   EnterCampaignScreen = "EnterCampaignScreen",
   MazeScreen = "MazeScreen",
-  Turn = "TurnTrigger",
+  TurnTrigger = "TurnTrigger",
   FightScreen = "FightScreen",
   LootScreen = "LootScreen",
 }

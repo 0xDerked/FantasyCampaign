@@ -1,6 +1,6 @@
 import * as React from "react";
 import { doorsCoords, spawnPointCoords, wallCoords } from "../Maze/mapData";
-import { GameData, Routes } from "../types";
+import { GameData, GameModes } from "../types";
 import { useEffect } from "react";
 
 export const initialGameData: GameData = {
@@ -9,7 +9,7 @@ export const initialGameData: GameData = {
   doors: doorsCoords,
   spawnPoints: spawnPointCoords,
   selectedTokenId: null,
-  route: Routes.SplashScreen,
+  mode: GameModes.SplashScreen,
 };
 
 export const GameDataContext = React.createContext<

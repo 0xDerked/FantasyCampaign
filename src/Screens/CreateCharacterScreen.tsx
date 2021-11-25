@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CharacterClass, Routes } from "../types";
+import { CharacterClass, GameModes } from "../types";
 import styled from "styled-components";
 import { useGetAvailableCharacters } from "../hooks/useGetAvailableCharacters";
 import { Button } from "../components/Button";
@@ -73,7 +73,7 @@ export const CreateCharacterScreen = () => {
       setGameData({
         ...gameData,
         selectedTokenId: selectedCharacterTokenId,
-        route: Routes.EnterCampaignScreen,
+        mode: GameModes.EnterCampaignScreen,
       });
     }
   };
@@ -95,8 +95,10 @@ export const CreateCharacterScreen = () => {
             {character.name}
           </SelectedCharacterButton>
         ))}
+        {selectedCharacter ? (
+          <StatsTable character={selectedCharacter} />
+        ) : null}
       </CharacterContainer>
-      {selectedCharacter ? <StatsTable character={selectedCharacter} /> : null}
       {typeof selectedCharacterTokenId == "number" ? (
         <Button onClick={handleUseExistingCharacter}>
           Start/Resume Campaign

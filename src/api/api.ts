@@ -68,7 +68,6 @@ export const fetchAllMintedCharacters = async (
       tokenId,
       abilities: mappedAbilities,
     };
-    console.log(characterMap);
   });
   await Promise.all(promises);
   return characterMap;

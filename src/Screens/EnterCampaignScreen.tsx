@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Routes } from "../types";
+import { GameModes } from "../types";
 import styled from "styled-components";
 import { useGetSelectedCharacter } from "../hooks/useGetSelectedCharacter";
 import { Button } from "../components/Button";
@@ -31,7 +31,7 @@ export const EnterCampaignScreen = () => {
       await enterCampaign(signer, selectedCharacter.tokenId);
       setGameData({
         ...gameData,
-        route: Routes.MazeScreen,
+        mode: GameModes.MazeScreen,
       });
     } catch (e: any) {
       alert(`Error starting campaign:  ${e.data?.message || e.message}`);

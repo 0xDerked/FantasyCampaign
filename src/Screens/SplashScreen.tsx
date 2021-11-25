@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { Routes } from "../types";
+import { GameModes } from "../types";
 import { Button } from "../components/Button";
 import { CenterFill } from "../components/Layout";
 import { useGameData } from "../hooks/useGameData";
@@ -10,7 +10,7 @@ export const SplashScreen = () => {
   const connect = () => {
     setGameData(gameData => ({
       ...gameData,
-      route: Routes.CreateCharacterScreen,
+      mode: GameModes.CreateCharacterScreen,
     }));
   };
   return (
