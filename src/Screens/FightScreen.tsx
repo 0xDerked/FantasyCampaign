@@ -75,17 +75,20 @@ export const FightScreen = () => {
   const contracts = useContracts();
   const [gameData, setGameData] = useGameData();
   const { data: mobStats } = useQueryMobStats();
+  const [localMessage, setLocalMessage] = React.useState<string | null>(null);
   const message = gameData?.message;
 
   useEffect(() => {
     if (message) {
       setTimeout(() => {
         setGameData({ ...gameData, message: null });
-      }, 750);
+        setLocalMessage(null);
+      }, 1000);
     }
   }, [message]);
 
   const handleAttack = async (abilityIndex: number) => {
+    setLocalMessage("Attacking...");
     if (typeof character?.tokenId === "number" && signer && contracts) {
       try {
         await attackWithAbility({
@@ -119,6 +122,7 @@ export const FightScreen = () => {
       <MobStat>{mobStats?.[0]?.health}</MobStat>
       <PlayerStat>{character?.health}</PlayerStat>
       {message ? <Modal>{message}</Modal> : null}
+      {localMessage ? <Modal>{localMessage}</Modal> : null}
     </Container>
   );
 };
