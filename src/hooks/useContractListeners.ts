@@ -1,66 +1,48 @@
-import { useCallback, useEffect, useRef } from "react";
-import CastleCampaign from "../../artifacts/contracts/CastleCampaign.sol/CastleCampaign.json";
-import { ethers } from "ethers";
+import { useCallback, useEffect } from "react";
 import { useGameData } from "./useGameData";
 import { useWallet } from "./useWallet";
-
-// enum Events {
-//   CampaignStarted = "CampaignStarted",
-//   CampaignEnded = "CampaignEnded",
-//   TurnSet = "TurnSet",
-//   TurnStarted = "TurnStarted",
-//   TurnCompleted = "TurnCompleted",
-//   CombatSequence = "CombatSequence",
-// }
-
-// const contractMock = {
-//   on(...args: any[]) {
-//     //
-//   },
-//   removeAllListeners(...args: any[]) {
-//     //
-//   },
-// };
+import { useContracts } from "./useContracts";
 
 export const useContractListeners = () => {
   const [gameState] = useGameData();
   const { signer } = useWallet();
+  const { castleCampaignContract } = useContracts();
   if (!signer) {
     return;
   }
-  const campaignAddress = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9";
-  const contract = new ethers.Contract(
-    campaignAddress,
-    CastleCampaign.abi,
-    signer
-  );
-  const filterStarted = contract.filters.CampaignStarted(
+  const filterStarted = castleCampaignContract.filters.CampaignStarted(
     gameState.selectedTokenId
   );
-  const filterEnded = contract.filters.CampaignEnded(gameState.selectedTokenId);
-  const filterTurnSet = contract.filters.TurnSet(gameState.selectedTokenId);
-  const filterTurnStart = contract.filters.TurnStarted(
+  const filterEnded = castleCampaignContract.filters.CampaignEnded(
     gameState.selectedTokenId
   );
-  const filterTurnCompleted = contract.filters.TurnCompleted(
+  const filterTurnSet = castleCampaignContract.filters.TurnSet(
     gameState.selectedTokenId
   );
-  const filterCombat = contract.filters.CombatSequence(
+  const filterTurnStart = castleCampaignContract.filters.TurnStarted(
     gameState.selectedTokenId
   );
-  const campaignStartedListener = useCallback(tokenId => {
+  const filterTurnCompleted = castleCampaignContract.filters.TurnCompleted(
+    gameState.selectedTokenId
+  );
+  const filterCombat = castleCampaignContract.filters.CombatSequence(
+    gameState.selectedTokenId
+  );
+  const campaignStartedListener = useCallback((...args) => {
+    console.log("campaignStartedListener", ...args);
     //
   }, []);
-  const campaignEndedListener = useCallback((tokenId, successful) => {
+  const campaignEndedListener = useCallback((tokenId, successful) => {}, []);
+  const turnSetListener = useCallback((...args) => {
+    console.log("turnSetListener", ...args);
     //
   }, []);
-  const turnSetListener = useCallback(tokenId => {
+  const turnStartedListener = useCallback((...args) => {
+    console.log("turnStartedListener", ...args);
     //
   }, []);
-  const turnStartedListener = useCallback(tokenId => {
-    //
-  }, []);
-  const turnCompletedListener = useCallback(tokenId => {
+  const turnCompletedListener = useCallback((...args) => {
+    console.log("turnCompletedListener", ...args);
     //
   }, []);
   const combatListener = useCallback((tokenId, damageDone) => {
@@ -68,14 +50,14 @@ export const useContractListeners = () => {
   }, []);
 
   useEffect(() => {
-    contract.on(filterStarted, campaignStartedListener);
-    contract.on(filterEnded, campaignEndedListener);
-    contract.on(filterTurnSet, turnSetListener);
-    contract.on(filterTurnStart, turnStartedListener);
-    contract.on(filterTurnCompleted, turnCompletedListener);
-    contract.on(filterCombat, combatListener);
+    castleCampaignContract.on(filterStarted, campaignStartedListener);
+    castleCampaignContract.on(filterEnded, campaignEndedListener);
+    castleCampaignContract.on(filterTurnSet, turnSetListener);
+    castleCampaignContract.on(filterTurnStart, turnStartedListener);
+    castleCampaignContract.on(filterTurnCompleted, turnCompletedListener);
+    castleCampaignContract.on(filterCombat, combatListener);
     return () => {
-      contract.removeAllListeners(); //no event provided unsubscribes for all events
+      castleCampaignContract.removeAllListeners(); //no event provided unsubscribes for all events
     };
   }, []);
 };

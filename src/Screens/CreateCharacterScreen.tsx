@@ -9,6 +9,7 @@ import { useWallet } from "../hooks/useWallet";
 import { createCharacter, enterCampaign } from "../api/api";
 import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
 import { StatsTable } from "../components/StatsTable";
+import { useContracts } from "../hooks/useContracts";
 
 const SelectedCharacterButton = styled.button<{
   selected: boolean;
@@ -38,6 +39,7 @@ const CharacterContainer = styled.div`
 export const CreateCharacterScreen = () => {
   const { signer } = useWallet();
   const [gameData, setGameData] = useGameData();
+  const contracts = useContracts();
   const { data: mintedCharacterData, refetch: refetchMintedCharacterData } =
     useQueryAllMintedCharacters();
 
@@ -59,7 +61,11 @@ export const CreateCharacterScreen = () => {
 
   const handleCreateCharacter = async () => {
     try {
-      await createCharacter(signer, selectedCharacterId);
+      await createCharacter({
+        signer,
+        characterId: selectedCharacterId,
+        contracts,
+      });
       await refetchMintedCharacterData();
     } catch (e: any) {
       alert(`Error creating character: ${e.data?.message || e.message}`);
@@ -71,7 +77,11 @@ export const CreateCharacterScreen = () => {
   const handleUseExistingCharacter = async () => {
     if (typeof selectedCharacterTokenId === "number") {
       try {
-        await enterCampaign(signer, selectedCharacterTokenId);
+        await enterCampaign({
+          signer,
+          contracts,
+          characterTokenId: selectedCharacterTokenId,
+        });
         setGameData({
           ...gameData,
           selectedTokenId: selectedCharacterTokenId,

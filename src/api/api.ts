@@ -1,40 +1,34 @@
 import { BigNumber, ethers } from "ethers";
 import { CharacterStatsDictionary } from "../types";
 import { JsonRpcSigner } from "@ethersproject/providers/src.ts/json-rpc-provider";
-import CastleCampaign from "../../artifacts/contracts/CastleCampaign.sol/CastleCampaign.json";
-import FantasyCharacter from "../../artifacts/contracts/FantasyCharacter.sol/FantasyCharacter.json";
-import FantasyAttributesManager from "../../artifacts/contracts/FantasyAttributesManager.sol/FantasyAttributesManager.json";
 
 import Web3Modal from "web3modal";
 import { characterStats } from "../constants";
 import { CharacterAttributesStructOutput } from "../../typechain/FantasyAttributesManager";
+import { Contracts } from "../providers/ContractsProvider";
 
 // --------------------------------------------------------------------------------
 
-export const fetchAllMintedCharacters = async (
-  signer: JsonRpcSigner | undefined
-): Promise<CharacterStatsDictionary | null> => {
+export const fetchAllMintedCharacters = async ({
+  signer,
+  contracts,
+}: {
+  signer: JsonRpcSigner | undefined;
+  contracts: Contracts;
+}): Promise<CharacterStatsDictionary | null> => {
   if (!signer) {
     return null;
   }
   const address = await signer.getAddress();
-  const fantasyCharacterContract = new ethers.Contract(
-    "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-    FantasyCharacter.abi,
-    signer
-  );
+
   const rawTokenIds: BigNumber[] =
-    await fantasyCharacterContract.getAllCharacters(address);
+    await contracts.fantasyCharacterContract.getAllCharacters(address);
   const tokenIds = rawTokenIds.map(id => id.toNumber());
-  const attributesManagerContract = new ethers.Contract(
-    "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-    FantasyAttributesManager.abi,
-    signer
-  );
+
   const characterMap: CharacterStatsDictionary = {};
   const promises = tokenIds.map(async tokenId => {
     const character: CharacterAttributesStructOutput =
-      await attributesManagerContract.getPlayer(tokenId);
+      await contracts.attributesManagerContract.getPlayer(tokenId);
     const {
       abilities,
       agility,
@@ -76,63 +70,68 @@ export const FETCH_MINTED_CACHE_KEY = "allMintedCharacters";
 
 // --------------------------------------------------------------------------------
 
-export const createCharacter = async (
-  signer: JsonRpcSigner | undefined,
-  characterId: number | null
-): Promise<void | null> => {
+export const createCharacter = async ({
+  signer,
+  characterId,
+  contracts,
+}: {
+  signer: JsonRpcSigner | undefined;
+  characterId: number | null;
+  contracts: Contracts;
+}): Promise<void | null> => {
   if (!signer) {
     return null;
   }
   if (!signer) {
     return null;
   }
-  const contract = new ethers.Contract(
-    "0x5FbDB2315678afecb367f032d93F642f64180aa3",
-    FantasyCharacter.abi,
-    signer
+  const transaction = await contracts.fantasyCharacterContract.createCharacter(
+    characterId
   );
-  const transaction = await contract.createCharacter(characterId);
   await transaction.wait();
 };
 export const CREATE_CHARACTER_CACHE_KEY = "createCharacter";
 
 // --------------------------------------------------------------------------------
 
-export const enterCampaign = async (
-  signer: JsonRpcSigner | undefined,
-  characterTokenId: number
-): Promise<void | null> => {
+export const enterCampaign = async ({
+  signer,
+  characterTokenId,
+  contracts,
+}: {
+  signer: JsonRpcSigner | undefined;
+  characterTokenId: number;
+  contracts: Contracts;
+}): Promise<void | null> => {
   if (!signer) {
     return null;
   }
-  const contract = new ethers.Contract(
-    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-    CastleCampaign.abi,
-    signer
+
+  const turn = await contracts.castleCampaignContract.playerTurn(
+    characterTokenId
   );
-  const turn = await contract.playerTurn(characterTokenId);
   const turnNumber = turn.toNumber();
   if (turnNumber === 0) {
-    await contract.enterCampaign(characterTokenId);
+    await contracts.castleCampaignContract.enterCampaign(characterTokenId);
   }
 };
 export const ENTER_CAMPAIGN_CACHE_KEY = "enterCampaign";
 
 // --------------------------------------------------------------------------------
 
-export const generateTurn = async (
-  signer: JsonRpcSigner | undefined,
-  characterTokenId: number
-): Promise<void | null> => {
+export const generateTurn = async ({
+  signer,
+  characterTokenId,
+  contracts,
+}: {
+  signer: JsonRpcSigner | undefined;
+  characterTokenId: number;
+  contracts: Contracts;
+}): Promise<void | null> => {
   if (!signer) {
     return null;
   }
-  const contract = new ethers.Contract(
-    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-    CastleCampaign.abi,
-    signer
-  );
-  await contract.generateTurn(characterTokenId);
+  await contracts.castleCampaignContract.generateTurn(characterTokenId);
 };
 export const GENERATE_TURN_CACHE_KEY = "generateTurn";
 
@@ -142,104 +141,125 @@ export const fetchSigner = async (): Promise<JsonRpcSigner> => {
   const web3Modal = new Web3Modal();
   const connection = await web3Modal.connect();
   const provider = new ethers.providers.Web3Provider(connection);
-  const signerResponse = provider.getSigner();
-  return signerResponse;
+  return provider.getSigner();
 };
 export const FETCH_SIGNER_CACHE_KEY = "fetchSigner";
 
 // --------------------------------------------------------------------------------
 
-export const attackWithAbility = async (
-  signer: JsonRpcSigner | undefined,
-  characterToken: number,
-  abilityIndex: number,
-  target: number
-): Promise<void | null> => {
+export const attackWithAbility = async ({
+  signer,
+  characterToken,
+  abilityIndex,
+  target,
+  contracts,
+}: {
+  signer: JsonRpcSigner | undefined;
+  characterToken: number;
+  abilityIndex: number;
+  target: number;
+  contracts: Contracts;
+}): Promise<void | null> => {
   if (!signer) {
     return null;
   }
-  const contract = new ethers.Contract(
-    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-    CastleCampaign.abi,
-    signer
+
+  await contracts.castleCampaignContract.attackWithAbility(
+    characterToken,
+    abilityIndex,
+    target
   );
-  await contract.attackWithAbility(characterToken, abilityIndex, target);
 };
 export const ATTACK_ABILITY_CACHE_KEY = "attackWithAbility";
 
 // --------------------------------------------------------------------------------
 
-export const attackWithItem = async (
-  signer: JsonRpcSigner | undefined,
-  characterToken: number,
-  itemIndex: number,
-  target: number
-): Promise<void | null> => {
+export const attackWithItem = async ({
+  signer,
+  characterToken,
+  itemIndex,
+  target,
+  contracts,
+}: {
+  signer: JsonRpcSigner | undefined;
+  characterToken: number;
+  itemIndex: number;
+  target: number;
+  contracts: Contracts;
+}): Promise<void | null> => {
   if (!signer) {
     return null;
   }
-  const contract = new ethers.Contract(
-    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-    CastleCampaign.abi,
-    signer
+  await contracts.castleCampaignContract.attackWithItem(
+    characterToken,
+    itemIndex,
+    target
   );
-  await contract.attackWithItem(characterToken, itemIndex, target);
 };
 export const ATTACK_ITEM_CACHE_KEY = "attackWithItem";
 
 // --------------------------------------------------------------------------------
 
-export const castHealAbility = async (
-  signer: JsonRpcSigner | undefined,
-  characterToken: number,
-  abilityIndex: number
-): Promise<void | null> => {
+export const castHealAbility = async ({
+  signer,
+  characterToken,
+  abilityIndex,
+  contracts,
+}: {
+  signer: JsonRpcSigner | undefined;
+  characterToken: number;
+  abilityIndex: number;
+  contracts: Contracts;
+}): Promise<void | null> => {
   if (!signer) {
     return null;
   }
-  const contract = new ethers.Contract(
-    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-    CastleCampaign.abi,
-    signer
+  await contracts.castleCampaignContract.castHealAbility(
+    characterToken,
+    abilityIndex
   );
-  await contract.castHealAbility(characterToken, abilityIndex);
 };
 export const HEAL_ABILITY_CACHE_KEY = "castHealAbility";
 
 // --------------------------------------------------------------------------------
 
-export const endExploreLoot = async (
-  signer: JsonRpcSigner | undefined,
-  characterToken: number
-): Promise<void | null> => {
+export const endExploreLoot = async ({
+  signer,
+  characterToken,
+  contracts,
+}: {
+  signer: JsonRpcSigner | undefined;
+  characterToken: number;
+  contracts: Contracts;
+}): Promise<void | null> => {
   if (!signer) {
     return null;
   }
-  const contract = new ethers.Contract(
-    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-    CastleCampaign.abi,
-    signer
-  );
-  await contract.endExploreLoot(characterToken);
+  await contracts.castleCampaignContract.endExploreLoot(characterToken);
 };
 export const END_LOOT_CACHE_KEY = "endExploreLoot";
 
 // --------------------------------------------------------------------------------
 
-export const getCampaignInventory = async (
-  signer: JsonRpcSigner | undefined,
-  characterToken: number,
-  characterNonce: number
-): Promise<void | null> => {
+export const getCampaignInventory = async ({
+  signer,
+  characterToken,
+  characterNonce,
+  contracts,
+}: {
+  signer: JsonRpcSigner | undefined;
+  characterToken: number;
+  characterNonce: number;
+  contracts: Contracts;
+}): Promise<void | null> => {
   if (!signer) {
     return null;
   }
-  const contract = new ethers.Contract(
-    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-    CastleCampaign.abi,
-    signer
+
+  await contracts.castleCampaignContract.campaignInventory(
+    characterToken,
+    characterNonce
   );
-  await contract.campaignInventory(characterToken, characterNonce);
 };
 export const GET_INVENTORY_CACHE_KEY = "getCampaignInventory";
 
@@ -247,18 +267,20 @@ export const GET_INVENTORY_CACHE_KEY = "getCampaignInventory";
 //unlock final turn
 // --------------------------------------------------------------------------------
 
-export const getCurrentCampaignStatus = async (
-  signer: JsonRpcSigner | undefined,
-  characterToken: number
-): Promise<void | null> => {
+export const getCurrentCampaignStatus = async ({
+  signer,
+  characterToken,
+  contracts,
+}: {
+  signer: JsonRpcSigner | undefined;
+  characterToken: number;
+  contracts: Contracts;
+}): Promise<void | null> => {
   if (!signer) {
     return null;
   }
-  const contract = new ethers.Contract(
-    "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9",
-    CastleCampaign.abi,
-    signer
+  await contracts.castleCampaignContract.getCurrentCampaignStatus(
+    characterToken
   );
-  await contract.getCurrentCampaignStatus(characterToken);
 };
 export const GET_STATUS_CACHE_KEY = "getCurrentCampaignStatus";
