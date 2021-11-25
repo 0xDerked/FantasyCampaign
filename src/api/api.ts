@@ -1,5 +1,9 @@
 import { BigNumber, ethers } from "ethers";
-import { CharacterStatsDictionary, TurnType } from "../types";
+import {
+  CharacterAttributes,
+  CharacterStatsDictionary,
+  TurnType,
+} from "../types";
 import { JsonRpcSigner } from "@ethersproject/providers/src.ts/json-rpc-provider";
 
 import Web3Modal from "web3modal";
@@ -238,6 +242,30 @@ export const endExploreLoot = async ({
   await contracts.castleCampaignContract.endExploreLoot(characterTokenId);
 };
 export const END_LOOT_CACHE_KEY = "endExploreLoot";
+
+// --------------------------------------------------------------------------------
+
+export const getPlayerStats = async ({
+  signer,
+  characterTokenId,
+  contracts,
+}: {
+  signer: JsonRpcSigner | undefined;
+  characterTokenId: number;
+  contracts: Contracts;
+}): Promise<CharacterAttributes | null> => {
+  if (!signer) {
+    return null;
+  }
+  const stats = await contracts.castleCampaignContract.getCurrentCampaignStats(
+    characterTokenId
+  );
+  return mapCharacterAPIToLocalStats({
+    ...stats,
+    tokenId: characterTokenId,
+  });
+};
+export const GET_PLAYER_STATS_CACHE_KEY = "getPlayerStats";
 
 // --------------------------------------------------------------------------------
 
