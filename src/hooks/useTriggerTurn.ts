@@ -29,7 +29,19 @@ export const useTriggerTurn = () => {
             contracts,
             characterTokenId: selectedTokenId,
           });
-          if (typeof turnType === "number") {
+          if (turnType === 0) {
+            // Only generate a turn if not currently in one.
+            setGameData({
+              ...gameData,
+              mode: GameModes.ExploringMaze,
+              message: "Something mysterious is happening...",
+            });
+            await generateTurn({
+              signer,
+              contracts,
+              characterTokenId: selectedTokenId,
+            });
+          } else {
             // Just set the game mode as the listener won't be called
             const gameMode = getGameModeFromTurnType(turnType);
             if (gameMode === null) {
@@ -45,13 +57,6 @@ export const useTriggerTurn = () => {
                 message: null,
               });
             }
-          } else {
-            // Don't trigger a turn if the character is already in a turn
-            await generateTurn({
-              signer,
-              contracts,
-              characterTokenId: selectedTokenId,
-            });
           }
           wasInTurnMode.current = isInTurnMode;
         } catch (e: any) {

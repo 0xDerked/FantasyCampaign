@@ -96,6 +96,7 @@ export const FightScreen = () => {
   const handleAttack = async (abilityIndex: number) => {
     if (typeof playerData?.tokenId === "number" && signer && contracts) {
       try {
+        setGameData({ ...gameData, message: "You attack!" });
         await attackWithAbility({
           abilityIndex,
           characterTokenId: playerData.tokenId,

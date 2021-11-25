@@ -179,7 +179,6 @@ export const setPos = (fn: PosFunction) => (gameData: GameData) => {
       ...gameData,
       mode: GameModes.TurnTrigger,
       position: newPosition,
-      message: "Something mysterious is happening...",
     };
   }
   return {

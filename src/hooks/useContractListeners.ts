@@ -7,6 +7,7 @@ import { useWallet } from "./useWallet";
 import { getGameModeFromTurnType } from "../utils/getGameModeFromTurnType";
 import { useQueryMobStats } from "../api/useQueryMobStats";
 import { useQueryPlayerStats } from "../api/useQueryPlayerStats";
+import { GameModes } from "../types";
 
 export const useContractListeners = () => {
   const [gameData, setGameData] = useGameData();
@@ -63,8 +64,19 @@ export const useContractListeners = () => {
   }, []);
 
   const turnCompletedListener = useCallback((...args) => {
-    console.log("turnCompletedListener");
+    setGameData({
+      ...gameData,
+      message: `All done`,
+    });
+    setTimeout(() => {
+      setGameData({
+        ...gameData,
+        message: null,
+        mode: GameModes.ExploringMaze,
+      });
+    }, 1000);
   }, []);
+
   const combatListener = useCallback(async (_, damage: number) => {
     console.log("combatListener", damage);
     await refetchMobStats();
@@ -73,6 +85,12 @@ export const useContractListeners = () => {
       ...gameData,
       message: `You dealt ${damage} damage!`,
     });
+    setTimeout(() => {
+      setGameData({
+        ...gameData,
+        message: null,
+      });
+    }, 1000);
   }, []);
 
   useEffect(() => {

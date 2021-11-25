@@ -260,10 +260,7 @@ export const getPlayerStats = async ({
   const stats = await contracts.castleCampaignContract.getCurrentCampaignStats(
     characterTokenId
   );
-  return mapCharacterAPIToLocalStats({
-    ...stats,
-    tokenId: characterTokenId,
-  });
+  return mapCharacterAPIToLocalStats(stats, characterTokenId);
 };
 export const GET_PLAYER_STATS_CACHE_KEY = "getPlayerStats";
 
@@ -305,7 +302,6 @@ export const getTurnData = async ({
   if (!signer) {
     return null;
   }
-
   const turnNumber = await contracts.castleCampaignContract.playerTurn(
     characterTokenId
   );
