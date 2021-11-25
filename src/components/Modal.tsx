@@ -5,6 +5,7 @@ import {
   UNSCALED_VIEWPORT_HEIGHT,
   UNSCALED_VIEWPORT_WIDTH,
 } from "../Maze/constants";
+import { ReactNode } from "react";
 
 const Container = styled.div`
   position: absolute;
@@ -25,11 +26,6 @@ const Container = styled.div`
   border: 3px double white;
 `;
 
-export const Modal = () => {
-  return (
-    <Container>
-      <span>Something mysterious is happening!</span>
-      <span>You are frozen in terror!</span>
-    </Container>
-  );
+export const Modal = ({ children }: { children: ReactNode }) => {
+  return <Container>{children}</Container>;
 };

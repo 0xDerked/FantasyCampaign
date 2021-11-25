@@ -13,6 +13,9 @@ import { attackWithAbility } from "../api/api";
 import { useWallet } from "../hooks/useWallet";
 import { useContracts } from "../hooks/useContracts";
 import { useQueryMobStats } from "../api/useQueryMobStats";
+import { useGameData } from "../hooks/useGameData";
+import { Modal } from "../components/Modal";
+import { useEffect } from "react";
 
 const FightScreenMock = styled(Image).attrs(() => ({
   src: match,
@@ -38,8 +41,14 @@ const ButtonsContainer = styled.div`
   bottom: ${scale(20)}px;
 `;
 
-const MobStat = styled.div`
+const PositionBase = styled.div`
   position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const MobStat = styled(PositionBase)`
   right: ${scale(UNSCALED_VIEWPORT_WIDTH / 3)}px;
   left: ${scale(UNSCALED_VIEWPORT_WIDTH / 3)}px;
   top: ${scale(0)}px;
@@ -47,16 +56,34 @@ const MobStat = styled.div`
   font-size: ${scale(28)}px;
   background-color: black;
   border: ${scale(3)}px double red;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+`;
+
+const PlayerStat = styled(PositionBase)`
+  left: ${scale(10)}px;
+  bottom: ${scale(10)}px;
+  height: ${scale(60)}px;
+  font-size: ${scale(40)}px;
+  background-color: black;
+  border: ${scale(3)}px double red;
+  padding: ${scale(10)}px;
+  width: ${scale(UNSCALED_VIEWPORT_WIDTH / 2)}px;
 `;
 
 export const FightScreen = () => {
   const character = useGetSelectedCharacter();
   const { signer } = useWallet();
   const contracts = useContracts();
+  const [gameData, setGameData] = useGameData();
   const { data: mobStats } = useQueryMobStats();
+  const message = gameData?.message;
+
+  useEffect(() => {
+    if (message) {
+      setTimeout(() => {
+        setGameData({ ...gameData, message: null });
+      }, 750);
+    }
+  }, [message]);
 
   const handleAttack = async (abilityIndex: number) => {
     if (typeof character?.tokenId === "number" && signer && contracts) {
@@ -90,6 +117,8 @@ export const FightScreen = () => {
         })}
       </ButtonsContainer>
       <MobStat>{mobStats?.[0]?.health}</MobStat>
+      <PlayerStat>{character?.health}</PlayerStat>
+      {message ? <Modal>{message}</Modal> : null}
     </Container>
   );
 };

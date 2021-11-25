@@ -81,7 +81,12 @@ export const MazeScreen = () => {
         ) : null;
       })}
       <Map rotateMap={false} />
-      {gameData.mode === GameModes.TurnTrigger ? <Modal /> : null}
+      {gameData.mode === GameModes.TurnTrigger ? (
+        <Modal>
+          <span>Something mysterious is happening!</span>
+          <span>You are frozen in terror!</span>
+        </Modal>
+      ) : null}
     </Outer>
   );
 };

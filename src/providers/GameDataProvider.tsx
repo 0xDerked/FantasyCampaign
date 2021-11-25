@@ -10,6 +10,7 @@ export const initialGameData: GameData = {
   spawnPoints: spawnPointCoords,
   selectedTokenId: null,
   mode: GameModes.SplashScreen,
+  message: null,
 };
 
 export const GameDataContext = React.createContext<
