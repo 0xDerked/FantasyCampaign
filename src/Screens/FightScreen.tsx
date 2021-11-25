@@ -120,6 +120,10 @@ export const FightScreen = () => {
         }
       } catch (e: any) {
         alert(`Something went wrong attacking ${e.message}`);
+        setGameData({
+          ...gameData,
+          mode: GameModes.ExploringMaze,
+        });
       }
     }
   };
