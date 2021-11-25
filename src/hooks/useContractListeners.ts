@@ -6,7 +6,7 @@ import { getTurnData } from "../api/api";
 import { useWallet } from "./useWallet";
 import { getGameModeFromTurnType } from "../utils/getGameModeFromTurnType";
 import { useQueryMobStats } from "../api/useQueryMobStats";
-import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
+import { useQueryPlayerStats } from "../api/useQueryPlayerStats";
 
 export const useContractListeners = () => {
   const [gameData, setGameData] = useGameData();
@@ -14,7 +14,7 @@ export const useContractListeners = () => {
   const contracts = useContracts();
   const { signer } = useWallet();
   const { refetch: refetchMobStats } = useQueryMobStats();
-  const { refetch: refetchMintedCharacters } = useQueryAllMintedCharacters();
+  const { refetch: refetchPlayerStats } = useQueryPlayerStats();
   const { castleCampaignContract } = contracts;
 
   const filterStarted =
@@ -68,7 +68,7 @@ export const useContractListeners = () => {
   const combatListener = useCallback(async (_, damage: number) => {
     console.log("combatListener", damage);
     await refetchMobStats();
-    await refetchMintedCharacters();
+    await refetchPlayerStats();
     setGameData({
       ...gameData,
       message: `You dealt ${damage} damage!`,

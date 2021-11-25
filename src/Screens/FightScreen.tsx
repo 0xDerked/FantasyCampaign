@@ -7,7 +7,6 @@ import {
   UNSCALED_VIEWPORT_WIDTH,
 } from "../Maze/constants";
 import { Image } from "../components/Image";
-import { useGetSelectedCharacter } from "../hooks/useGetSelectedCharacter";
 import { ButtonAttack } from "../components/Button";
 import { attackWithAbility } from "../api/api";
 import { useWallet } from "../hooks/useWallet";
@@ -16,6 +15,7 @@ import { useQueryMobStats } from "../api/useQueryMobStats";
 import { useGameData } from "../hooks/useGameData";
 import { Modal } from "../components/Modal";
 import { useEffect } from "react";
+import { useQueryPlayerStats } from "../api/useQueryPlayerStats";
 
 const FightScreenMock = styled(Image).attrs(() => ({
   src: match,
@@ -70,7 +70,7 @@ const PlayerStat = styled(PositionBase)`
 `;
 
 export const FightScreen = () => {
-  const character = useGetSelectedCharacter();
+  const { data: playerData } = useQueryPlayerStats();
   const { signer } = useWallet();
   const contracts = useContracts();
   const [gameData, setGameData] = useGameData();
@@ -89,11 +89,11 @@ export const FightScreen = () => {
 
   const handleAttack = async (abilityIndex: number) => {
     setLocalMessage("Attacking...");
-    if (typeof character?.tokenId === "number" && signer && contracts) {
+    if (typeof playerData?.tokenId === "number" && signer && contracts) {
       try {
         await attackWithAbility({
           abilityIndex,
-          characterTokenId: character.tokenId,
+          characterTokenId: playerData.tokenId,
           contracts,
           signer,
           target: 0, // Only one mob member currently
@@ -108,7 +108,7 @@ export const FightScreen = () => {
     <Container>
       <FightScreenMock />
       <ButtonsContainer>
-        {character?.abilities.map((ability, index) => {
+        {playerData?.abilities.map((ability, index) => {
           return (
             <ButtonAttack
               onClick={() => handleAttack(index)}
@@ -120,7 +120,7 @@ export const FightScreen = () => {
         })}
       </ButtonsContainer>
       <MobStat>{mobStats?.[0]?.health}</MobStat>
-      <PlayerStat>{character?.health}</PlayerStat>
+      <PlayerStat>{playerData?.health}</PlayerStat>
       {message ? <Modal>{message}</Modal> : null}
       {localMessage ? <Modal>{localMessage}</Modal> : null}
     </Container>
