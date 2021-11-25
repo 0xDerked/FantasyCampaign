@@ -20,7 +20,7 @@ export type GameData = {
   doors: DoorCoords[];
   spawnPoints: SpawnPointCoords[];
   selectedTokenId: number | null;
-  route: Routes;
+  mode: GameModes;
 };
 export type CharacterAbilities = {
   abilityType: number;

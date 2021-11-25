@@ -3,7 +3,6 @@ import * as React from "react";
 import { CreateCharacterScreen } from "../Screens/CreateCharacterScreen";
 import { FightScreen } from "../Screens/FightScreen";
 import { SplashScreen } from "../Screens/SplashScreen";
-import { EnterCampaignScreen } from "../Screens/EnterCampaignScreen";
 import { MazeScreen } from "../Screens/MazeScreen";
 import { GameModes } from "../types";
 import { useGameData } from "../hooks/useGameData";
@@ -18,12 +17,6 @@ export const Router = () => {
       return (
         <Web3Gate>
           <CreateCharacterScreen />
-        </Web3Gate>
-      );
-    case GameModes.EnterCampaignScreen:
-      return (
-        <Web3Gate>
-          <EnterCampaignScreen />
         </Web3Gate>
       );
     case GameModes.FightScreen:

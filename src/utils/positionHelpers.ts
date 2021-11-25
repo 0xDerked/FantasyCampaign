@@ -1,6 +1,6 @@
 import { rotate } from "./rotate";
 import { round } from "./round";
-import { GameData, Position, Routes } from "../types";
+import { GameData, Position, GameModes } from "../types";
 import {
   generateDoorCollisions,
   generateSpawnCollisions,
@@ -27,7 +27,7 @@ export const setRow = (pos: Position, delta: number) => ({
 });
 
 export const rotLeft = (gameData: GameData): GameData => {
-  if (gameData.route === Routes.Turn) {
+  if (gameData.mode === GameModes.TurnTrigger) {
     return gameData;
   }
   const newPos = {
@@ -41,7 +41,7 @@ export const rotLeft = (gameData: GameData): GameData => {
 };
 
 export const rotRight = (gameData: GameData): GameData => {
-  if (gameData.route === Routes.Turn) {
+  if (gameData.mode === GameModes.TurnTrigger) {
     return gameData;
   }
   const newPos = {
@@ -166,7 +166,7 @@ export const strafeLeft = (pos: Position, currentState: GameData): Position => {
 
 type PosFunction = (position: Position, currentState: GameData) => Position;
 export const setPos = (fn: PosFunction) => (gameData: GameData) => {
-  if (gameData.route === Routes.Turn) {
+  if (gameData.mode === GameModes.TurnTrigger) {
     return gameData;
   }
   const newPosition = fn(gameData.position, gameData);
@@ -174,11 +174,10 @@ export const setPos = (fn: PosFunction) => (gameData: GameData) => {
   const spawnPointsDict = generateSpawnCollisions(gameData.spawnPoints);
   const spawnPoint =
     spawnPointsDict[`${round(newPosition.col)},${round(newPosition.row)}`];
-  if (typeof spawnPoint !== "undefined") {
+  if (spawnPoint === true) {
     return {
       ...gameData,
-      route: Routes.Turn,
-      isFighting: true,
+      mode: GameModes.TurnTrigger,
       position: newPosition,
     };
   }

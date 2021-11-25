@@ -6,7 +6,7 @@ import { Button } from "../components/Button";
 import { CenterFill } from "../components/Layout";
 import { useGameData } from "../hooks/useGameData";
 import { useWallet } from "../hooks/useWallet";
-import { createCharacter } from "../api/api";
+import { createCharacter, enterCampaign } from "../api/api";
 import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
 import { StatsTable } from "../components/StatsTable";
 
@@ -68,13 +68,21 @@ export const CreateCharacterScreen = () => {
     }
   };
 
-  const handleUseExistingCharacter = () => {
+  const handleUseExistingCharacter = async () => {
     if (typeof selectedCharacterTokenId === "number") {
       setGameData({
         ...gameData,
         selectedTokenId: selectedCharacterTokenId,
-        mode: GameModes.EnterCampaignScreen,
       });
+      try {
+        await enterCampaign(signer, selectedCharacterTokenId);
+        setGameData({
+          ...gameData,
+          mode: GameModes.MazeScreen,
+        });
+      } catch (e: any) {
+        alert(`Error starting campaign:  ${e.data?.message || e.message}`);
+      }
     }
   };
 
