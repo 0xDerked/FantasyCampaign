@@ -70,14 +70,11 @@ export const CreateCharacterScreen = () => {
 
   const handleUseExistingCharacter = async () => {
     if (typeof selectedCharacterTokenId === "number") {
-      setGameData({
-        ...gameData,
-        selectedTokenId: selectedCharacterTokenId,
-      });
       try {
         await enterCampaign(signer, selectedCharacterTokenId);
         setGameData({
           ...gameData,
+          selectedTokenId: selectedCharacterTokenId,
           mode: GameModes.MazeScreen,
         });
       } catch (e: any) {

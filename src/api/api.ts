@@ -79,7 +79,7 @@ export const FETCH_MINTED_CACHE_KEY = "allMintedCharacters";
 export const createCharacter = async (
   signer: JsonRpcSigner | undefined,
   characterId: number | null
-) => {
+): Promise<void | null> => {
   if (!signer) {
     return null;
   }
@@ -101,7 +101,7 @@ export const CREATE_CHARACTER_CACHE_KEY = "createCharacter";
 export const enterCampaign = async (
   signer: JsonRpcSigner | undefined,
   characterTokenId: number
-) => {
+): Promise<void | null> => {
   if (!signer) {
     return null;
   }
@@ -123,7 +123,7 @@ export const ENTER_CAMPAIGN_CACHE_KEY = "enterCampaign";
 export const generateTurn = async (
   signer: JsonRpcSigner | undefined,
   characterTokenId: number
-) => {
+): Promise<void | null> => {
   if (!signer) {
     return null;
   }
@@ -154,7 +154,7 @@ export const attackWithAbility = async (
   characterToken: number,
   abilityIndex: number,
   target: number
-) => {
+): Promise<void | null> => {
   if (!signer) {
     return null;
   }
@@ -174,7 +174,7 @@ export const attackWithItem = async (
   characterToken: number,
   itemIndex: number,
   target: number
-) => {
+): Promise<void | null> => {
   if (!signer) {
     return null;
   }
@@ -193,7 +193,7 @@ export const castHealAbility = async (
   signer: JsonRpcSigner | undefined,
   characterToken: number,
   abilityIndex: number
-) => {
+): Promise<void | null> => {
   if (!signer) {
     return null;
   }
@@ -211,7 +211,7 @@ export const HEAL_ABILITY_CACHE_KEY = "castHealAbility";
 export const endExploreLoot = async (
   signer: JsonRpcSigner | undefined,
   characterToken: number
-) => {
+): Promise<void | null> => {
   if (!signer) {
     return null;
   }
@@ -230,7 +230,7 @@ export const getCampaignInventory = async (
   signer: JsonRpcSigner | undefined,
   characterToken: number,
   characterNonce: number
-) => {
+): Promise<void | null> => {
   if (!signer) {
     return null;
   }
@@ -250,7 +250,7 @@ export const GET_INVENTORY_CACHE_KEY = "getCampaignInventory";
 export const getCurrentCampaignStatus = async (
   signer: JsonRpcSigner | undefined,
   characterToken: number
-) => {
+): Promise<void | null> => {
   if (!signer) {
     return null;
   }

@@ -22,11 +22,11 @@ export const useTriggerTurn = () => {
       ) {
         try {
           await generateTurn(signer, selectedTokenId);
+          wasInTurnMode.current = isInTurnMode;
         } catch (e: any) {
           alert(`Failed to trigger turn ${e.data?.message || e.message}`);
         }
       }
     })();
-    wasInTurnMode.current = isInTurnMode;
   }, [isInTurnMode, selectedTokenId, signer]);
 };
