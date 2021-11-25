@@ -24,6 +24,7 @@ export const GameDataProvider: React.FC = ({ children }) => {
     const storedGameData = localStorage.getItem("gameData");
     if (storedGameData) {
       const parsed: GameData = JSON.parse(storedGameData);
+      parsed.message = null;
       setGameData(parsed);
     }
   }, []);

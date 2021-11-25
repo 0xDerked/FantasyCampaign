@@ -9,6 +9,18 @@ import { useGameData } from "../hooks/useGameData";
 import { Web3Gate } from "./Web3Gate";
 import { ContractsProvider } from "../providers/ContractsProvider";
 import { ContractListeners } from "../hooks/useContractListeners";
+import { Modal } from "../components/Modal";
+import { ReactNode } from "react";
+
+const Core = ({ children }: { children: ReactNode }) => (
+  <Web3Gate>
+    <ContractsProvider>
+      <ContractListeners />
+      {children}
+      <Modal />
+    </ContractsProvider>
+  </Web3Gate>
+);
 
 export const Router = () => {
   const [gameData] = useGameData();
@@ -17,32 +29,23 @@ export const Router = () => {
       return <SplashScreen />;
     case GameModes.SelectingCharacter:
       return (
-        <Web3Gate>
-          <ContractsProvider>
-            <ContractListeners />
-            <CreateCharacterScreen />
-          </ContractsProvider>
-        </Web3Gate>
+        <Core>
+          <CreateCharacterScreen />
+        </Core>
       );
     case GameModes.InCombat:
       return (
-        <Web3Gate>
-          <ContractsProvider>
-            <ContractListeners />
-            <FightScreen />
-          </ContractsProvider>
-        </Web3Gate>
+        <Core>
+          <FightScreen />
+        </Core>
       );
     case GameModes.ExploringMaze:
     case GameModes.TurnTrigger:
     default:
       return (
-        <Web3Gate>
-          <ContractsProvider>
-            <ContractListeners />
-            <MazeScreen />
-          </ContractsProvider>
-        </Web3Gate>
+        <Core>
+          <MazeScreen />
+        </Core>
       );
   }
 };

@@ -79,16 +79,21 @@ export const FightScreen = () => {
   const message = gameData?.message;
 
   useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout> | undefined = undefined;
     if (message) {
-      setTimeout(() => {
+      timeout = setTimeout(() => {
         setGameData({ ...gameData, message: null });
         setLocalMessage(null);
       }, 1000);
     }
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
   }, [message]);
 
   const handleAttack = async (abilityIndex: number) => {
-    setLocalMessage("Attacking...");
     if (typeof playerData?.tokenId === "number" && signer && contracts) {
       try {
         await attackWithAbility({
@@ -121,8 +126,6 @@ export const FightScreen = () => {
       </ButtonsContainer>
       <MobStat>{mobStats?.[0]?.health}</MobStat>
       <PlayerStat>{playerData?.health}</PlayerStat>
-      {message ? <Modal>{message}</Modal> : null}
-      {localMessage ? <Modal>{localMessage}</Modal> : null}
     </Container>
   );
 };

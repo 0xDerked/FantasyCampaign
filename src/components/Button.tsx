@@ -9,16 +9,16 @@ const ButtonBase = styled.button`
   text-align: inherit;
   display: flex;
   align-items: center;
-  justify-content: inherit;
+  justify-content: center;
   opacity: ${props => (props.disabled ? 0.2 : 1)};
 `;
 
 export const ButtonLarge = styled(ButtonBase)`
   background-color: black;
   border: ${scale(3)}px solid blue;
-  padding: ${scale(9)}px;
+  padding: ${scale(10)}px;
   color: white;
-  font-size: ${scale(10)}px;
+  font-size: ${scale(30)}px;
 `;
 
 export const ButtonAttack = styled(ButtonBase)`

@@ -10,7 +10,6 @@ import { useCallback } from "react";
 import { useGameData } from "../hooks/useGameData";
 import { useTriggerTurn } from "../hooks/useTriggerTurn";
 import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
-import { Modal } from "../components/Modal";
 import { Map } from "../Maze/Map";
 
 export const MazeScreen = () => {
@@ -81,12 +80,6 @@ export const MazeScreen = () => {
         ) : null;
       })}
       <Map rotateMap={false} />
-      {gameData.mode === GameModes.TurnTrigger ? (
-        <Modal>
-          <span>Something mysterious is happening!</span>
-          <span>You are frozen in terror!</span>
-        </Modal>
-      ) : null}
     </Outer>
   );
 };
