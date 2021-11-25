@@ -2,7 +2,7 @@ import * as React from "react";
 import { CharacterClass, GameModes } from "../types";
 import styled from "styled-components";
 import { useGetAvailableCharacters } from "../hooks/useGetAvailableCharacters";
-import { Button } from "../components/Button";
+import { ButtonLarge } from "../components/Button";
 import { CenterFill } from "../components/Layout";
 import { useGameData } from "../hooks/useGameData";
 import { useWallet } from "../hooks/useWallet";
@@ -115,13 +115,16 @@ export const CreateCharacterScreen = () => {
         ) : null}
       </CharacterContainer>
       {typeof selectedCharacterTokenId == "number" ? (
-        <Button onClick={handleUseExistingCharacter}>
+        <ButtonLarge onClick={handleUseExistingCharacter}>
           Start/Resume Campaign
-        </Button>
+        </ButtonLarge>
       ) : (
-        <Button onClick={handleCreateCharacter} disabled={!selectedCharacterId}>
+        <ButtonLarge
+          onClick={handleCreateCharacter}
+          disabled={!selectedCharacterId}
+        >
           Create New Character
-        </Button>
+        </ButtonLarge>
       )}
     </CenterFill>
   );

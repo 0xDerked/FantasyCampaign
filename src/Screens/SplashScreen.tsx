@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import { GameModes } from "../types";
-import { Button } from "../components/Button";
+import { ButtonLarge } from "../components/Button";
 import { CenterFill } from "../components/Layout";
 import { useGameData } from "../hooks/useGameData";
 
@@ -16,7 +16,7 @@ export const SplashScreen = () => {
   return (
     <CenterFill>
       <h1>Fantasy Campaign</h1>
-      <Button onClick={connect}>Connect Wallet</Button>
+      <ButtonLarge onClick={connect}>Connect Wallet</ButtonLarge>
     </CenterFill>
   );
 };

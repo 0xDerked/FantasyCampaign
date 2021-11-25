@@ -1,17 +1,30 @@
 import styled from "styled-components";
+import { scale } from "../utils/scale";
 
-export const Button = styled.button`
+const ButtonBase = styled.button`
   appearance: none;
   font-family: inherit;
-  background-color: black;
   border-radius: 0;
   outline: none;
-  border: 1px solid blue;
   text-align: inherit;
   display: flex;
-  padding: 5px;
   align-items: center;
   justify-content: inherit;
-  color: white;
   opacity: ${props => (props.disabled ? 0.2 : 1)};
+`;
+
+export const ButtonLarge = styled(ButtonBase)`
+  background-color: black;
+  border: ${scale(3)}px solid blue;
+  padding: ${scale(9)}px;
+  color: white;
+  font-size: ${scale(10)}px;
+`;
+
+export const ButtonAttack = styled(ButtonBase)`
+  background-color: red;
+  border: ${scale(3)}px double white;
+  padding: ${scale(6)}px;
+  color: white;
+  font-size: ${scale(20)}px;
 `;
