@@ -8,7 +8,10 @@ import {
 import { useInterfaceEventsListeners } from "./hooks/useInterfaceEventsListeners";
 import { scale } from "./utils/scale";
 import { useGameData } from "./hooks/useGameData";
-import { GameDataProvider, initialGameData } from "./providers/GameData";
+import {
+  GameDataProvider,
+  initialGameData,
+} from "./providers/GameDataProvider";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Router } from "./routes/Router";
 
