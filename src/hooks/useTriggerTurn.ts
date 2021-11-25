@@ -37,7 +37,7 @@ export const useTriggerTurn = () => {
             setGameData({
               ...gameData,
               mode: GameModes.ExploringMaze,
-              message: "Something mysterious is happening...",
+              message: "The dragon roles its dice...",
             });
             await generateTurn({
               signer,
