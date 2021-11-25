@@ -1,5 +1,5 @@
 import { BigNumber, ethers } from "ethers";
-import { CharacterStatsDictionary } from "../types";
+import { CharacterStatsDictionary, TurnType } from "../types";
 import { JsonRpcSigner } from "@ethersproject/providers/src.ts/json-rpc-provider";
 
 import Web3Modal from "web3modal";
@@ -131,7 +131,7 @@ export const generateTurn = async ({
   if (!signer) {
     return null;
   }
-  await contracts.castleCampaignContract.generateTurn(characterTokenId);
+  return await contracts.castleCampaignContract.generateTurn(characterTokenId);
 };
 export const GENERATE_TURN_CACHE_KEY = "generateTurn";
 
@@ -149,13 +149,13 @@ export const FETCH_SIGNER_CACHE_KEY = "fetchSigner";
 
 export const attackWithAbility = async ({
   signer,
-  characterToken,
+  characterTokenId,
   abilityIndex,
   target,
   contracts,
 }: {
   signer: JsonRpcSigner | undefined;
-  characterToken: number;
+  characterTokenId: number;
   abilityIndex: number;
   target: number;
   contracts: Contracts;
@@ -165,7 +165,7 @@ export const attackWithAbility = async ({
   }
 
   await contracts.castleCampaignContract.attackWithAbility(
-    characterToken,
+    characterTokenId,
     abilityIndex,
     target
   );
@@ -176,13 +176,13 @@ export const ATTACK_ABILITY_CACHE_KEY = "attackWithAbility";
 
 export const attackWithItem = async ({
   signer,
-  characterToken,
+  characterTokenId,
   itemIndex,
   target,
   contracts,
 }: {
   signer: JsonRpcSigner | undefined;
-  characterToken: number;
+  characterTokenId: number;
   itemIndex: number;
   target: number;
   contracts: Contracts;
@@ -191,7 +191,7 @@ export const attackWithItem = async ({
     return null;
   }
   await contracts.castleCampaignContract.attackWithItem(
-    characterToken,
+    characterTokenId,
     itemIndex,
     target
   );
@@ -202,12 +202,12 @@ export const ATTACK_ITEM_CACHE_KEY = "attackWithItem";
 
 export const castHealAbility = async ({
   signer,
-  characterToken,
+  characterTokenId,
   abilityIndex,
   contracts,
 }: {
   signer: JsonRpcSigner | undefined;
-  characterToken: number;
+  characterTokenId: number;
   abilityIndex: number;
   contracts: Contracts;
 }): Promise<void | null> => {
@@ -215,7 +215,7 @@ export const castHealAbility = async ({
     return null;
   }
   await contracts.castleCampaignContract.castHealAbility(
-    characterToken,
+    characterTokenId,
     abilityIndex
   );
 };
@@ -225,17 +225,17 @@ export const HEAL_ABILITY_CACHE_KEY = "castHealAbility";
 
 export const endExploreLoot = async ({
   signer,
-  characterToken,
+  characterTokenId,
   contracts,
 }: {
   signer: JsonRpcSigner | undefined;
-  characterToken: number;
+  characterTokenId: number;
   contracts: Contracts;
 }): Promise<void | null> => {
   if (!signer) {
     return null;
   }
-  await contracts.castleCampaignContract.endExploreLoot(characterToken);
+  await contracts.castleCampaignContract.endExploreLoot(characterTokenId);
 };
 export const END_LOOT_CACHE_KEY = "endExploreLoot";
 
@@ -243,12 +243,12 @@ export const END_LOOT_CACHE_KEY = "endExploreLoot";
 
 export const getCampaignInventory = async ({
   signer,
-  characterToken,
+  characterTokenId,
   characterNonce,
   contracts,
 }: {
   signer: JsonRpcSigner | undefined;
-  characterToken: number;
+  characterTokenId: number;
   characterNonce: number;
   contracts: Contracts;
 }): Promise<void | null> => {
@@ -257,11 +257,36 @@ export const getCampaignInventory = async ({
   }
 
   await contracts.castleCampaignContract.campaignInventory(
-    characterToken,
+    characterTokenId,
     characterNonce
   );
 };
 export const GET_INVENTORY_CACHE_KEY = "getCampaignInventory";
+
+// --------------------------------------------------------------------------------
+
+export const getTurnData = async ({
+  signer,
+  contracts,
+  characterTokenId,
+}: {
+  signer: JsonRpcSigner | undefined;
+  contracts: Contracts;
+  characterTokenId: number;
+}): Promise<TurnType | null> => {
+  if (!signer) {
+    return null;
+  }
+
+  const turnNumber = await contracts.castleCampaignContract.playerTurn(
+    characterTokenId
+  );
+  const turnType = await contracts.castleCampaignContract.turnTypes(
+    characterTokenId,
+    turnNumber
+  );
+  return turnType;
+};
 
 // --------------------------------------------------------------------------------
 //unlock final turn
@@ -269,18 +294,18 @@ export const GET_INVENTORY_CACHE_KEY = "getCampaignInventory";
 
 export const getCurrentCampaignStatus = async ({
   signer,
-  characterToken,
+  characterTokenId,
   contracts,
 }: {
   signer: JsonRpcSigner | undefined;
-  characterToken: number;
+  characterTokenId: number;
   contracts: Contracts;
 }): Promise<void | null> => {
   if (!signer) {
     return null;
   }
   await contracts.castleCampaignContract.getCurrentCampaignStatus(
-    characterToken
+    characterTokenId
   );
 };
 export const GET_STATUS_CACHE_KEY = "getCurrentCampaignStatus";

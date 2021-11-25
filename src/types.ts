@@ -6,12 +6,11 @@ export type Position = {
 
 export enum GameModes {
   SplashScreen = "SplashScreen",
-  CreateCharacterScreen = "CreateCharacterScreen",
-  EnterCampaignScreen = "EnterCampaignScreen",
-  MazeScreen = "MazeScreen",
+  SelectingCharacter = "SelectingCharacter",
+  ExploringMaze = "ExploringMaze",
   TurnTrigger = "TurnTrigger",
-  FightScreen = "FightScreen",
-  LootScreen = "LootScreen",
+  InCombat = "InCombat",
+  Looting = "Looting",
 }
 
 export type GameData = {
@@ -55,6 +54,13 @@ export enum CharacterClass {
   Rogue = 5,
   Ranger = 6,
   Warlock = 7,
+}
+
+export enum TurnType {
+  NotSet,
+  Combat,
+  Loot,
+  Puzzle,
 }
 
 export enum WallType {

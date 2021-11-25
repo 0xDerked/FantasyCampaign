@@ -10,7 +10,7 @@ export const SplashScreen = () => {
   const connect = () => {
     setGameData(gameData => ({
       ...gameData,
-      mode: GameModes.CreateCharacterScreen,
+      mode: GameModes.SelectingCharacter,
     }));
   };
   return (

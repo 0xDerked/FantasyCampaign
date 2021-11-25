@@ -15,7 +15,7 @@ export const Router = () => {
   switch (gameData.mode) {
     case GameModes.SplashScreen:
       return <SplashScreen />;
-    case GameModes.CreateCharacterScreen:
+    case GameModes.SelectingCharacter:
       return (
         <Web3Gate>
           <ContractsProvider>
@@ -24,7 +24,7 @@ export const Router = () => {
           </ContractsProvider>
         </Web3Gate>
       );
-    case GameModes.FightScreen:
+    case GameModes.InCombat:
       return (
         <Web3Gate>
           <ContractsProvider>
@@ -33,7 +33,7 @@ export const Router = () => {
           </ContractsProvider>
         </Web3Gate>
       );
-    case GameModes.MazeScreen:
+    case GameModes.ExploringMaze:
     case GameModes.TurnTrigger:
     default:
       return (

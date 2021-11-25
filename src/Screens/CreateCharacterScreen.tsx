@@ -85,7 +85,7 @@ export const CreateCharacterScreen = () => {
         setGameData({
           ...gameData,
           selectedTokenId: selectedCharacterTokenId,
-          mode: GameModes.MazeScreen,
+          mode: GameModes.ExploringMaze,
         });
       } catch (e: any) {
         alert(`Error starting campaign:  ${e.data?.message || e.message}`);
