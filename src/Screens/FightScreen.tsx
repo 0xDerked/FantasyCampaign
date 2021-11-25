@@ -8,7 +8,7 @@ import {
 } from "../Maze/constants";
 import { Image } from "../components/Image";
 import { ButtonAttack } from "../components/Button";
-import { attackWithAbility } from "../api/api";
+import { attackWithAbility, getTurnData } from "../api/api";
 import { useWallet } from "../hooks/useWallet";
 import { useContracts } from "../hooks/useContracts";
 import { useQueryMobStats } from "../api/useQueryMobStats";
@@ -16,6 +16,7 @@ import { useGameData } from "../hooks/useGameData";
 import { Modal } from "../components/Modal";
 import { useEffect } from "react";
 import { useQueryPlayerStats } from "../api/useQueryPlayerStats";
+import { GameModes } from "../types";
 
 const FightScreenMock = styled(Image).attrs(() => ({
   src: match,
@@ -77,6 +78,7 @@ export const FightScreen = () => {
   const { data: mobStats } = useQueryMobStats();
   const [localMessage, setLocalMessage] = React.useState<string | null>(null);
   const message = gameData?.message;
+  const tokenId = playerData?.tokenId;
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined = undefined;
@@ -94,16 +96,28 @@ export const FightScreen = () => {
   }, [message]);
 
   const handleAttack = async (abilityIndex: number) => {
-    if (typeof playerData?.tokenId === "number" && signer && contracts) {
+    if (typeof tokenId === "number" && signer && contracts) {
       try {
-        setGameData({ ...gameData, message: "You attack!" });
-        await attackWithAbility({
-          abilityIndex,
-          characterTokenId: playerData.tokenId,
-          contracts,
+        const turnType = await getTurnData({
           signer,
-          target: 0, // Only one mob member currently
+          contracts,
+          characterTokenId: tokenId,
         });
+        if (turnType === 0) {
+          setGameData({
+            ...gameData,
+            mode: GameModes.ExploringMaze,
+          });
+        } else {
+          setGameData({ ...gameData, message: "You attack!" });
+          await attackWithAbility({
+            abilityIndex,
+            characterTokenId: tokenId,
+            contracts,
+            signer,
+            target: 0, // Only one mob member currently
+          });
+        }
       } catch (e: any) {
         alert(`Something went wrong attacking ${e.message}`);
       }

@@ -5,11 +5,14 @@ import { useQuerySigner } from "../api/useQuerySigner";
 import { generateTurn, getTurnData } from "../api/api";
 import { useContracts } from "./useContracts";
 import { getGameModeFromTurnType } from "../utils/getGameModeFromTurnType";
+import { useQueryPlayerStats } from "../api/useQueryPlayerStats";
 
 export const useTriggerTurn = () => {
   const { data: signer } = useQuerySigner();
+  const { data: playerData } = useQueryPlayerStats();
   const [gameData, setGameData] = useGameData();
-  const { selectedTokenId, mode } = gameData;
+  const { mode } = gameData;
+  const tokenId = playerData?.tokenId;
   const contracts = useContracts();
 
   const isInTurnMode = mode === GameModes.TurnTrigger;
@@ -21,13 +24,13 @@ export const useTriggerTurn = () => {
         isInTurnMode &&
         !wasInTurnMode.current &&
         signer &&
-        typeof selectedTokenId === "number"
+        typeof tokenId === "number"
       ) {
         try {
           const turnType = await getTurnData({
             signer,
             contracts,
-            characterTokenId: selectedTokenId,
+            characterTokenId: tokenId,
           });
           if (turnType === 0) {
             // Only generate a turn if not currently in one.
@@ -39,7 +42,7 @@ export const useTriggerTurn = () => {
             await generateTurn({
               signer,
               contracts,
-              characterTokenId: selectedTokenId,
+              characterTokenId: tokenId,
             });
           } else {
             // Just set the game mode as the listener won't be called
@@ -64,5 +67,5 @@ export const useTriggerTurn = () => {
         }
       }
     })();
-  }, [isInTurnMode, selectedTokenId, signer]);
+  }, [isInTurnMode, tokenId, signer]);
 };
