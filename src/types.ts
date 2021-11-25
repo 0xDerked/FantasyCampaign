@@ -20,7 +20,9 @@ export type GameData = {
   spawnPoints: SpawnPointCoords[];
   selectedTokenId: number | null;
   mode: GameModes;
+  message: string | null;
 };
+
 export type CharacterAbilities = {
   abilityType: number;
   action: number;
