@@ -36,11 +36,13 @@ export const useTriggerTurn = () => {
               setGameData({
                 ...gameData,
                 mode: GameModes.ExploringMaze,
+                message: null,
               });
             } else {
               setGameData({
                 ...gameData,
                 mode: gameMode,
+                message: null,
               });
             }
           } else {
