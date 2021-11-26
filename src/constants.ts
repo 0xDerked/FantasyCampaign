@@ -1,4 +1,12 @@
 import { CharacterAttributes, CharacterClass } from "./types";
+import barbarianSelect from "./assets/scaled/barbarian_select.png";
+import barbarianBack from "./assets/scaled/barbarian_back.png";
+import shamanSelect from "./assets/scaled/shaman_select.png";
+import shamanBack from "./assets/scaled/shaman_back.png";
+import wizardSelect from "./assets/scaled/wizard_select.png";
+import wizardBack from "./assets/scaled/wizard_back.png";
+import rangerSelect from "./assets/scaled/ranger_select.png";
+import rangerBack from "./assets/scaled/ranger_back.png";
 
 export const characterStats: Record<number, CharacterAttributes | null> = {
   [CharacterClass.Warlord]: {
@@ -101,3 +109,27 @@ export const availableCharacterIds: number[] = [
   CharacterClass.Ranger,
   CharacterClass.Wizard,
 ];
+
+export const CharacterAssets: Record<number, { front: any; back: any } | null> =
+  {
+    [CharacterClass.Warlord]: {
+      front: barbarianSelect,
+      back: barbarianBack,
+    },
+    [CharacterClass.Shaman]: {
+      front: shamanSelect,
+      back: shamanBack,
+    },
+    [CharacterClass.Ranger]: {
+      front: rangerSelect,
+      back: rangerBack,
+    },
+    [CharacterClass.Wizard]: {
+      front: wizardSelect,
+      back: wizardBack,
+    },
+    [CharacterClass.Knight]: null,
+    [CharacterClass.Cleric]: null,
+    [CharacterClass.Rogue]: null,
+    [CharacterClass.Warlock]: null,
+  };
