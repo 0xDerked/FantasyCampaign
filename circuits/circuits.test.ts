@@ -11,7 +11,7 @@ const circuitMap = require("../src/Maze/circuitMap");
 const flatMaze = circuitMap.flat();
 
 describe("Circuit tests", () => {
-  test("Maze array circuit works", async () => {
+  test("Maze map circuit works", async () => {
     const file = path.resolve(__dirname, "./fixtures/Maze.circom");
     const circuit = await wasmTester(file);
 
@@ -20,6 +20,47 @@ describe("Circuit tests", () => {
     outputs.forEach((output, i) => {
       expect(Fr.eq(Fr.e(flatMaze[i]), output)).toBe(true);
     });
+  });
+
+  test("Direction circuit works", async () => {
+    const file = path.resolve(
+      __dirname,
+      "./fixtures/GetDirectionForMove.circom"
+    );
+    const circuit = await wasmTester(file);
+
+    {
+      // North
+      const witness = await circuit.calculateWitness(
+        { x1: 1, x2: 1, y1: 4, y2: 3 }, // User enters or exits tile 10 from top
+        true
+      );
+      expect(Fr.eq(Fr.e(0), witness[1])).toBe(true);
+    }
+    {
+      // East
+      const witness = await circuit.calculateWitness(
+        { x1: 1, x2: 2, y1: 3, y2: 3 }, // User enters or exits tile 10 from top
+        true
+      );
+      expect(Fr.eq(Fr.e(1), witness[1])).toBe(true);
+    }
+    {
+      // South
+      const witness = await circuit.calculateWitness(
+        { x1: 1, x2: 1, y1: 3, y2: 4 }, // User enters or exits tile 10 from top
+        true
+      );
+      expect(Fr.eq(Fr.e(2), witness[1])).toBe(true);
+    }
+    {
+      // West
+      const witness = await circuit.calculateWitness(
+        { x1: 2, x2: 1, y1: 3, y2: 3 }, // User enters or exits tile 10 from top
+        true
+      );
+      expect(Fr.eq(Fr.e(3), witness[1])).toBe(true);
+    }
   });
 
   test("TileCodeFromCoords circuit works", async () => {
