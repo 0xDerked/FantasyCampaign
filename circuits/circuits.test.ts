@@ -1,5 +1,4 @@
 const path = require("path");
-const fs = require("fs");
 const { F1Field, Scalar } = require("ffjavascript");
 exports.p = Scalar.fromString(
   "21888242871839275222246405745257275088548364400416034343698204186575808495617"
@@ -8,14 +7,7 @@ const Fr = new F1Field(exports.p);
 
 const wasmTester = require("circom_tester").wasm;
 
-const MAZE = [
-  // eslint-disable-next-line prettier/prettier
-  10, 14, 5, 6, 12,
-  6, 2, 4, 4, 5,
-  11, 13, 6, 5, 13,
-  6, 4, 8, 13, 11,
-  7, 14, 12, 7, 12,
-];
+const circuitMap = require("../src/Maze/circuitMap");
 
 describe("Circuit tests", () => {
   test("Maze array circuit works", async () => {
@@ -23,9 +15,10 @@ describe("Circuit tests", () => {
     const circuit = await wasmTester(file);
 
     const witness = await circuit.calculateWitness({}, true);
-    const outputs = witness.slice(1, 25);
+    const outputs = witness.slice(1, 49);
+    const flatMaze = circuitMap.flat();
     outputs.forEach((output, i) => {
-      expect(Fr.eq(Fr.e(MAZE[i]), output)).toBe(true);
+      expect(Fr.eq(Fr.e(flatMaze[i]), output)).toBe(true);
     });
   });
 
