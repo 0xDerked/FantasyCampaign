@@ -1,11 +1,10 @@
 import * as React from "react";
-import { doorsCoords, spawnPointCoords, wallCoords } from "../Maze/mapData";
+import { doorsCoords, spawnPointCoords } from "../Maze/mapData";
 import { GameData, GameModes } from "../types";
 import { useEffect } from "react";
 
 export const initialGameData: GameData = {
   position: { col: 1, dir: 0, row: 1 },
-  walls: wallCoords,
   doors: doorsCoords,
   spawnPoints: spawnPointCoords,
   selectedTokenId: null,

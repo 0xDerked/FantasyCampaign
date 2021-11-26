@@ -5,6 +5,7 @@ import {
   generateDoorCollisions,
   generateSpawnCollisions,
   generateWallCollisions,
+  wallsDict,
 } from "./generateCollisionMaps";
 
 export enum Keys {
@@ -80,7 +81,6 @@ export const boundPosition = (
   }
 
   // Make sure there's not a wall in the way
-  const wallsDict = generateWallCollisions(currentState.walls);
   if (wallsDict[`${round(x1w)},${round(y1w)},${round(x2w)},${round(y2w)}`]) {
     return currPosition;
   }

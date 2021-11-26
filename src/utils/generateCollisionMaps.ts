@@ -6,6 +6,7 @@ import {
   WallCoords,
   WallsDict,
 } from "../types";
+import { wallCoords } from "../Maze/mapData";
 
 export const generateDoorCollisions = (
   doorsCoords: DoorCoords[]
@@ -32,6 +33,8 @@ export const generateWallCollisions = (
   }
   return wallsDict;
 };
+
+export const wallsDict = generateWallCollisions(wallCoords);
 
 export const generateSpawnCollisions = (
   spawnCoords: SpawnPointCoords[]

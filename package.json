@@ -12,6 +12,7 @@
     "circuits:test": "yarn jest ./circuits/circuits.test.ts",
     "circuits:compile": "node ./circuits/compile.js",
     "circuits:ptau": "sh ./circuits/ptau.sh",
+    "circuits:generate-maze": "node ./circuits/generateMaze.js",
     "contracts:compile": "npx hardhat compile",
     "contracts:typechain": "npx hardhat typechain",
     "contracts:deploy": "npx hardhat run ./scripts/deploy.ts --network localhost",

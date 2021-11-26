@@ -16,7 +16,6 @@ export enum GameModes {
 
 export type GameData = {
   position: Position;
-  walls: WallCoords[];
   doors: DoorCoords[];
   spawnPoints: SpawnPointCoords[];
   selectedTokenId: number | null;

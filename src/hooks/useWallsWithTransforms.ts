@@ -1,6 +1,7 @@
 import { rotate } from "../utils/rotate";
 import { round } from "../utils/round";
 import { useGameData } from "./useGameData";
+import { wallCoords } from "../Maze/mapData";
 
 export const useWallsWithTransforms = () => {
   const [gameData] = useGameData();
@@ -8,7 +9,7 @@ export const useWallsWithTransforms = () => {
 
   const Rot = 90 * dir;
 
-  return gameData.walls.map(({ x1, x2, y1, y2, type }) => {
+  return wallCoords.map(({ x1, x2, y1, y2, type }) => {
     // Player moved by row/col index currently so we move them to the center of the tile
     // for collision detection etc
     const orow = row + 0.5;
