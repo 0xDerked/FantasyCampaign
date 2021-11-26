@@ -11,6 +11,7 @@ import { useGameData } from "../hooks/useGameData";
 import { useTriggerTurn } from "../hooks/useTriggerTurn";
 import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
 import { Map } from "../Maze/Map";
+import { calculateProof } from "../utils/calculateProof";
 
 export const MazeScreen = () => {
   useTriggerTurn();
@@ -47,8 +48,9 @@ export const MazeScreen = () => {
     .filter(Boolean);
 
   const handleClick = useCallback(
-    (coords: DoorCoords) => {
+    async (coords: DoorCoords) => {
       const doors = gameData.doors;
+      await calculateProof();
       for (let i = 0; i < doors.length; i++) {
         const door = doors[i];
         if (door.id === coords.id) {

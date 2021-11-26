@@ -4,45 +4,21 @@ const { groth16 } = require("snarkjs");
 const fs = require("fs");
 const builder = require("./circuit_js/witness_calculator");
 
-const p = bigInt(
-  "21888242871839275222246405745257275088548364400416034343698204186575808495617"
-);
-
-// FROM https://github.com/darkforest-eth/packages/blob/05c85915ad664563e17085eb23817ea9a0f83bb2/snarks/index.ts#L205-L218
-function buildContractCallArgs(snarkProof, publicSignals) {
-  // the object returned by genZKSnarkProof needs to be massaged into a set of parameters the verifying contract
-  // will accept
-  return [
-    snarkProof.pi_a.slice(0, 2), // pi_a
-    // genZKSnarkProof reverses values in the inner arrays of pi_b
-    [
-      snarkProof.pi_b[0].slice(0).reverse(),
-      snarkProof.pi_b[1].slice(0).reverse(),
-    ], // pi_b
-    snarkProof.pi_c.slice(0, 2), // pi_c
-    publicSignals, // input
-  ];
-}
-
-function modPBigInt(x) {
-  let ret = bigInt(x).mod(p);
-  if (ret.lesser(bigInt(0))) {
-    ret = ret.add(p);
+const genWnts = async (input, wasmFilePath) => {
+  let wntsBuff;
+  //window exists only in browser
+  if (typeof window !== "undefined") {
+    const resp = await fetch(wasmFilePath);
+    wntsBuff = await resp.arrayBuffer();
+  } else {
+    wntsBuff = fs.readFileSync(wasmFilePath);
   }
-  return ret;
-}
-
-// From https://github.com/akinovak/circom2-example/blob/375895064dcbc2c7747dd1deeafc634869de79c7/src/index.ts
-
-const genWnts = async (input, wasmFilePath, witnessFileName) => {
-  const buffer = fs.readFileSync(wasmFilePath);
 
   return new Promise((resolve, reject) => {
-    builder(buffer)
+    builder(wntsBuff)
       .then(async witnessCalculator => {
         const buff = await witnessCalculator.calculateWTNSBin(input, 0);
-        fs.writeFileSync(witnessFileName, buff);
-        resolve(witnessFileName);
+        resolve(buff);
       })
       .catch(error => {
         reject(error);
@@ -51,14 +27,21 @@ const genWnts = async (input, wasmFilePath, witnessFileName) => {
 };
 
 const genProof = async (grothInput, wasmFilePath, finalZkeyPath) => {
-  await genWnts(grothInput, wasmFilePath, "witness.wtns");
+  let zkeyBuff;
+  const wtnsBuff = await genWnts(grothInput, wasmFilePath);
+  //window exists only in browser
+  if (typeof window !== "undefined") {
+    const resp = await fetch(finalZkeyPath);
+    zkeyBuff = await resp.arrayBuffer();
+  } else {
+    zkeyBuff = fs.readFileSync(finalZkeyPath);
+  }
+
   const { proof, publicSignals } = await groth16.prove(
-    finalZkeyPath,
-    "witness.wtns",
+    new Uint8Array(zkeyBuff),
+    wtnsBuff,
     null
   );
-  const exists = fs.existsSync("witness.wtns");
-  if (exists) fs.unlinkSync("witness.wtns");
   return { proof, publicSignals };
 };
 
@@ -68,8 +51,6 @@ const verifyProof = (vKey, fullProof) => {
 };
 
 module.exports = {
-  buildContractCallArgs,
-  modPBigInt,
   genWnts,
   genProof,
   verifyProof,
