@@ -3,10 +3,12 @@ pragma circom 2.0.0;
 include "../functions/getMaze.circom";
 
 template Maze() {
-  signal output out[25];
-  var maze[25] = getMaze();
-  for (var i = 0; i < 24; i++) {
-    out[i] <-- maze[i];
+  signal output out[7][7];
+  var maze[7][7] = getMaze();
+  for (var y = 0; y < 7; y++) {
+    for (var x = 0; x < 7; x++) {
+      out[y][x] <-- maze[y][x];
+    }
   }
 }
 

@@ -10,7 +10,7 @@ const SIZE = circuitMap.length;
 const template = `pragma circom 2.0.0;
 
 function getMaze() {
-  var maze[${SIZE}] = ${JSON.stringify(circuitMap, null, 2)}
+  var maze[${SIZE}][${SIZE}] = ${JSON.stringify(circuitMap)};
   return maze;
 }
 `;

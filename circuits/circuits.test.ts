@@ -8,6 +8,7 @@ const Fr = new F1Field(exports.p);
 const wasmTester = require("circom_tester").wasm;
 
 const circuitMap = require("../src/Maze/circuitMap");
+const flatMaze = circuitMap.flat();
 
 describe("Circuit tests", () => {
   test("Maze array circuit works", async () => {
@@ -16,57 +17,30 @@ describe("Circuit tests", () => {
 
     const witness = await circuit.calculateWitness({}, true);
     const outputs = witness.slice(1, 49);
-    const flatMaze = circuitMap.flat();
     outputs.forEach((output, i) => {
       expect(Fr.eq(Fr.e(flatMaze[i]), output)).toBe(true);
     });
   });
 
-  test("TileCodeFromIndex circuit works", async () => {
-    const file = path.resolve(__dirname, "./fixtures/TileCodeFromIndex.circom");
-    const circuit = await wasmTester(file);
-
-    const promises = MAZE.map((_, i) => async () => {
-      const witness = await circuit.calculateWitness({ index: i }, true);
-      const output = witness[1];
-      expect(Fr.eq(Fr.e(MAZE[i]), output)).toBe(true);
-    });
-    await Promise.all(promises);
-  });
-
-  test("GetNextIndexForMove circuit works", async () => {
+  test("TileCodeFromCoords circuit works", async () => {
     const file = path.resolve(
       __dirname,
-      "./fixtures/GetNextIndexForMove.circom"
+      "./fixtures/TileCodeFromCoords.circom"
     );
     const circuit = await wasmTester(file);
 
-    const MOVES = [
-      {
-        input: [0, 3],
-        expected: 1,
-      },
-      {
-        input: [1, 3],
-        expected: 2,
-      },
-      {
-        input: [1, 0],
-        expected: 7,
-      },
-      {
-        input: [0, 0],
-        expected: 6,
-      },
-    ];
-
-    const promises = MOVES.map(test => async () => {
-      const witness = await circuit.calculateWitness(
-        { from: test.input[0], direction: test.input[1] },
-        true
-      );
-      const output = witness[1];
-      expect(Fr.eq(Fr.e(test.expected), output)).toBe(true);
+    const promises = [];
+    circuitMap.forEach((row, y) => {
+      row.forEach((tile, x) => {
+        promises.push(async () => {
+          const witness = await circuit.calculateWitness({
+            x: Fr.e(x),
+            y: Fr.e(y),
+          });
+          const output = witness[1];
+          expect(Fr.eq(Fr.e(tile), output)).toBe(true);
+        });
+      });
     });
     await Promise.all(promises);
   });
