@@ -11,6 +11,7 @@ export enum GameModes {
   TurnTrigger = "TurnTrigger",
   InCombat = "InCombat",
   Looting = "Looting",
+  End = "End",
 }
 
 export type GameData = {
@@ -21,6 +22,7 @@ export type GameData = {
   selectedTokenId: number | null;
   mode: GameModes;
   message: string | null;
+  isRollingDice: boolean;
 };
 
 export type CharacterAbilities = {
@@ -57,6 +59,14 @@ export enum CharacterClass {
   Ranger = 6,
   Warlock = 7,
 }
+
+export type Item = {
+  attr: number;
+  item: number;
+  name: string;
+  numUses: number;
+  power: number;
+};
 
 export enum TurnType {
   NotSet,

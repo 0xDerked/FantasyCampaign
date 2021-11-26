@@ -11,6 +11,7 @@ export const initialGameData: GameData = {
   selectedTokenId: null,
   mode: GameModes.SplashScreen,
   message: null,
+  isRollingDice: false,
 };
 
 export const GameDataContext = React.createContext<

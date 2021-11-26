@@ -5,7 +5,6 @@ import {
   UNSCALED_VIEWPORT_HEIGHT,
   UNSCALED_VIEWPORT_WIDTH,
 } from "../Maze/constants";
-import { useGameData } from "../hooks/useGameData";
 
 const Container = styled.div`
   position: absolute;
@@ -26,8 +25,11 @@ const Container = styled.div`
   border: 3px double white;
 `;
 
-export const Modal = () => {
-  const [gameData] = useGameData();
-  const message = gameData.message;
-  return message ? <Container>{message}</Container> : null;
+export const EndScreen = () => {
+  return (
+    <Container>
+      <span>You have vanquished the dragon!</span>
+      <span>It flies away, never to be seen again!</span>
+    </Container>
+  );
 };

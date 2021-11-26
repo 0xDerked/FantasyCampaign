@@ -37,7 +37,8 @@ export const useTriggerTurn = () => {
             setGameData({
               ...gameData,
               mode: GameModes.ExploringMaze,
-              message: "The dragon roles its dice...",
+              message: null,
+              isRollingDice: true,
             });
             await generateTurn({
               signer,
@@ -52,18 +53,26 @@ export const useTriggerTurn = () => {
                 ...gameData,
                 mode: GameModes.ExploringMaze,
                 message: null,
+                isRollingDice: false,
               });
             } else {
               setGameData({
                 ...gameData,
                 mode: gameMode,
                 message: null,
+                isRollingDice: false,
               });
             }
           }
           wasInTurnMode.current = isInTurnMode;
         } catch (e: any) {
           alert(`Failed to trigger turn ${e.data?.message || e.message}`);
+          setGameData({
+            ...gameData,
+            isRollingDice: false,
+            message: null,
+            mode: GameModes.ExploringMaze,
+          });
         }
       }
     })();

@@ -2,6 +2,7 @@ import { BigNumber, ethers } from "ethers";
 import {
   CharacterAttributes,
   CharacterStatsDictionary,
+  Item,
   TurnType,
 } from "../types";
 import { JsonRpcSigner } from "@ethersproject/providers/src.ts/json-rpc-provider";
@@ -224,6 +225,33 @@ export const getMobStats = async ({
   );
 };
 export const GET_MOB_STATS_CACHE_KEY = "getMobStats";
+
+// --------------------------------------------------------------------------------
+
+export const getLootStats = async ({
+  signer,
+  characterTokenId,
+  contracts,
+}: {
+  signer: JsonRpcSigner | undefined;
+  characterTokenId: number;
+  contracts: Contracts;
+}) => {
+  if (!signer) {
+    return null;
+  }
+  const playerNonce = await contracts.castleCampaignContract.playerNonce(
+    characterTokenId
+  );
+  const lootStats: Item =
+    await contracts.castleCampaignContract.campaignInventory(
+      characterTokenId,
+      playerNonce,
+      characterTokenId
+    );
+  return lootStats;
+};
+export const GET_LOOT_STATS_CACHE_KEY = "getLootStats";
 
 // --------------------------------------------------------------------------------
 

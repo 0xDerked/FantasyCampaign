@@ -10,14 +10,15 @@ import { useGameData } from "../hooks/useGameData";
 import { Web3Gate } from "./Web3Gate";
 import { ContractsProvider } from "../providers/ContractsProvider";
 import { ContractListeners } from "../hooks/useContractListeners";
-import { Modal } from "../components/Modal";
+import { OracleModal } from "../components/OracleModal";
 import { ReactNode } from "react";
+import { EndScreen } from "../Screens/EndScreen";
 
 const Core = ({ children }: { children: ReactNode }) => (
   <Web3Gate>
     <ContractsProvider>
       {children}
-      <Modal />
+      <OracleModal />
     </ContractsProvider>
   </Web3Gate>
 );
@@ -44,6 +45,13 @@ export const Router = () => {
       return (
         <Core>
           <LootScreen />
+          <ContractListeners />
+        </Core>
+      );
+    case GameModes.End:
+      return (
+        <Core>
+          <EndScreen />
           <ContractListeners />
         </Core>
       );

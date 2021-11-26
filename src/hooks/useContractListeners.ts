@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react";
 import { useGameData } from "./useGameData";
 import { useContracts } from "./useContracts";
 import { BigNumber } from "ethers";
-import { getMobStats, getTurnData } from "../api/api";
+import { getTurnData } from "../api/api";
 import { useWallet } from "./useWallet";
 import { getGameModeFromTurnType } from "../utils/getGameModeFromTurnType";
 import { useQueryMobStats } from "../api/useQueryMobStats";
@@ -53,33 +53,48 @@ export const useContractListeners = () => {
         ...gameData,
         message: null,
         mode: GameModes.ExploringMaze,
+        isRollingDice: false,
       });
     }, 1000);
   }, []);
 
   const combatListener = useCallback(async (_, damage: number) => {
     console.log("combatListener", damage);
-    await refetchMobStats();
-    await refetchPlayerStats();
+    // Prevent combatListener from being called when in a non-combat mode
+    if (gameData.mode === GameModes.InCombat) {
+      await refetchMobStats();
+      await refetchPlayerStats();
+      setGameData({
+        ...gameData,
+        message: `You dealt ${damage} damage!`,
+        isRollingDice: false,
+      });
+    }
+  }, []);
 
+  const campaignEndedListener = useCallback(async (_, damage: number) => {
+    console.log("campaignEndedListener");
     setGameData({
       ...gameData,
-      message: `You dealt ${damage} damage!`,
+      message: null,
+      mode: GameModes.End,
+      isRollingDice: false,
     });
   }, []);
 
   useEffect(() => {
     // const filterStarted = castleCampaignContract.filters.CampaignStarted(playerTokenId);
-    // const filterEnded = //   castleCampaignContract.filters.CampaignEnded(playerTokenId);
+    const filterEnded =
+      castleCampaignContract.filters.CampaignEnded(playerTokenId);
     // const filterTurnSet = castleCampaignContract.filters.TurnSet(playerTokenId);
-    const filterTurnStart =
-      castleCampaignContract.filters.TurnStarted(playerTokenId);
-    const filterTurnCompleted =
-      castleCampaignContract.filters.TurnCompleted(playerTokenId);
-    const filterCombat =
-      castleCampaignContract.filters.CombatSequence(playerTokenId);
+    // eslint-disable-next-line prettier/prettier
+    const filterTurnStart = castleCampaignContract.filters.TurnStarted(playerTokenId);
+    // eslint-disable-next-line prettier/prettier
+    const filterTurnCompleted = castleCampaignContract.filters.TurnCompleted(playerTokenId);
+    // eslint-disable-next-line prettier/prettier
+    const filterCombat = castleCampaignContract.filters.CombatSequence(playerTokenId);
     // castleCampaignContract.on(filterStarted, campaignStartedListener);
-    // castleCampaignContract.on(filterEnded, campaignEndedListener);
+    castleCampaignContract.on(filterEnded, campaignEndedListener);
     // castleCampaignContract.on(filterTurnSet, turnSetListener);
     castleCampaignContract.on(filterTurnStart, turnStartedListener);
     castleCampaignContract.on(filterTurnCompleted, turnCompletedListener);

@@ -13,7 +13,7 @@ import { useWallet } from "../hooks/useWallet";
 import { useContracts } from "../hooks/useContracts";
 import { useQueryMobStats } from "../api/useQueryMobStats";
 import { useGameData } from "../hooks/useGameData";
-import { Modal } from "../components/Modal";
+import { OracleModal } from "../components/OracleModal";
 import { useEffect } from "react";
 import { useQueryPlayerStats } from "../api/useQueryPlayerStats";
 import { GameModes } from "../types";
@@ -109,7 +109,11 @@ export const FightScreen = () => {
             mode: GameModes.ExploringMaze,
           });
         } else {
-          setGameData({ ...gameData, message: "You attack!" });
+          setGameData({
+            ...gameData,
+            message: "You attack!",
+            isRollingDice: true,
+          });
           await attackWithAbility({
             abilityIndex,
             characterTokenId: tokenId,
@@ -120,10 +124,6 @@ export const FightScreen = () => {
         }
       } catch (e: any) {
         alert(`Something went wrong attacking ${e.data?.message || e.message}`);
-        setGameData({
-          ...gameData,
-          mode: GameModes.ExploringMaze,
-        });
       }
     }
   };

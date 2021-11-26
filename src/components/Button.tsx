@@ -24,7 +24,7 @@ export const ButtonLarge = styled(ButtonBase)`
 export const ButtonAttack = styled(ButtonBase)`
   background-color: red;
   border: ${scale(3)}px double white;
-  padding: ${scale(6)}px;
+  padding: ${scale(9)}px;
   color: white;
   font-size: ${scale(20)}px;
 `;
