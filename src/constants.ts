@@ -1,11 +1,11 @@
 import { CharacterAttributes, CharacterClass } from "./types";
-import barbarianSelect from "./assets/scaled/barbarian_select.png";
+import barbarianFront from "./assets/scaled/barbarian_select.png";
 import barbarianBack from "./assets/scaled/barbarian_back.png";
-import shamanSelect from "./assets/scaled/shaman_select.png";
+import shamanFront from "./assets/scaled/shaman_front.png";
 import shamanBack from "./assets/scaled/shaman_back.png";
-import wizardSelect from "./assets/scaled/wizard_select.png";
+import wizardFront from "./assets/scaled/wizard_front.png";
 import wizardBack from "./assets/scaled/wizard_back.png";
-import rangerSelect from "./assets/scaled/ranger_select.png";
+import rangerFront from "./assets/scaled/ranger_front.png";
 import rangerBack from "./assets/scaled/ranger_back.png";
 
 export const characterStats: Record<number, CharacterAttributes | null> = {
@@ -113,19 +113,19 @@ export const availableCharacterIds: number[] = [
 export const CharacterAssets: Record<number, { front: any; back: any } | null> =
   {
     [CharacterClass.Warlord]: {
-      front: barbarianSelect,
+      front: barbarianFront,
       back: barbarianBack,
     },
     [CharacterClass.Shaman]: {
-      front: shamanSelect,
+      front: shamanFront,
       back: shamanBack,
     },
     [CharacterClass.Ranger]: {
-      front: rangerSelect,
+      front: rangerFront,
       back: rangerBack,
     },
     [CharacterClass.Wizard]: {
-      front: wizardSelect,
+      front: wizardFront,
       back: wizardBack,
     },
     [CharacterClass.Knight]: null,

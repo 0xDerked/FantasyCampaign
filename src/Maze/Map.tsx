@@ -5,7 +5,7 @@ import { rotate } from "../utils/rotate";
 import { MAZE_WIDTH, spawnPointCoords, wallCoords } from "./mapData";
 import { useGameData } from "../hooks/useGameData";
 
-const CELL_PX = 7;
+const CELL_PX = 5;
 
 const Container = styled.div`
   height: ${CELL_PX * MAZE_WIDTH}px;

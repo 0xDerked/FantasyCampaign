@@ -1,12 +1,6 @@
 import * as React from "react";
 import styled from "styled-components";
-
-import {
-  UNSCALED_VIEWPORT_HEIGHT,
-  UNSCALED_VIEWPORT_WIDTH,
-} from "./Maze/constants";
 import { UserInterfaceListeners } from "./hooks/useInterfaceEventsListeners";
-import { scale } from "./utils/scale";
 import { useGameData } from "./hooks/useGameData";
 import {
   GameDataProvider,
@@ -25,7 +19,7 @@ const GameScreenContainer = styled.div`
   justify-content: center;
   position: relative;
   overflow: hidden;
-  transform: scale(4);
+  transform: scale(3);
   user-select: none;
 `;
 
@@ -39,12 +33,6 @@ const ClearStorageButton = styled.button`
   font-family: inherit;
   border: none;
   outline: none;
-`;
-
-const ViewPortContainer = styled.div`
-  position: relative;
-  height: ${scale(UNSCALED_VIEWPORT_HEIGHT)}px;
-  width: ${scale(UNSCALED_VIEWPORT_WIDTH)}px;
 `;
 
 const ClearStorage = () => {
@@ -66,9 +54,7 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <UserInterfaceListeners />
         <GameScreenContainer>
-          <ViewPortContainer>
-            <Router />
-          </ViewPortContainer>
+          <Router />
         </GameScreenContainer>
         <ClearStorage />
       </QueryClientProvider>

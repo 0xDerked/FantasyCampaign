@@ -57,7 +57,6 @@ const generateWallCoords = (): WallCoords[] => {
 export const wallCoords: WallCoords[] = generateWallCoords();
 
 export const spawnPointCoords: SpawnPointCoords[] = [
-  { x: 0, y: 0 },
   { x: 2, y: 2 },
   { x: 1, y: 4 },
 ];

@@ -8,8 +8,9 @@ import { AbsoluteCenterFill, CenterFill } from "../components/Layout";
 import styled from "styled-components";
 
 import bgBattle from "../assets/scaled/battle_background.png";
+import { Image } from "../components/Image";
 
-const Background = styled.img`
+const Background = styled(Image)`
   position: absolute;
   top: 0;
   left: 0;
