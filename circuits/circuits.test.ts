@@ -22,6 +22,61 @@ describe("Circuit tests", () => {
     });
   });
 
+  test("AssertNoTeleport", async () => {
+    const file = path.resolve(__dirname, "./fixtures/AssertNoTeleport.circom");
+    const circuit = await wasmTester(file);
+    const VALID = 1;
+    const INVALID = 0;
+    {
+      // North
+      const witness = await circuit.calculateWitness(
+        { direction: 0, enabled: 1 },
+        true
+      );
+      expect(Fr.eq(Fr.e(VALID), witness[1])).toBe(true);
+    }
+    {
+      // East
+      const witness = await circuit.calculateWitness(
+        { direction: 1, enabled: 1 },
+        true
+      );
+      expect(Fr.eq(Fr.e(VALID), witness[1])).toBe(true);
+    }
+    {
+      // South
+      const witness = await circuit.calculateWitness(
+        { direction: 2, enabled: 1 },
+        true
+      );
+      expect(Fr.eq(Fr.e(VALID), witness[1])).toBe(true);
+    }
+    {
+      // West
+      const witness = await circuit.calculateWitness(
+        { direction: 3, enabled: 1 },
+        true
+      );
+      expect(Fr.eq(Fr.e(VALID), witness[1])).toBe(true);
+    }
+    {
+      // Fail
+      const witness = await circuit.calculateWitness(
+        { direction: 100, enabled: 0 },
+        true
+      );
+      expect(Fr.eq(Fr.e(INVALID), witness[1])).toBe(true);
+    }
+    {
+      // Fail hard
+      try {
+        await circuit.calculateWitness({ direction: 100, enabled: 1 }, true);
+      } catch (e) {
+        expect(true).toBe(true);
+      }
+    }
+  });
+
   test("Direction circuit works", async () => {
     const file = path.resolve(
       __dirname,
@@ -92,28 +147,28 @@ describe("Circuit tests", () => {
 
     {
       const witness = await circuit.calculateWitness(
-        { tileCode: 10, side: 1 }, // User enters or exits tile 10 from top
+        { tileCode: 9, side: 1 }, // User enters or exits tile 10 from top
         true
       );
       expect(Fr.eq(Fr.e(1), witness[1])).toBe(true);
     }
     {
       const witness = await circuit.calculateWitness(
-        { tileCode: 10, side: 3 },
+        { tileCode: 9, side: 3 },
         true
       );
       expect(Fr.eq(Fr.e(0), witness[1])).toBe(true);
     }
     {
       const witness = await circuit.calculateWitness(
-        { tileCode: 6, side: 3 },
+        { tileCode: 5, side: 3 },
         true
       );
       expect(Fr.eq(Fr.e(0), witness[1])).toBe(true);
     }
     {
       const witness = await circuit.calculateWitness(
-        { tileCode: 7, side: 2 },
+        { tileCode: 6, side: 2 },
         true
       );
       expect(Fr.eq(Fr.e(1), witness[1])).toBe(true);
@@ -126,45 +181,38 @@ describe("Circuit tests", () => {
 
     const INVALID = 0;
     const VALID = 1;
-    const COMPLETE = 2;
-    const MAX_MOVES = 20;
-    const OUT_OF_RANGE = 100;
+    // const COMPLETE = 2;
+    const MAX_MOVES = 10;
+    const OUT_OF_RANGE = [100, 100];
+
     // Valid and incomplete
     {
       const moves = Array(MAX_MOVES).fill(OUT_OF_RANGE); // Sparse array of moves
-      [1, 1, 0, 3].forEach((move, index) => {
+      [
+        [0, 0],
+        [0, 1],
+        [1, 1],
+        [1, 2],
+      ].forEach((move, index) => {
         moves[index] = move;
       });
       const witness = await circuit.calculateWitness({ moves }, true);
       expect(Fr.eq(Fr.e(VALID), witness[1])).toBe(true);
     }
+
     // Invalid and incomplete
     {
       const moves = Array(MAX_MOVES).fill(OUT_OF_RANGE); // Sparse array of moves
-      [1, 5, 0, 3].forEach((move, index) => {
+      [
+        [0, 0],
+        [0, 1],
+        [1, 1],
+        [2, 1],
+      ].forEach((move, index) => {
         moves[index] = move;
       });
       const witness = await circuit.calculateWitness({ moves }, true);
       expect(Fr.eq(Fr.e(INVALID), witness[1])).toBe(true);
-    }
-    // Invalid and complete
-    {
-      const moves = Array(MAX_MOVES).fill(OUT_OF_RANGE);
-      // second move is invalid
-      [1, 7, 0, 3, 0, 0, 1, 2, 1, 0, 0, 1].forEach((move, index) => {
-        moves[index] = move;
-      });
-      const witness = await circuit.calculateWitness({ moves }, true);
-      expect(Fr.eq(Fr.e(INVALID), witness[1])).toBe(true);
-    }
-    // Valid and complete
-    {
-      const moves = Array(MAX_MOVES).fill(OUT_OF_RANGE);
-      [1, 1, 0, 3, 0, 0, 1, 2, 1, 0, 0, 1].forEach((move, index) => {
-        moves[index] = move;
-      });
-      const witness = await circuit.calculateWitness({ moves }, true);
-      expect(Fr.eq(Fr.e(COMPLETE), witness[1])).toBe(true);
     }
   });
 });

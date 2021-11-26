@@ -9,10 +9,10 @@ function isTileOpenForSide(tileCode, side) {
   // 2 - bottom
   // 3 - left
 
-  var    topOpen[8] = [ 1, 2, 3, 5, 6,  9, 13, 15];
-  var bottomOpen[8] = [ 1, 3, 4, 7, 8, 11, 13, 15];
-  var   leftOpen[8] = [ 1, 2, 4, 5, 8, 14, 15,  0]; // 0 to keep the array size constant
-  var  rightOpen[8] = [ 2, 3, 4, 6, 7, 10, 14, 15];
+  var    topOpen[8] = [ 0, 1, 2, 4, 5,  8, 12, 14];
+  var bottomOpen[8] = [ 0, 2, 3, 6, 7, 10, 12, 14];
+  var   leftOpen[8] = [ 0, 1, 3, 4, 7, 13, 14,  100]; // 100 to keep the array size constant
+  var  rightOpen[8] = [ 1, 2, 3, 5, 6, 9, 13, 14];
   var sides[4][8] = [
     topOpen,
     rightOpen,

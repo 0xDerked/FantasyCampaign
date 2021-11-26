@@ -9,7 +9,7 @@ function getDirectionForMove(x1, y1, x2, y2) {
   // 1 - east
   // 2 - south
   // 3 - west
-  var direction;
+  var direction = 100;
   if (xDiff == -1) {
     direction = 3;
   }

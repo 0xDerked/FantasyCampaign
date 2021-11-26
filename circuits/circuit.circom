@@ -1,53 +1,43 @@
 pragma circom 2.0.0;
 
-include "./functions/getNextIndexForMove.circom";
-include "./functions/getTileCodeFromIndex.circom";
+include "./functions/getDirectionForMove.circom";
+include "./functions/getTileCodeFromCoords.circom";
 include "./functions/isTileOpenForSide.circom";
 
-function invertDirection(direction) {
-    if (direction == 0) {
-        return 2;
-    } else if (direction == 1) {
-        return 3;
-    } else if (direction == 2) {
-        return 0;
-    } else {
-      return 1;
-    }
-}
-
 template Game(N) {
-  signal input moves[N];
+  signal input moves[N][2];
 
   // result
   signal output out;
 
-  var currentTileCode;
-  var currentIndex = 0;
-  var currentDirection;
+  var tileCode;
+  var direction;
+  var tileOpen;
+  var currentX;
+  var currentY;
+  var nextX;
+  var nextY;
   var movesOk = 1;
 
   var OUT_OF_RANGE = 100;
 
-  for (var m = 0; m < N; m++) {
-    currentDirection = moves[m];
-    if (currentDirection != OUT_OF_RANGE) {
-      // Get current tile type
-      currentTileCode = getTileCodeFromIndex(currentIndex);
+  for (var m = 0; m < 3; m++) {
+    currentX = moves[m][0];
+    currentY = moves[m][1];
+    nextX = moves[m+1][0];
+    nextY = moves[m+1][1];
 
-      // Check if exiting the tile in that direction is ok
-      movesOk *= isTileOpenForSide(currentTileCode, currentDirection); // I.e. if success is zero, movesOk becomes zero
+    // Get current tile type
+    tileCode = getTileCodeFromCoords(currentX, currentY);
 
-      // Get the next index
-      currentIndex = getNextIndexForMove(currentIndex, currentDirection);
-    }
+    // Check if exiting the tile in that direction is ok
+    direction = getDirectionForMove(currentX, currentY, nextX, nextY);
+    tileOpen = isTileOpenForSide(tileCode, direction); // I.e. if success is zero, movesOk becomes zero
+
+    movesOk *= tileOpen;
   }
 
-  var isComplete = currentIndex == 24 ? 1 : 0;
-
-  var result = isComplete * movesOk == 1 ? 2 : movesOk;
-
-  out <-- result;
+  out <-- movesOk;
 }
 
-component main = Game(20);
+component main = Game(10);
