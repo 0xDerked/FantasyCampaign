@@ -1,7 +1,7 @@
 import { DoorCoords, SpawnPointCoords, WallCoords, WallType } from "../types";
 import circuitMap from "./circuitMap";
 
-export const MAZE_WIDTH = 8;
+export const MAZE_WIDTH = 7;
 
 export const doorsCoords: DoorCoords[] = [
   { id: 1, x1: 5, y1: 6.5, x2: 6, y2: 6.5, open: false },

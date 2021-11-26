@@ -2,11 +2,7 @@ import * as React from "react";
 import { ReactElement } from "react";
 import styled from "styled-components";
 import { rotate } from "../utils/rotate";
-import {
-  MAZE_WIDTH,
-  spawnPointCoords,
-  wallCoords,
-} from "./mapData";
+import { MAZE_WIDTH, spawnPointCoords, wallCoords } from "./mapData";
 import { useGameData } from "../hooks/useGameData";
 
 const CELL_PX = 7;

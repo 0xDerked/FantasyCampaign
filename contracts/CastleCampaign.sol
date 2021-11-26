@@ -27,7 +27,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
       0x326C977E6efc84E512bB9C30f76E30c160eD06FB //LINK token
 	) CampaignPlaymaster(_numTurns, _fantasyCharacters, _attributesManager) {
 		keyHash = 0x6e75b569a01ef56d18cab6a8e71e6600d6ce853834d4a5748b720d06f878b3a4; //oracle keyhash;
-      fee = 0.0001 * 10**18; //0.0001 LINK //link token fee; 
+      fee = 0.0001 * 10**18; //0.0001 LINK //link token fee;
 
 		mockVRF = IMockVRF(_mockVRF);
 
@@ -56,7 +56,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		//second to last turn we will find the dragonslayer ice lance
 		turnGuaranteedTypes[_numTurns - 1] = FantasyThings.TurnType.Loot;
 		uint256[] memory itemIdsForTurn = new uint256[](1);
-		itemIdsForTurn[0] = 0; 
+		itemIdsForTurn[0] = 0;
 		lootGuaranteedItemIds[_numTurns - 1] = itemIdsForTurn;
 	}
 
@@ -65,7 +65,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		require(playerTurn[_tokenId] == 0, "Campaign Previously Started");
 		FantasyThings.CharacterAttributes memory playerCopy = attributesManager.getPlayer(_tokenId);
 		FantasyThings.CampaignAttributes storage campaignPlayer = playerStatus[_tokenId][playerNonce[_tokenId]];
-		
+
 		//update the campaign attributes and character power
 
 		campaignPlayer.health = playerCopy.health;
@@ -157,6 +157,4 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 			}
 		emit TurnSet(tokenId);
 	}
-  
-
 }
