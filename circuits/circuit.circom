@@ -46,4 +46,4 @@ template Game(N) {
   out <-- movesOk;
 }
 
-component main = Game(5);
+component main = Game(10);
