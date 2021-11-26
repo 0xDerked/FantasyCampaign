@@ -1,7 +1,7 @@
 import * as React from "react";
 import { doorTextureMaps } from "../Maze/DoorTextures";
 import { wallTextureMaps } from "../Maze/WallTextures";
-import { Ceiling, Floor, Outer } from "../Maze/EnvironmentTextures";
+import { Ceiling, Floor, GameViewPort } from "../Maze/EnvironmentTextures";
 import { DoorCoords, WallType } from "../types";
 import { useWallsWithTransforms } from "../hooks/useWallsWithTransforms";
 import { useDoorsWithTransforms } from "../hooks/useDoorsWithTransforms";
@@ -12,6 +12,30 @@ import { useTriggerTurn } from "../hooks/useTriggerTurn";
 import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
 import { Map } from "../Maze/Map";
 import { calculateProof } from "../utils/calculateProof";
+import styled from "styled-components";
+import {
+  UNSCALED_VIEWPORT_HEIGHT,
+  UNSCALED_VIEWPORT_WIDTH,
+} from "../Maze/constants";
+import { scale } from "../utils/scale";
+
+const CentreCrop = styled.div`
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  flex-direction: row;
+  align-items: center;
+  overflow: hidden;
+`;
+
+const NaturalView = styled.div`
+  width: ${scale(UNSCALED_VIEWPORT_WIDTH)}px;
+  height: ${scale(UNSCALED_VIEWPORT_HEIGHT)}px;
+  position: relative;
+`;
 
 export const MazeScreen = () => {
   useTriggerTurn();
@@ -69,23 +93,27 @@ export const MazeScreen = () => {
   );
 
   return (
-    <Outer>
-      <Ceiling />
-      <Floor />
-      {wallSurfaces.map((Surface, index) => {
-        return Surface ? <Surface key={index} /> : null;
-      })}
-      {doorSurfaces.map(({ Surface, ...rest }, index) => {
-        return Surface ? (
-          <Surface
-            key={index}
-            // @ts-ignore
-            open={rest.open}
-            onClick={() => handleClick(rest)}
-          />
-        ) : null;
-      })}
-      <Map rotateMap={false} />
-    </Outer>
+    <GameViewPort>
+      <CentreCrop>
+        <NaturalView>
+          <Ceiling />
+          <Floor />
+          {wallSurfaces.map((Surface, index) => {
+            return Surface ? <Surface key={index} /> : null;
+          })}
+          {doorSurfaces.map(({ Surface, ...rest }, index) => {
+            return Surface ? (
+              <Surface
+                key={index}
+                // @ts-ignore
+                open={rest.open}
+                onClick={() => handleClick(rest)}
+              />
+            ) : null;
+          })}
+        </NaturalView>
+        <Map rotateMap={false} />
+      </CentreCrop>
+    </GameViewPort>
   );
 };
