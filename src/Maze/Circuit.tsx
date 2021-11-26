@@ -15,6 +15,10 @@ const Td = styled.td`
 
 const Table = styled.table`
   background-color: red;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
 `;
 
 export const CircuitMap = (): ReactElement => {

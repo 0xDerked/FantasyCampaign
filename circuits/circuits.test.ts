@@ -182,7 +182,7 @@ describe("Circuit tests", () => {
     const INVALID = 0;
     const VALID = 1;
     // const COMPLETE = 2;
-    const MAX_MOVES = 10;
+    const MAX_MOVES = 200;
     const OUT_OF_RANGE = [100, 100];
 
     // Valid and incomplete
@@ -193,12 +193,25 @@ describe("Circuit tests", () => {
         [0, 1],
         [1, 1],
         [1, 2],
-        [100, 100],
-        [100, 100],
-        [100, 100],
-        [100, 100],
-        [100, 100],
-        [100, 100],
+        [0, 2],
+        [0, 3],
+        [1, 3],
+        [2, 3],
+        [2, 4],
+        [3, 4],
+        [3, 3],
+        [3, 2],
+        [3, 1],
+        [4, 1],
+        [4, 0],
+        [5, 0],
+        [6, 0],
+        [6, 1],
+        [6, 2],
+        [6, 3],
+        [5, 3],
+        [5, 4],
+        [5, 5],
       ].forEach((move, index) => {
         moves[index] = move;
       });

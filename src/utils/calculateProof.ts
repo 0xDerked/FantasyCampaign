@@ -2,31 +2,22 @@ import * as snarkjs from "snarkjs";
 
 import verificationKey from "../../circuits/verification_key.json";
 import { genProof } from "./proofUtils";
-const MAX_MOVES = 10;
+import { Position } from "../types";
+const MAX_MOVES = 200;
+const OUT_OF_RANGE = [100, 100];
 
-export const calculateProof = async () => {
+export const calculateProof = async (
+  moves: Position[]
+): Promise<{ proofVerifies: boolean; answerCorrect: boolean }> => {
   console.log(verificationKey);
-  const MAX_MOVES = 10;
-  const OUT_OF_RANGE = [100, 100];
 
-  const moves = Array(MAX_MOVES).fill(OUT_OF_RANGE); // Sparse array of moves
-  [
-    [0, 0],
-    [0, 1],
-    [2, 1],
-    [10, 2],
-    [100, 100],
-    [100, 100],
-    [100, 100],
-    [100, 100],
-    [100, 100],
-    [100, 100],
-  ].forEach((move, index) => {
-    moves[index] = move;
+  const paddedMoves = Array(MAX_MOVES).fill(OUT_OF_RANGE); // Sparse array of moves
+  moves.forEach(({ col, row }, index) => {
+    paddedMoves[index] = [col, row];
   });
   const { proof, publicSignals } = await genProof(
     {
-      moves: moves,
+      moves: paddedMoves,
     },
     "http://localhost:3000/circuit.wasm",
     "http://localhost:3000/circuit_final.key"
@@ -37,5 +28,8 @@ export const calculateProof = async () => {
     publicSignals,
     proof
   );
-  console.log(res, publicSignals);
+  return {
+    proofVerifies: res,
+    answerCorrect: publicSignals[0] === "1",
+  };
 };

@@ -63,6 +63,7 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
       type,
     };
   });
+
   const rotatedDoorCoords = gameData.doors.map(({ x1, x2, y1, y2, open }) => {
     const [x1p, y1p] = rotate(x1, y1, Cx, Cy, By);
     const [x2p, y2p] = rotate(x2, y2, Cx, Cy, By);

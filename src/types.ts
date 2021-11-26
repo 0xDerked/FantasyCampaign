@@ -22,6 +22,7 @@ export type GameData = {
   mode: GameModes;
   message: string | null;
   isRollingDice: boolean;
+  moves: Position[];
 };
 
 export type CharacterAbilities = {

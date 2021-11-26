@@ -181,8 +181,17 @@ export const setPos = (fn: PosFunction) => (gameData: GameData) => {
       position: newPosition,
     };
   }
+  const newMoves = [...gameData.moves];
+  const lastPosition = newMoves[newMoves.length - 1];
+  if (
+    newPosition.col !== lastPosition?.col ||
+    newPosition.row !== lastPosition?.row
+  ) {
+    newMoves.push(newPosition);
+  }
   return {
     ...gameData,
     position: newPosition,
+    moves: newMoves,
   };
 };

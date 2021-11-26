@@ -50,15 +50,19 @@ export const MazeScreen = () => {
   const handleClick = useCallback(
     async (coords: DoorCoords) => {
       const doors = gameData.doors;
-      await calculateProof();
-      for (let i = 0; i < doors.length; i++) {
-        const door = doors[i];
-        if (door.id === coords.id) {
-          const newDoors = clone(doors);
-          newDoors[i].open = !door.open;
-          setGameData({ ...gameData, doors: newDoors });
-          break;
+      const { answerCorrect } = await calculateProof(gameData.moves);
+      if (answerCorrect) {
+        for (let i = 0; i < doors.length; i++) {
+          const door = doors[i];
+          if (door.id === coords.id) {
+            const newDoors = clone(doors);
+            newDoors[i].open = !door.open;
+            setGameData({ ...gameData, doors: newDoors });
+            break;
+          }
         }
+      } else {
+        alert("Somehow you cheated!");
       }
     },
     [doors]
