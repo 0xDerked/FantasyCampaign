@@ -214,5 +214,18 @@ describe("Circuit tests", () => {
       const witness = await circuit.calculateWitness({ moves }, true);
       expect(Fr.eq(Fr.e(INVALID), witness[1])).toBe(true);
     }
+
+    // Tried starting at the end
+    {
+      const moves = Array(MAX_MOVES).fill(OUT_OF_RANGE); // Sparse array of moves
+      [
+        [23, 23],
+        [23, 24],
+      ].forEach((move, index) => {
+        moves[index] = move;
+      });
+      const witness = await circuit.calculateWitness({ moves }, true);
+      expect(Fr.eq(Fr.e(INVALID), witness[1])).toBe(true);
+    }
   });
 });
