@@ -5,6 +5,7 @@ import { FightScreen } from "../Screens/FightScreen";
 import { SplashScreen } from "../Screens/SplashScreen";
 import { MazeScreen } from "../Screens/MazeScreen";
 import { LootScreen } from "../Screens/LootScreen";
+import { EndScreen } from "../Screens/EndScreen";
 import { GameModes } from "../types";
 import { useGameData } from "../hooks/useGameData";
 import { Web3Gate } from "./Web3Gate";
@@ -12,7 +13,6 @@ import { ContractsProvider } from "../providers/ContractsProvider";
 import { ContractListeners } from "../hooks/useContractListeners";
 import { OracleModal } from "../components/OracleModal";
 import { ReactNode } from "react";
-import { EndScreen } from "../Screens/EndScreen";
 
 const Core = ({ children }: { children: ReactNode }) => (
   <Web3Gate>

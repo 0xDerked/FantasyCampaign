@@ -5,10 +5,7 @@ import {
   UNSCALED_VIEWPORT_HEIGHT,
   UNSCALED_VIEWPORT_WIDTH,
 } from "./Maze/constants";
-import {
-  useInterfaceEventsListeners,
-  UserInterfaceListeners,
-} from "./hooks/useInterfaceEventsListeners";
+import { UserInterfaceListeners } from "./hooks/useInterfaceEventsListeners";
 import { scale } from "./utils/scale";
 import { useGameData } from "./hooks/useGameData";
 import {

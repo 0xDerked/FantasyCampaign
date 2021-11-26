@@ -1,5 +1,5 @@
 import * as React from "react";
-import { CharacterClass, GameModes } from "../types";
+import { GameModes } from "../types";
 import styled from "styled-components";
 import { useGetAvailableCharacters } from "../hooks/useGetAvailableCharacters";
 import { ButtonLarge } from "../components/Button";

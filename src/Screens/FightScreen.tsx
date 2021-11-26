@@ -13,7 +13,6 @@ import { useWallet } from "../hooks/useWallet";
 import { useContracts } from "../hooks/useContracts";
 import { useQueryMobStats } from "../api/useQueryMobStats";
 import { useGameData } from "../hooks/useGameData";
-import { OracleModal } from "../components/OracleModal";
 import { useEffect } from "react";
 import { useQueryPlayerStats } from "../api/useQueryPlayerStats";
 import { GameModes } from "../types";

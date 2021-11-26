@@ -7,8 +7,6 @@ import { useGameData } from "../hooks/useGameData";
 
 const CELL_PX = 7;
 
-const PADDING = 2;
-
 const Container = styled.div`
   height: ${CELL_PX * 5}px;
   width: ${CELL_PX * 5}px;

@@ -2,7 +2,7 @@ import * as React from "react";
 import { doorTextureMaps } from "../Maze/DoorTextures";
 import { wallTextureMaps } from "../Maze/WallTextures";
 import { Ceiling, Floor, Outer } from "../Maze/EnvironmentTextures";
-import { DoorCoords, GameModes, WallType } from "../types";
+import { DoorCoords, WallType } from "../types";
 import { useWallsWithTransforms } from "../hooks/useWallsWithTransforms";
 import { useDoorsWithTransforms } from "../hooks/useDoorsWithTransforms";
 import clone from "lodash/clone";
