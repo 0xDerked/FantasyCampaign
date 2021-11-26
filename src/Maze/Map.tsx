@@ -2,14 +2,18 @@ import * as React from "react";
 import { ReactElement } from "react";
 import styled from "styled-components";
 import { rotate } from "../utils/rotate";
-import { spawnPointCoords } from "./mapData";
+import {
+  MAZE_WIDTH,
+  spawnPointCoords,
+  wallCoords,
+} from "./mapData";
 import { useGameData } from "../hooks/useGameData";
 
 const CELL_PX = 7;
 
 const Container = styled.div`
-  height: ${CELL_PX * 5}px;
-  width: ${CELL_PX * 5}px;
+  height: ${CELL_PX * MAZE_WIDTH}px;
+  width: ${CELL_PX * MAZE_WIDTH}px;
   position: absolute;
   top: 2px;
   right: 2px;
@@ -52,7 +56,7 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
   const Cx = col;
   const Cy = row;
   const OFFSET = rotateMap ? 2 : 0;
-  const rotatedWallCoords = gameData.walls.map(({ x1, x2, y1, y2, type }) => {
+  const rotatedWallCoords = wallCoords.map(({ x1, x2, y1, y2, type }) => {
     const [x1p, y1p] = rotate(x1, y1, Cx, Cy, By);
     const [x2p, y2p] = rotate(x2, y2, Cx, Cy, By);
     return {
@@ -77,7 +81,7 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
   return (
     <Container>
       <svg
-        viewBox={`0 0 ${5 * CELL_PX} ${5 * CELL_PX}`}
+        viewBox={`0 0 ${MAZE_WIDTH * CELL_PX} ${MAZE_WIDTH * CELL_PX}`}
         xmlns="http://www.w3.org/2000/svg"
       >
         {rotatedWallCoords.map(({ x1, y1, x2, y2 }, i) => (
