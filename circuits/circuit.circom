@@ -21,6 +21,12 @@ template Game(N) {
 
   var OUT_OF_RANGE = 100;
 
+  // Make sure the initial position is [0,0];
+  var startX =  moves[0][0];
+  var startY =  moves[0][1];
+  movesOk *= startX == 0 ? 1 : 0;
+  movesOk *= startY == 0 ? 1 : 0;
+
   for (var m = 0; m < 3; m++) {
     currentX = moves[m][0];
     currentY = moves[m][1];
