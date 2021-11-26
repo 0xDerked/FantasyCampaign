@@ -142,7 +142,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 
 		if(randomness % 100 < 101) {
 			//set up combat turn
-			uint256[] memory mobIdsForTurn = new uint256[](randomness%2+1);
+			uint256[] memory mobIdsForTurn = new uint256[](1);
 			for(uint256 i=0; i<mobIdsForTurn.length; i++) {
 				mobIdsForTurn[i] = 0; //we could randomly generate this from some sort of data model and spawn rate
 			}
