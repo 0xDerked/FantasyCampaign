@@ -14,6 +14,7 @@ abstract contract CampaignPlaymaster {
 	//tokenId -> Nonce (# of times player has played campaign)
 	mapping(uint256 => uint256) public playerNonce; 
 	mapping(uint256 => uint256) internal currentRandomSeed;
+	mapping(uint256 => bool) public bossFightAvailable;
 	uint16 public baseHealth;
 
 
@@ -59,14 +60,11 @@ abstract contract CampaignPlaymaster {
 	IERC721Metadata public fantasyCharacters;
 	FantasyAttributesManager attributesManager;
 
-	uint256 public blockStampTest;
-
 
 	constructor(uint256 _numberOfTurns, address _fantasyCharacters, address _attributesManager) {
 		numberOfTurns = _numberOfTurns;
 		fantasyCharacters = IERC721Metadata(_fantasyCharacters);
 		attributesManager = FantasyAttributesManager(_attributesManager);
-		blockStampTest = block.timestamp;
 	}
 
 	modifier controlsCharacter(uint256 _tokenId) {
@@ -379,20 +377,8 @@ abstract contract CampaignPlaymaster {
 		emit CampaignEnded(_tokenId, _campaignSuccess);
 	}
 
-	function inspectMob(uint256 _mobId) public view returns(FantasyThings.Mob memory) {
-		return mobAttributes[_mobId];
-	}
-
 	function getMobsForTurn(uint256 _tokenId, uint256 _turnNum) public view returns(FantasyThings.Mob[] memory) {
 		return combatTurnToMobs[_tokenId][playerNonce[_tokenId]][_turnNum];
-	}
-
-	function inspectMobAbilities(uint256 _mobId) public view returns(FantasyThings.Ability[] memory) {
-		return mobAttributes[_mobId].abilities;
-	}
-
-	function getMobAbility(uint256 _mobId, uint256 _abilityId) public view returns(FantasyThings.Ability memory) {
-		return mobAttributes[_mobId].abilities[_abilityId];
 	}
 
 	function getInventory(uint256 _tokenId) external view returns(FantasyThings.Item[] memory) {

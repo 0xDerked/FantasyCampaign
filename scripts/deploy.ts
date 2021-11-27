@@ -5,6 +5,7 @@ import {
   FantasyAttributesManager__factory,
   CastleCampaign__factory,
   MockVRF__factory,
+  Verifier__factory,
 } from "../typechain";
 
 const main = async () => {
@@ -38,12 +39,17 @@ const main = async () => {
   const MockVRFContract = await MockVRFFactory.deploy();
   await MockVRFContract.deployed();
 
+  const VerifierFactory = new Verifier__factory(owner);
+  const VerifierContract = await VerifierFactory.deploy();
+  await VerifierContract.deployed();
+
   const CastleCampaignFactory = new CastleCampaign__factory(owner);
   const CastleCampaignContract = await CastleCampaignFactory.deploy(
     FantasyCharacterContract.address,
     MockVRFContract.address,
     FantasyAttributesManagerContract.address,
-    4
+    4,
+    VerifierContract.address
   );
   await CastleCampaignContract.deployed();
 

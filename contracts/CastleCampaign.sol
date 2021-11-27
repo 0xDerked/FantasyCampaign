@@ -12,17 +12,28 @@ interface IMockVRF {
 	function requestRandomness(uint256 _num, string calldata _letters, bytes32 _requestId) external;
 }
 
+interface IVerifier {
+	 function verifyProof(
+            uint[2] memory a,
+            uint[2][2] memory b,
+            uint[2] memory c,
+            uint[1] memory input
+        ) external view returns (bool r);
+}
+
 contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignItems {
 
 	bytes32 public keyHash;
 	uint256 public fee;
 
 	mapping(bytes32 => uint256) private requestToTokenId;
+	mapping(bytes32 => bool) internal proofHashUsed;
 
+	IVerifier verifier;
 
 	IMockVRF mockVRF;
 
-	constructor(address _fantasyCharacters, address _mockVRF, address _attributesManager, uint256 _numTurns) VRFConsumerBase(
+	constructor(address _fantasyCharacters, address _mockVRF, address _attributesManager, uint256 _numTurns, address _verifier) VRFConsumerBase(
 		0x8C7382F9D8f56b33781fE506E897a4F1e2d17255, //vrfCoordinator
       0x326C977E6efc84E512bB9C30f76E30c160eD06FB //LINK token
 	) CampaignPlaymaster(_numTurns, _fantasyCharacters, _attributesManager) {
@@ -30,7 +41,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
       fee = 0.0001 * 10**18; //0.0001 LINK //link token fee;
 
 		mockVRF = IMockVRF(_mockVRF);
-
+		verifier = IVerifier(_verifier);
 		//set up some mobs
 		FantasyThings.Ability[] memory henchmanAbilities = new FantasyThings.Ability[](1);
 		henchmanAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Strength, 1,"Attack");
@@ -43,9 +54,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 
 		//push the items into the campaign
 		CampaignItems.push(iceLance);
-		CampaignItems.push(scrollOfProtection);
-		CampaignItems.push(scrollOfStrength);
-
+	
 		//set up some guaranteed events with the mobs/puzzles/loot and turn types
 		//last turn will be a boss fight against the dragon
 		turnGuaranteedTypes[_numTurns] = FantasyThings.TurnType.Combat;
@@ -101,9 +110,25 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		emit CampaignStarted(_tokenId);
 	}
 
+	function unlockFinalTurn(uint256 _tokenId, uint[2] memory a, uint[2][2] memory b, uint[2] memory c, uint[1] memory input) 
+		external controlsCharacter(_tokenId) {
+			bytes32 proofHash = keccak256(abi.encodePacked(a,b,c,input));
+			require(!proofHashUsed[proofHash], "Stop Cheating");
+			proofHashUsed[proofHash] = true;
+			bool validProof = verifier.verifyProof(a,b,c,input);
+			uint256 currentTurn = playerTurn[_tokenId];
+			if(validProof && currentTurn == numberOfTurns) {
+				bossFightAvailable[_tokenId] = true;
+			}
+	}
+
 	function generateTurn(uint256 _tokenId) external override controlsCharacter(_tokenId) {
 		require(playerTurn[_tokenId] > 0, "Enter Campaign First");
 		require(!turnInProgress[_tokenId], "Turn in progress");
+
+		if(playerTurn[_tokenId] == numberOfTurns) {
+			require(bossFightAvailable[_tokenId], "Not avail");
+		}
 
 		turnInProgress[_tokenId] = true;
 		emit TurnStarted(_tokenId);
