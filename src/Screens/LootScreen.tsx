@@ -18,7 +18,13 @@ const Title = styled.div`
 `;
 
 const Container = styled(AbsoluteCenterFill)`
-  padding: 12px;
+  padding: 30px;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  border: 1px solid #81603e;
+  box-shadow: 0 0 0 1px #a18160;
 `;
 
 export const LootScreen = () => {

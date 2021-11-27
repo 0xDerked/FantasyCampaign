@@ -7,12 +7,12 @@ const initialPosition = { col: 0, dir: 0, row: 0 };
 
 export const initialGameData: GameData = {
   position: initialPosition,
-  doors: doorsCoords,
   selectedTokenId: null,
   mode: GameModes.SplashScreen,
   message: null,
   isRollingDice: false,
   moves: [initialPosition],
+  isGateOpen: false,
 };
 
 export const GameDataContext = React.createContext<

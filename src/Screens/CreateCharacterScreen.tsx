@@ -34,7 +34,7 @@ const SelectedCharacterButton = styled.button<{
 
 const Label = styled.div`
   color: lightgray;
-  font-size: 7px;
+  font-size: 6px;
   text-align: center;
   margin-top: 3px;
   background-color: black;

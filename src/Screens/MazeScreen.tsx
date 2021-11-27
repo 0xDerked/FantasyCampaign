@@ -15,7 +15,6 @@ import {
   UNSCALED_VIEWPORT_WIDTH,
 } from "../Maze/constants";
 import { scale } from "../utils/scale";
-import { useFinalPositionCheck } from "../hooks/useFinalPositionCheck";
 import { AbsoluteFill } from "../components/Layout";
 import { useQueryMoveIsFinal } from "../api/useQueryMoveIsFinal";
 
@@ -59,7 +58,6 @@ export const MazeScreen = () => {
   const walls = useWallsWithTransforms();
   const doors = useDoorsWithTransforms();
   useQueryAllMintedCharacters();
-  useFinalPositionCheck();
   const { data: moveIsFinal } = useQueryMoveIsFinal();
   const [gameData, setGameData] = useGameData();
 

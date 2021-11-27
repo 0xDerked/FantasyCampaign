@@ -1,10 +1,11 @@
 import { DoorCoords, SpawnPointCoords, WallCoords, WallType } from "../types";
 import circuitMap from "./circuitMap";
+import { generateSpawnCollisions } from "../utils/generateCollisionMaps";
 
 export const MAZE_WIDTH = 7;
 
 export const doorsCoords: DoorCoords[] = [
-  { id: 1, x1: 5, y1: 6.5, x2: 6, y2: 6.5, open: false },
+  { id: 1, x1: 5, y1: 6.5, x2: 6, y2: 6.5 },
 ];
 
 // N, E, S, W
@@ -57,6 +58,8 @@ const generateWallCoords = (): WallCoords[] => {
 export const wallCoords: WallCoords[] = generateWallCoords();
 
 export const spawnPointCoords: SpawnPointCoords[] = [
-  { x: 2, y: 2 },
-  { x: 1, y: 4 },
+  { x: 2, y: 2, type: "Henchman" },
+  { x: 0, y: 4, type: "Henchman" },
+  { x: 1, y: 6, type: "Loot" },
+  { x: 3, y: 2, type: "Loot" },
 ];

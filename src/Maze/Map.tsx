@@ -2,7 +2,12 @@ import * as React from "react";
 import { ReactElement } from "react";
 import styled from "styled-components";
 import { rotate } from "../utils/rotate";
-import { MAZE_WIDTH, spawnPointCoords, wallCoords } from "./mapData";
+import {
+  doorsCoords,
+  MAZE_WIDTH,
+  spawnPointCoords,
+  wallCoords,
+} from "./mapData";
 import { useGameData } from "../hooks/useGameData";
 
 const CELL_PX = 5;
@@ -47,7 +52,8 @@ const SpawnDot = styled.div`
 
 export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
   const [gameData] = useGameData();
-  const { row, col, dir } = gameData.position;
+  const { position, isGateOpen } = gameData;
+  const { row, col, dir } = position;
   const By = rotateMap ? 90 * dir : 0;
   const Cx = col;
   const Cy = row;
@@ -64,7 +70,7 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
     };
   });
 
-  const rotatedDoorCoords = gameData.doors.map(({ x1, x2, y1, y2, open }) => {
+  const rotatedDoorCoords = doorsCoords.map(({ x1, x2, y1, y2 }) => {
     const [x1p, y1p] = rotate(x1, y1, Cx, Cy, By);
     const [x2p, y2p] = rotate(x2, y2, Cx, Cy, By);
     return {
@@ -72,7 +78,6 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
       y1: y1p - (rotateMap ? row : 0),
       x2: x2p - (rotateMap ? col : 0),
       y2: y2p - (rotateMap ? row : 0),
-      open,
     };
   });
   return (
@@ -93,14 +98,14 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
             strokeLinecap={"square"}
           />
         ))}
-        {rotatedDoorCoords.map(({ x1, y1, x2, y2, open }, i) => (
+        {rotatedDoorCoords.map(({ x1, y1, x2, y2 }, i) => (
           <line
             key={JSON.stringify({ x1, y1, x2, y2, i })}
             x1={(x1 + OFFSET) * CELL_PX}
             y1={(y1 + OFFSET) * CELL_PX}
             x2={(x2 + OFFSET) * CELL_PX}
             y2={(y2 + OFFSET) * CELL_PX}
-            stroke={open ? "black" : "#7E7E7E"}
+            stroke={isGateOpen ? "black" : "#7E7E7E"}
             strokeWidth={1}
             strokeLinecap={"square"}
           />

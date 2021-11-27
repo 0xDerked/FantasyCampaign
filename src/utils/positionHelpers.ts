@@ -7,7 +7,7 @@ import {
   generateWallCollisions,
   wallsDict,
 } from "./generateCollisionMaps";
-import { spawnPointCoords } from "../Maze/mapData";
+import { doorsCoords, spawnPointCoords } from "../Maze/mapData";
 
 export enum Keys {
   Forward = "w",
@@ -75,9 +75,9 @@ export const boundPosition = (
   const [x2w, y2w] = rotate(x2, y2, Cx, Cy, By);
 
   // Just check generally if there's a wall in the middle of tile and it's not open
-  const doorsDict = generateDoorCollisions(currentState.doors);
+  const doorsDict = generateDoorCollisions(doorsCoords);
   const door = doorsDict[`${round(x2)},${round(y2)}`];
-  if (typeof door !== "undefined" && door === false) {
+  if (typeof door !== "undefined" && !currentState.isGateOpen) {
     return currPosition;
   }
 

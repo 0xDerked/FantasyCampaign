@@ -16,11 +16,11 @@ export enum GameModes {
 
 export type GameData = {
   position: Position;
-  doors: DoorCoords[];
   selectedTokenId: number | null;
   mode: GameModes;
   message: string | null;
   isRollingDice: boolean;
+  isGateOpen: boolean;
   moves: Position[];
 };
 
@@ -85,7 +85,6 @@ export type DoorCoords = {
   y1: number;
   x2: number;
   y2: number;
-  open: boolean;
   id: number;
 };
 

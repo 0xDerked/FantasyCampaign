@@ -15,11 +15,12 @@ const ButtonBase = styled.button`
 `;
 
 export const ButtonLarge = styled(ButtonBase)`
-  background-color: black;
-  border: 1px solid #48865f;
   padding: 2px 6px;
   color: white;
-  font-size: 6px;
+  font-size: 7px;
+  border: 1px solid #48865f;
+  background-color: black;
+  box-shadow: 0 0 0 1px black;
 `;
 
 export const ButtonAttack = styled(ButtonBase)`
