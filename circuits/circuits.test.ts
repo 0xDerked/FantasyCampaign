@@ -179,13 +179,11 @@ describe("Circuit tests", () => {
     const file = path.resolve(__dirname, "circuit.circom");
     const circuit = await wasmTester(file);
 
-    const INVALID = 0;
     const VALID = 1;
-    // const COMPLETE = 2;
     const MAX_MOVES = 200;
     const OUT_OF_RANGE = [100, 100];
 
-    // Valid and incomplete
+    // Valid and complete
     {
       const moves = Array(MAX_MOVES).fill(OUT_OF_RANGE); // Sparse array of moves
       [
@@ -217,6 +215,7 @@ describe("Circuit tests", () => {
       });
       const witness = await circuit.calculateWitness({ moves }, true);
       expect(Fr.eq(Fr.e(VALID), witness[1])).toBe(true);
+      expect(Fr.eq(Fr.e(VALID), witness[2])).toBe(true);
     }
 
     // Invalid and incomplete
@@ -231,20 +230,22 @@ describe("Circuit tests", () => {
         moves[index] = move;
       });
       const witness = await circuit.calculateWitness({ moves }, true);
-      expect(Fr.eq(Fr.e(INVALID), witness[1])).toBe(true);
+      expect(Fr.eq(Fr.e(VALID), witness[1])).toBe(false);
+      expect(Fr.eq(Fr.e(VALID), witness[2])).toBe(false);
     }
 
     // Tried starting at the end
     {
       const moves = Array(MAX_MOVES).fill(OUT_OF_RANGE); // Sparse array of moves
       [
-        [23, 23],
-        [23, 24],
+        [5, 4],
+        [5, 5],
       ].forEach((move, index) => {
         moves[index] = move;
       });
       const witness = await circuit.calculateWitness({ moves }, true);
-      expect(Fr.eq(Fr.e(INVALID), witness[1])).toBe(true);
+      expect(Fr.eq(Fr.e(VALID), witness[1])).toBe(false);
+      expect(Fr.eq(Fr.e(VALID), witness[2])).toBe(true);
     }
   });
 });
