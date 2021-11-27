@@ -29,7 +29,7 @@ export const useContractListeners = () => {
       ...gameData,
       isRollingDice: true,
     });
-  }, [gameData]);
+  }, [gameData, setGameData]);
 
   const turnStartedListener = useCallback(
     async (tokenId: BigNumber) => {
@@ -56,7 +56,7 @@ export const useContractListeners = () => {
         }
       }
     },
-    [gameData]
+    [contracts, gameData, setGameData, signer]
   );
 
   const turnCompletedListener = useCallback(
@@ -69,7 +69,7 @@ export const useContractListeners = () => {
       });
       lastGameMode.current = GameModes.ExploringMaze;
     },
-    [gameData]
+    [gameData, setGameData]
   );
 
   const combatListener = useCallback(
@@ -86,7 +86,7 @@ export const useContractListeners = () => {
         });
       }
     },
-    [gameData]
+    [gameData, refetchMobStats, refetchPlayerStats, setGameData]
   );
 
   const campaignEndedListener = useCallback(
@@ -100,7 +100,7 @@ export const useContractListeners = () => {
       });
       lastGameMode.current = GameModes.End;
     },
-    [gameData]
+    [gameData, setGameData]
   );
 
   useEffect(() => {
@@ -123,7 +123,16 @@ export const useContractListeners = () => {
     return () => {
       castleCampaignContract.removeAllListeners(); //no event provided unsubscribes for all events
     };
-  }, [gameData.mode]);
+  }, [
+    campaignEndedListener,
+    castleCampaignContract,
+    combatListener,
+    gameData.mode,
+    playerTokenId,
+    turnCompletedListener,
+    turnSetListener,
+    turnStartedListener,
+  ]);
 };
 
 export const ContractListeners = () => {

@@ -1,7 +1,6 @@
 export type Position = {
   row: number;
   col: number;
-  dir: number; // up : 0, right: 1, down: 2, left: 3
 };
 
 export enum GameModes {
@@ -15,13 +14,13 @@ export enum GameModes {
 }
 
 export type GameData = {
-  position: Position;
   selectedTokenId: number | null;
   mode: GameModes;
   message: string | null;
   isRollingDice: boolean;
   isGateOpen: boolean;
   moves: Position[];
+  direction: number; // up : 0, right: 1, down: 2, left: 3
 };
 
 export type CharacterAbilities = {

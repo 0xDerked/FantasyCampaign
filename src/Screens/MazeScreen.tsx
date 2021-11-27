@@ -17,6 +17,8 @@ import {
 import { scale } from "../utils/scale";
 import { AbsoluteFill } from "../components/Layout";
 import { useQueryMoveIsFinal } from "../api/useQueryMoveIsFinal";
+import { X_FINAL, Y_FINAL } from "../constants";
+import { usePosition } from "../hooks/usePosition";
 
 const CentreCrop = styled.div`
   display: flex;
@@ -55,10 +57,16 @@ const NaturalView = styled.div`
 
 export const MazeScreen = () => {
   useTriggerTurn();
+  useQueryAllMintedCharacters();
   const walls = useWallsWithTransforms();
   const doors = useDoorsWithTransforms();
-  useQueryAllMintedCharacters();
-  const { data: moveIsFinal } = useQueryMoveIsFinal();
+  const { data: isFinalTurn } = useQueryMoveIsFinal();
+  const position = usePosition();
+  const { row, col } = position;
+  const [gameData] = useGameData();
+  const { mode, moves, isGateOpen } = gameData;
+  const isAtGateTriggerPoint = col === X_FINAL && row === Y_FINAL;
+  const isAtDragonTriggerPoint = col === X_FINAL && row === Y_FINAL + 1;
 
   const wallSurfaces = walls
     .map(values => {
@@ -96,18 +104,25 @@ export const MazeScreen = () => {
           {wallSurfaces.map((Surface, index) => {
             return Surface ? <Surface key={index} /> : null;
           })}
-          {doorSurfaces.map(({ Surface, ...rest }, index) => {
+          {doorSurfaces.map(({ Surface }, index) => {
             return Surface ? (
               <Surface
                 key={index}
                 // @ts-ignore
-                open={rest.open}
+                open={isGateOpen}
               />
             ) : null;
           })}
         </NaturalView>
         <Map rotateMap={false} />
-        {moveIsFinal ? <GoToEndOfMaze>Head to the exit</GoToEndOfMaze> : null}
+        {isAtGateTriggerPoint && !isGateOpen && !isFinalTurn ? (
+          <GoToEndOfMaze>
+            You need to find the Dragon Lance to unlock the gate!
+          </GoToEndOfMaze>
+        ) : null}
+        {isFinalTurn && !isAtGateTriggerPoint && !isAtDragonTriggerPoint ? (
+          <GoToEndOfMaze>Head to the exit</GoToEndOfMaze>
+        ) : null}
       </CentreCrop>
     </AbsoluteFill>
   );

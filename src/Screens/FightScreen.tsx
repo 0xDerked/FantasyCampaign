@@ -137,7 +137,7 @@ export const FightScreen = () => {
         clearTimeout(timeout);
       }
     };
-  }, [message]);
+  }, [gameData, message, setGameData]);
 
   const handleAttack = async (abilityIndex: number) => {
     if (typeof tokenId === "number" && signer && contracts) {

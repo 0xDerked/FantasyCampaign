@@ -22,7 +22,7 @@ When the user get so the end point of the maze, the SNARK circuit validates all 
 
 The circuits themselves are fairly rough and don't check for common attacks but should work fine as a PoC. The input is also limited to just 200 steps - if the user does more than that, validator will throw. This is to keep the performance pretty much realtime.
 
-The maze solution is public ([circuitMap.js](./src/Maze/circuitMap.js) plus the generated [getMaze.circom](./circuits/functions/getMaze.circom)) as well as being shown in the UI but you could imagine this being omitted from the repo and obfuscated from the user.
+The maze solution is public ([circuitMap.js](./src/Maze/circuitMap.js) plus the generated [getMaze.circom](./circuits/functions/getMaze.circom)) as well as being shown in the UI but you could imagine this being omitted from the repo and obfuscated from the user. Furthermore since we don't enforce the proof being submitted only once, it's possible to inspect the contract transaction history on the blockchain, extract the proof and then submit it yourself. But that's easy enough to defend against.
 
 Many of the build artefacts that are committed to the repo shouldn't be, but they are there for interest and easy collaboration.
 

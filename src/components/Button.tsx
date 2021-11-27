@@ -10,6 +10,7 @@ const ButtonBase = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  cursor: pointer;
   filter: grayscale(${props => (props.disabled ? 1 : 0)})
     brightness(${props => (props.disabled ? 0.4 : 1)});
 `;
