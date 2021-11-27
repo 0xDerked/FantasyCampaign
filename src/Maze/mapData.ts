@@ -1,6 +1,5 @@
 import { DoorCoords, SpawnPointCoords, WallCoords, WallType } from "../types";
 import circuitMap from "./circuitMap";
-import { generateSpawnCollisions } from "../utils/generateCollisionMaps";
 
 export const MAZE_WIDTH = 7;
 
