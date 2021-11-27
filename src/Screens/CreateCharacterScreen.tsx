@@ -18,6 +18,7 @@ import { GameViewPort } from "../Maze/EnvironmentTextures";
 import { CharacterAssets } from "../constants";
 import bgSelect from "../assets/scaled/bg_select.png";
 import bgBattle from "../assets/scaled/battle_background.png";
+import { Image } from "../components/Image";
 
 const SelectedCharacterButton = styled.button<{
   selected: boolean;
@@ -28,31 +29,38 @@ const SelectedCharacterButton = styled.button<{
   outline: 0;
   background-color: transparent;
   border: none;
-  width: 48px;
-  margin: 3px;
-  height: 64px;
+  width: 51px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   cursor: pointer;
+  font-family: inherit;
 `;
 
-const CharacterIcon = styled.img`
+const Label = styled.div`
+  color: lightgray;
+  font-size: 7px;
+  text-align: center;
+  margin-top: 3px;
+  background-color: black;
+  padding: 0 2px;
+`;
+
+const CharacterIcon = styled(Image)`
   width: 100%;
-  image-rendering: pixelated;
 `;
 
-const CharacterIconLarge = styled.img`
-  width: 45px;
-  image-rendering: pixelated;
+const CharacterIconLarge = styled(Image)`
+  width: 100%;
 `;
 
 const CharacterContainer = styled.div`
   display: flex;
-  padding-top: 30px;
+  padding-top: 24px;
 `;
 
-const Background = styled.img`
+const Background = styled(Image)`
   position: absolute;
   top: 0;
   left: 0;
@@ -86,7 +94,7 @@ const Prompt = styled.div`
   font-size: 13px;
   width: 100%;
   position: absolute;
-  top: 10px;
+  top: 8px;
   left: 0;
   display: flex;
   justify-content: center;
@@ -162,14 +170,14 @@ export const CreateCharacterScreen = () => {
             src={CharacterAssets[selectedCharacterId]!.front}
           />
         </PreviewContainer>
+        <BackButtonContainer>
+          <ButtonSecondary onClick={() => setSelectedCharacterId(null)}>
+            Back
+          </ButtonSecondary>
+        </BackButtonContainer>
         <StatsContainer>
           <StatsTable character={selectedCharacter} />
         </StatsContainer>
-        <BackButtonContainer>
-          <ButtonSecondary onClick={() => setSelectedCharacterId(null)}>
-            ← Back
-          </ButtonSecondary>
-        </BackButtonContainer>
         <CreateButtonContainer>
           {typeof selectedCharacterTokenId == "number" ? (
             <ButtonLarge onClick={handleUseExistingCharacter}>
@@ -194,7 +202,7 @@ export const CreateCharacterScreen = () => {
       <AbsoluteFill>
         <Prompt>Choose Your Adventurer!</Prompt>
         <CharacterContainer>
-          {charactersWithLiveData.map(({ id, tokenId }) => (
+          {charactersWithLiveData.map(({ id, tokenId, name }) => (
             <SelectedCharacterButton
               key={id}
               selected={selectedCharacterId === id}
@@ -202,6 +210,7 @@ export const CreateCharacterScreen = () => {
               exists={typeof tokenId === "number"}
             >
               <CharacterIcon src={CharacterAssets[id]!.front} />
+              <Label>{name}</Label>
             </SelectedCharacterButton>
           ))}
         </CharacterContainer>
