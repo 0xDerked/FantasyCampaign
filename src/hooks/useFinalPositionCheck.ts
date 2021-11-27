@@ -29,10 +29,14 @@ export const useFinalPositionCheck = () => {
             contracts,
             signer,
           });
+          if (!contractSaysFinal) {
+            alert(
+              "You need to collect the necessary weapons. Battle more minions then come back"
+            );
+          }
           if (contractSaysFinal) {
-            const mazeMovesAreCorrect = (await calculateProof(moves))
+            const mazeMovesAreLocallyCorrect = (await calculateProof(moves))
               .answerCorrect;
-            canUnlock = mazeMovesAreCorrect;
           }
         }
         if (canUnlock) {
