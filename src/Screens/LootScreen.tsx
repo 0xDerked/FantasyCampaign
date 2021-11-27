@@ -9,11 +9,16 @@ import { useWallet } from "../hooks/useWallet";
 import { useContracts } from "../hooks/useContracts";
 import { AbsoluteCenterFill } from "../components/Layout";
 
-const Title = styled.h1`
-  font-size: 20px;
-  margin-bottom: 5px;
+const Title = styled.div`
+  font-size: 11px;
+  margin-bottom: 7px;
   margin-top: 0;
   padding: 0;
+  text-align: center;
+`;
+
+const Container = styled(AbsoluteCenterFill)`
+  padding: 12px;
 `;
 
 export const LootScreen = () => {
@@ -33,9 +38,9 @@ export const LootScreen = () => {
         });
         setGameData({
           ...gameData,
-          isRollingDice: false,
           message: null,
-          mode: GameModes.ExploringMaze,
+          // Let the contract figure out the new user state
+          // mode: GameModes.ExploringMaze,
         });
       } catch (e: any) {
         alert(`Something went exploring loot ${e.data?.message || e.message}`);
@@ -48,10 +53,10 @@ export const LootScreen = () => {
   };
 
   return (
-    <AbsoluteCenterFill>
+    <Container>
       <Title>You find a corpse of a fellow adventurer!</Title>
       <Title>They have the {lootData?.name}</Title>
       <ButtonAttack onClick={handleEndLooting}>Take Loot</ButtonAttack>
-    </AbsoluteCenterFill>
+    </Container>
   );
 };

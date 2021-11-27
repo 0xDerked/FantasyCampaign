@@ -96,7 +96,6 @@ export const FightScreen = () => {
   const [localMessage, setLocalMessage] = React.useState<string | null>(null);
   const message = gameData?.message;
   const tokenId = gameData?.selectedTokenId;
-  console.log(mobStats);
 
   const { data: mintedCharacterData, refetch: refetchMintedCharacterData } =
     useQueryAllMintedCharacters();
