@@ -106,8 +106,6 @@ const Divider = styled.div`
   align-self: stretch;
 `;
 
-const isDragon = false;
-
 export const FightScreen = () => {
   const { data: playerData } = useQueryPlayerStats();
   const { signer } = useWallet();
@@ -115,9 +113,9 @@ export const FightScreen = () => {
   const [gameData, setGameData] = useGameData();
   const { selectedTokenId } = gameData;
   const { data: mobStats } = useQueryMobStats();
-  const [localMessage, setLocalMessage] = React.useState<string | null>(null);
   const message = gameData?.message;
   const tokenId = gameData?.selectedTokenId;
+  const isDragon = mobStats?.[0].name === "Draco";
 
   const { data: mintedCharacterData, refetch: refetchMintedCharacterData } =
     useQueryAllMintedCharacters();
@@ -132,7 +130,6 @@ export const FightScreen = () => {
     if (message) {
       timeout = setTimeout(() => {
         setGameData({ ...gameData, message: null });
-        setLocalMessage(null);
       }, 1000);
     }
     return () => {

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GameModes } from "../types";
 import { useGameData } from "./useGameData";
 import { useQuerySigner } from "../api/useQuerySigner";
@@ -9,7 +9,7 @@ import { useQueryPlayerStats } from "../api/useQueryPlayerStats";
 import { X_FINAL, Y_FINAL } from "../constants";
 import { generateProof } from "../utils/calculateProof";
 
-const MOCK_CONTRACT = async (...args: any[]) => true;
+const MOCK_CONTRACT = async (...args: any[]) => false;
 
 export const useTriggerTurn = () => {
   const { data: signer } = useQuerySigner();
@@ -38,6 +38,8 @@ export const useTriggerTurn = () => {
         const contractSaysCanUnlock = await MOCK_CONTRACT(publicSignals, proof);
         if (contractSaysCanUnlock) {
           setGameData({ ...gameData, isGateOpen: true });
+        } else {
+          alert("You need the lance! Go loot some more");
         }
         return;
       }
