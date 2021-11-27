@@ -1,17 +1,14 @@
 import * as React from "react";
 import { doorTextureMaps } from "../Maze/DoorTextures";
 import { wallTextureMaps } from "../Maze/WallTextures";
-import { Ceiling, Floor, GameViewPort } from "../Maze/EnvironmentTextures";
-import { DoorCoords, WallType } from "../types";
+import { Ceiling, Floor } from "../Maze/EnvironmentTextures";
+import { WallType } from "../types";
 import { useWallsWithTransforms } from "../hooks/useWallsWithTransforms";
 import { useDoorsWithTransforms } from "../hooks/useDoorsWithTransforms";
-import clone from "lodash/clone";
-import { useCallback } from "react";
 import { useGameData } from "../hooks/useGameData";
 import { useTriggerTurn } from "../hooks/useTriggerTurn";
 import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
 import { Map } from "../Maze/Map";
-import { calculateProof } from "../utils/calculateProof";
 import styled from "styled-components";
 import {
   UNSCALED_VIEWPORT_HEIGHT,
@@ -19,6 +16,7 @@ import {
 } from "../Maze/constants";
 import { scale } from "../utils/scale";
 import { useFinalPositionCheck } from "../hooks/useFinalPositionCheck";
+import { AbsoluteFill } from "../components/Layout";
 
 const CentreCrop = styled.div`
   display: flex;
@@ -74,7 +72,7 @@ export const MazeScreen = () => {
     .filter(Boolean);
 
   return (
-    <GameViewPort>
+    <AbsoluteFill>
       <CentreCrop>
         <NaturalView>
           <Ceiling />
@@ -94,6 +92,6 @@ export const MazeScreen = () => {
         </NaturalView>
         <Map rotateMap={false} />
       </CentreCrop>
-    </GameViewPort>
+    </AbsoluteFill>
   );
 };

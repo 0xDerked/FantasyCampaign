@@ -16,23 +16,24 @@ const ButtonBase = styled.button`
 
 export const ButtonLarge = styled(ButtonBase)`
   background-color: black;
-  border: 1px double #48865f;
-  padding: 2px 5px;
+  border: 1px solid #48865f;
+  padding: 2px 6px;
   color: white;
-  font-size: 7px;
+  font-size: 6px;
 `;
 
 export const ButtonAttack = styled(ButtonBase)`
-  background-color: red;
-  border: ${scale(3)}px double white;
-  padding: ${scale(9)}px;
+  padding: 1px 4px;
   color: white;
-  font-size: ${scale(20)}px;
+  font-size: 7px;
+  background-color: red;
+  border: 1px solid black;
+  box-shadow: 0 0 0 1px white;
 `;
 
 export const ButtonSecondary = styled(ButtonBase)`
   background-color: transparent;
-  border: 1px double transparent;
+  border: 1px solid transparent;
   padding: 5px;
   color: white;
   font-size: 7px;

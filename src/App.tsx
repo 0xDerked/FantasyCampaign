@@ -19,7 +19,7 @@ const GameScreenContainer = styled.div`
   justify-content: center;
   position: relative;
   overflow: hidden;
-  transform: scale(3);
+  transform: scale(3.75);
   user-select: none;
 `;
 

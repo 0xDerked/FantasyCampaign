@@ -13,12 +13,15 @@ import { ContractsProvider } from "../providers/ContractsProvider";
 import { ContractListeners } from "../hooks/useContractListeners";
 import { OracleModal } from "../components/OracleModal";
 import { ReactNode } from "react";
+import { GameViewPort } from "../Maze/EnvironmentTextures";
 
 const Core = ({ children }: { children: ReactNode }) => (
   <Web3Gate>
     <ContractsProvider>
-      {children}
-      <OracleModal />
+      <GameViewPort>
+        {children}
+        <OracleModal />
+      </GameViewPort>
     </ContractsProvider>
   </Web3Gate>
 );
@@ -27,7 +30,11 @@ export const Router = () => {
   const [gameData] = useGameData();
   switch (gameData.mode) {
     case GameModes.SplashScreen:
-      return <SplashScreen />;
+      return (
+        <GameViewPort>
+          <SplashScreen />
+        </GameViewPort>
+      );
     case GameModes.SelectingCharacter:
       return (
         <Core>

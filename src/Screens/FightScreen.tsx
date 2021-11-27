@@ -10,11 +10,11 @@ import { useGameData } from "../hooks/useGameData";
 import { useEffect } from "react";
 import { useQueryPlayerStats } from "../api/useQueryPlayerStats";
 import { GameModes } from "../types";
-import { GameViewPort } from "../Maze/EnvironmentTextures";
 import { CharacterAssets } from "../constants";
 import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
 import battleBackground from "../assets/scaled/battle_background.png";
 import henchman from "../assets/scaled/henchman.png";
+import { AbsoluteFill } from "../components/Layout";
 
 const Background = styled(Image).attrs(() => ({
   src: battleBackground,
@@ -155,7 +155,7 @@ export const FightScreen = () => {
   };
 
   return (
-    <GameViewPort>
+    <AbsoluteFill>
       <Background />
       <Henchman />
       {avatarImg ? <Avatar src={avatarImg} /> : null}
@@ -183,6 +183,6 @@ export const FightScreen = () => {
           })}
         </ButtonsContainer>
       </PlayerStat>
-    </GameViewPort>
+    </AbsoluteFill>
   );
 };

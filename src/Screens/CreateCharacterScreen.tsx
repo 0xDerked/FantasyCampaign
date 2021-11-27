@@ -9,7 +9,6 @@ import { useWallet } from "../hooks/useWallet";
 import { createCharacter, enterCampaign } from "../api/api";
 import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
 import { useContracts } from "../hooks/useContracts";
-import { GameViewPort } from "../Maze/EnvironmentTextures";
 import { CharacterAssets } from "../constants";
 import bgSelect from "../assets/scaled/bg_select.png";
 import { Image } from "../components/Image";
@@ -139,7 +138,7 @@ export const CreateCharacterScreen = () => {
   };
 
   return (
-    <GameViewPort>
+    <AbsoluteFill>
       <Background src={bgSelect} />
       <AbsoluteFill>
         <Prompt>Choose Your Adventurer!</Prompt>
@@ -171,6 +170,6 @@ export const CreateCharacterScreen = () => {
           )}
         </CreateButtonContainer>
       </AbsoluteFill>
-    </GameViewPort>
+    </AbsoluteFill>
   );
 };
