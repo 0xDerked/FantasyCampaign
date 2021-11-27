@@ -7,6 +7,7 @@ import {
   generateWallCollisions,
   wallsDict,
 } from "./generateCollisionMaps";
+import { spawnPointCoords } from "../Maze/mapData";
 
 export enum Keys {
   Forward = "w",
@@ -171,7 +172,7 @@ export const setPos = (fn: PosFunction) => (gameData: GameData) => {
   }
   const newPosition = fn(gameData.position, gameData);
   // Check if the new position runs over a spawn point
-  const spawnPointsDict = generateSpawnCollisions(gameData.spawnPoints);
+  const spawnPointsDict = generateSpawnCollisions(spawnPointCoords);
   const spawnPoint =
     spawnPointsDict[`${round(newPosition.col)},${round(newPosition.row)}`];
   if (spawnPoint === true) {

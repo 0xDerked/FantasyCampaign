@@ -1,5 +1,5 @@
 import * as React from "react";
-import { doorsCoords, spawnPointCoords } from "../Maze/mapData";
+import { doorsCoords } from "../Maze/mapData";
 import { GameData, GameModes } from "../types";
 import { useEffect } from "react";
 
@@ -8,7 +8,6 @@ const initialPosition = { col: 0, dir: 0, row: 0 };
 export const initialGameData: GameData = {
   position: initialPosition,
   doors: doorsCoords,
-  spawnPoints: spawnPointCoords,
   selectedTokenId: null,
   mode: GameModes.SplashScreen,
   message: null,
