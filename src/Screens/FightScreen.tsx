@@ -12,12 +12,24 @@ import { useQueryPlayerStats } from "../api/useQueryPlayerStats";
 import { GameModes } from "../types";
 import { CharacterAssets } from "../constants";
 import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
+import { AbsoluteFill } from "../components/Layout";
 import battleBackground from "../assets/scaled/battle_background.png";
 import henchman from "../assets/scaled/henchman.png";
-import { AbsoluteFill } from "../components/Layout";
+import dragonBackground from "../assets/scaled/dragon_stage.png";
+import dragon from "../assets/scaled/dragon.png";
 
 const Background = styled(Image).attrs(() => ({
   src: battleBackground,
+}))`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+`;
+
+const DragonBackground = styled(Image).attrs(() => ({
+  src: dragonBackground,
 }))`
   position: absolute;
   bottom: 0;
@@ -38,6 +50,14 @@ const Henchman = styled(Image).attrs(() => ({
   position: absolute;
   top: 17px;
   right: 27px;
+`;
+
+const Dragon = styled(Image).attrs(() => ({
+  src: dragon,
+}))`
+  position: absolute;
+  top: 1px;
+  right: 2px;
 `;
 
 const ButtonsContainer = styled.div``;
@@ -85,6 +105,8 @@ const Divider = styled.div`
   margin-right: 4px;
   align-self: stretch;
 `;
+
+const isDragon = false;
 
 export const FightScreen = () => {
   const { data: playerData } = useQueryPlayerStats();
@@ -155,8 +177,8 @@ export const FightScreen = () => {
 
   return (
     <AbsoluteFill>
-      <Background />
-      <Henchman />
+      {isDragon ? <DragonBackground /> : <Background />}
+      {isDragon ? <Dragon /> : <Henchman />}
       {avatarImg ? <Avatar src={avatarImg} /> : null}
 
       <MobStatContainer>
