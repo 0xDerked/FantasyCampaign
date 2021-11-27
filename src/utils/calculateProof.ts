@@ -6,9 +6,9 @@ import { Position } from "../types";
 const MAX_MOVES = 200;
 const OUT_OF_RANGE = [100, 100];
 
-export const calculateProof = async (
+export const generateProof = async (
   moves: Position[]
-): Promise<{ proofVerifies: boolean; answerCorrect: boolean }> => {
+): Promise<{ proof: any; publicSignals: [string, string] }> => {
   const paddedMoves = Array(MAX_MOVES).fill(OUT_OF_RANGE); // Sparse array of moves
   moves.forEach(({ col, row }, index) => {
     paddedMoves[index] = [col, row];
@@ -20,7 +20,13 @@ export const calculateProof = async (
     "http://localhost:3000/circuit.wasm",
     "http://localhost:3000/circuit_final.key"
   );
+  return { proof, publicSignals };
+};
 
+export const calculateProof = async (
+  moves: Position[]
+): Promise<{ proofVerifies: boolean; answerCorrect: boolean }> => {
+  const { publicSignals, proof } = await generateProof(moves);
   const res = await snarkjs.groth16.verify(
     verificationKey,
     publicSignals,
