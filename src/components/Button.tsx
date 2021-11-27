@@ -10,7 +10,8 @@ const ButtonBase = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: ${props => (props.disabled ? 0.2 : 1)};
+  filter: grayscale(${props => (props.disabled ? 1 : 0)})
+    brightness(${props => (props.disabled ? 0.4 : 1)});
 `;
 
 export const ButtonLarge = styled(ButtonBase)`
