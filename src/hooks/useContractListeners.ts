@@ -76,7 +76,6 @@ export const useContractListeners = () => {
     async (_, damage: number) => {
       console.log("combatListener", damage);
       // Prevent combatListener from being called when in a non-combat mode
-      console.log(11111, lastGameMode, gameData.mode);
       if (lastGameMode.current === GameModes.InCombat) {
         await refetchMobStats();
         await refetchPlayerStats();

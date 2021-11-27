@@ -17,7 +17,7 @@ interface IVerifier {
             uint[2] memory a,
             uint[2][2] memory b,
             uint[2] memory c,
-            uint[1] memory input
+            uint[2] memory input
         ) external view returns (bool r);
 }
 
@@ -54,7 +54,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 
 		//push the items into the campaign
 		CampaignItems.push(iceLance);
-	
+
 		//set up some guaranteed events with the mobs/puzzles/loot and turn types
 		//last turn will be a boss fight against the dragon
 		turnGuaranteedTypes[_numTurns] = FantasyThings.TurnType.Combat;
@@ -110,7 +110,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		emit CampaignStarted(_tokenId);
 	}
 
-	function unlockFinalTurn(uint256 _tokenId, uint[2] memory a, uint[2][2] memory b, uint[2] memory c, uint[1] memory input) 
+	function unlockFinalTurn(uint256 _tokenId, uint[2] memory a, uint[2][2] memory b, uint[2] memory c, uint[2] memory input)
 		external controlsCharacter(_tokenId) {
 			bytes32 proofHash = keccak256(abi.encodePacked(a,b,c,input));
 			require(!proofHashUsed[proofHash], "Stop Cheating");

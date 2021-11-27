@@ -1,7 +1,7 @@
 import * as snarkjs from "snarkjs";
 
 import verificationKey from "../../circuits/verification_key.json";
-import { genProof } from "./proofUtils";
+import { genProof } from "./snarkUtils";
 import { Position } from "../types";
 const MAX_MOVES = 200;
 const OUT_OF_RANGE = [100, 100];
@@ -36,4 +36,16 @@ export const calculateProof = async (
     proofVerifies: res,
     answerCorrect: publicSignals[0] === "1" && publicSignals[1] === "1",
   };
+};
+
+export const buildContractCallArgs = (
+  proof: any,
+  publicSignals: [string, string]
+) => {
+  return [
+    proof.pi_a.slice(0, 2),
+    [proof.pi_b[0].slice(0).reverse(), proof.pi_b[1].slice(0).reverse()],
+    proof.pi_c.slice(0, 2),
+    publicSignals,
+  ];
 };

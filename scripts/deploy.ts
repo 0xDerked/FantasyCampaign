@@ -42,6 +42,7 @@ const main = async () => {
   const VerifierFactory = new Verifier__factory(owner);
   const VerifierContract = await VerifierFactory.deploy();
   await VerifierContract.deployed();
+  console.log("Verifier Contract Address: ", VerifierContract.address);
 
   const CastleCampaignFactory = new CastleCampaign__factory(owner);
   const CastleCampaignContract = await CastleCampaignFactory.deploy(

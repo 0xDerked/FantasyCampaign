@@ -2,12 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { GameModes } from "../types";
 import { useGameData } from "./useGameData";
 import { useQuerySigner } from "../api/useQuerySigner";
-import { generateTurn, getTurnData } from "../api/api";
+import { generateTurn, getTurnData, unlockFinalTurn } from "../api/api";
 import { useContracts } from "./useContracts";
 import { getGameModeFromTurnType } from "../utils/getGameModeFromTurnType";
 import { useQueryPlayerStats } from "../api/useQueryPlayerStats";
 import { X_FINAL, Y_FINAL } from "../constants";
-import { generateProof } from "../utils/calculateProof";
+import { calculateProof, generateProof } from "../utils/calculateProof";
 
 const MOCK_CONTRACT = async (...args: any[]) => false;
 
@@ -25,7 +25,6 @@ export const useTriggerTurn = () => {
 
   const isAtGateTriggerPoint = col === X_FINAL && row === Y_FINAL;
   const isAtDragonTriggerPoint = col === X_FINAL && row === Y_FINAL + 1;
-  console.log(isAtGateTriggerPoint, isAtDragonTriggerPoint);
 
   useEffect(() => {
     (async () => {

@@ -11,6 +11,7 @@ import Web3Modal from "web3modal";
 import { CharacterAttributesStructOutput } from "../../typechain/FantasyAttributesManager";
 import { Contracts } from "../providers/ContractsProvider";
 import { mapCharacterAPIToLocalStats } from "../utils/mapCharacterAPIToLocalStats";
+import { buildContractCallArgs } from "../utils/calculateProof";
 
 // --------------------------------------------------------------------------------
 
@@ -133,6 +134,31 @@ export const MOVE_IS_FINAL_CACHE_KEY = "moveIsFinal";
 
 // --------------------------------------------------------------------------------
 
+export const unlockFinalTurn = async ({
+  signer,
+  characterTokenId,
+  contracts,
+  proof,
+  publicSignals,
+}: {
+  signer: JsonRpcSigner | undefined;
+  characterTokenId: number;
+  contracts: Contracts;
+  proof: any;
+  publicSignals: [string, string];
+}): Promise<void | null> => {
+  if (!signer) {
+    return null;
+  }
+  const args = buildContractCallArgs(proof, publicSignals);
+  await contracts.castleCampaignContract.unlockFinalTurn(
+    characterTokenId,
+    ...args
+  );
+};
+export const UNLOCK_FINAL_TURN_CACHE_KEY = "unlockFinalTurn";
+
+// --------------------------------------------------------------------------------
 export const fetchSigner = async (): Promise<JsonRpcSigner> => {
   const web3Modal = new Web3Modal();
   const connection = await web3Modal.connect();
