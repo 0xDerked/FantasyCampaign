@@ -8,9 +8,16 @@ import { endExploreLoot } from "../api/api";
 import { useWallet } from "../hooks/useWallet";
 import { useContracts } from "../hooks/useContracts";
 import { AbsoluteCenterFill } from "../components/Layout";
+import { Image } from "../components/Image";
+import lance from "../assets/scaled/lance.png";
+
+const LootItem = styled(Image)`
+  margin-bottom: 10px;
+  width: 10px;
+`;
 
 const Title = styled.div`
-  font-size: 11px;
+  font-size: 9px;
   margin-bottom: 7px;
   margin-top: 0;
   padding: 0;
@@ -18,7 +25,7 @@ const Title = styled.div`
 `;
 
 const Container = styled(AbsoluteCenterFill)`
-  padding: 30px;
+  padding: 17px;
   top: 5px;
   left: 5px;
   right: 5px;
@@ -60,8 +67,8 @@ export const LootScreen = () => {
 
   return (
     <Container>
-      <Title>You find a corpse of a fellow adventurer!</Title>
-      <Title>They have the {lootData?.name}</Title>
+      <Title>You found the {lootData?.name}</Title>
+      <LootItem src={lance} />
       <ButtonAttack onClick={handleEndLooting}>Take Loot</ButtonAttack>
     </Container>
   );
