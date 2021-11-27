@@ -17,7 +17,6 @@ export enum GameModes {
 export type GameData = {
   position: Position;
   doors: DoorCoords[];
-  spawnPoints: SpawnPointCoords[];
   selectedTokenId: number | null;
   mode: GameModes;
   message: string | null;
@@ -108,6 +107,7 @@ export type WallsDict = Record<
 export type SpawnPointCoords = {
   x: number;
   y: number;
+  type: "Henchman" | "Dragon" | "Loot";
 };
 
 export type SpawnPointsDict = Record<`${number},${number}`, boolean>;
