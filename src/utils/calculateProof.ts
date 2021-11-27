@@ -9,8 +9,6 @@ const OUT_OF_RANGE = [100, 100];
 export const calculateProof = async (
   moves: Position[]
 ): Promise<{ proofVerifies: boolean; answerCorrect: boolean }> => {
-  console.log(verificationKey);
-
   const paddedMoves = Array(MAX_MOVES).fill(OUT_OF_RANGE); // Sparse array of moves
   moves.forEach(({ col, row }, index) => {
     paddedMoves[index] = [col, row];
@@ -30,6 +28,6 @@ export const calculateProof = async (
   );
   return {
     proofVerifies: res,
-    answerCorrect: publicSignals[0] === "1",
+    answerCorrect: publicSignals[0] === "1" && publicSignals[1] === "1",
   };
 };

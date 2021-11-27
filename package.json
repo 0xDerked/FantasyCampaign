@@ -10,7 +10,8 @@
     "lint": "eslint --ext .js,.ts,.tsx src/",
     "lint:fix": "eslint --fix --ext .js,.ts,.tsx test/",
     "circuits:test": "yarn jest ./circuits/circuits.test.ts",
-    "circuits:compile": "node ./circuits/compile.js",
+    "circuits:compile": "node ./circuits/compile.js && yarn circuits:copy",
+    "circuits:copy": "cp ./circuits/circuit_final.key ./public/circuit_final.key && cp ./circuits/circuit_js/circuit.wasm ./public/circuit.wasm",
     "circuits:ptau": "sh ./circuits/ptau.sh",
     "circuits:check": "node circuits/checkFullProve.js",
     "circuits:generate-maze": "node ./circuits/generateMaze.js",
@@ -18,7 +19,7 @@
     "contracts:typechain": "npx hardhat typechain",
     "contracts:deploy": "npx hardhat run ./scripts/deploy.ts --network localhost",
     "circomcheck": "yarn why circom",
-    "node:start": "npx hardhat nodeSplashScreen"
+    "node:start": "npx hardhat node"
   },
   "dependencies": {
     "@craco/craco": "^6.4.1",
