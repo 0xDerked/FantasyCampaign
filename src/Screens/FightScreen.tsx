@@ -1,11 +1,5 @@
 import * as React from "react";
 import styled from "styled-components";
-import match from "../assets/scaled/match.png";
-import { scale } from "../utils/scale";
-import {
-  UNSCALED_VIEWPORT_HEIGHT,
-  UNSCALED_VIEWPORT_WIDTH,
-} from "../Maze/constants";
 import { Image } from "../components/Image";
 import { ButtonAttack } from "../components/Button";
 import { attackWithAbility, getTurnData } from "../api/api";
@@ -16,57 +10,80 @@ import { useGameData } from "../hooks/useGameData";
 import { useEffect } from "react";
 import { useQueryPlayerStats } from "../api/useQueryPlayerStats";
 import { GameModes } from "../types";
+import { GameViewPort } from "../Maze/EnvironmentTextures";
+import { CharacterAssets } from "../constants";
+import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
+import battleBackground from "../assets/scaled/battle_background.png";
+import henchman from "../assets/scaled/henchman.png";
 
-const FightScreenMock = styled(Image).attrs(() => ({
-  src: match,
+const Background = styled(Image).attrs(() => ({
+  src: battleBackground,
 }))`
   position: absolute;
   bottom: 0;
   left: 0;
-  height: ${scale(UNSCALED_VIEWPORT_HEIGHT)}px;
-  width: ${scale(UNSCALED_VIEWPORT_WIDTH)}px;
+  height: 100%;
+  width: 100%;
 `;
 
-const Container = styled.div`
+const Avatar = styled(Image)`
   position: absolute;
   bottom: 0;
   left: 0;
-  height: ${scale(UNSCALED_VIEWPORT_HEIGHT)}px;
-  width: ${scale(UNSCALED_VIEWPORT_WIDTH)}px;
 `;
 
-const ButtonsContainer = styled.div`
+const Henchman = styled(Image).attrs(() => ({
+  src: henchman,
+}))`
   position: absolute;
-  right: ${scale(20)}px;
-  bottom: ${scale(20)}px;
+  top: 17px;
+  right: 27px;
 `;
 
-const PositionBase = styled.div`
+const ButtonsContainer = styled.div``;
+
+const MobStatContainer = styled.div`
   position: absolute;
+  left: 5px;
+  top: 5px;
+  right: 5px;
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
-const MobStat = styled(PositionBase)`
-  right: ${scale(UNSCALED_VIEWPORT_WIDTH / 3)}px;
-  left: ${scale(UNSCALED_VIEWPORT_WIDTH / 3)}px;
-  top: ${scale(0)}px;
-  height: ${scale(40)}px;
-  font-size: ${scale(28)}px;
-  background-color: black;
-  border: ${scale(3)}px double red;
+const MobStat = styled.div`
+  font-size: 8px;
+  padding: 2px 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #2b2417;
+  border: 1px solid #5f462b;
+  box-shadow: 0 0 0 1px #2b2417;
 `;
 
-const PlayerStat = styled(PositionBase)`
-  left: ${scale(10)}px;
-  bottom: ${scale(10)}px;
-  height: ${scale(60)}px;
-  font-size: ${scale(40)}px;
-  background-color: black;
-  border: ${scale(3)}px double red;
-  padding: ${scale(10)}px;
-  width: ${scale(UNSCALED_VIEWPORT_WIDTH / 2)}px;
+const PlayerStat = styled.div`
+  position: absolute;
+  left: 5px;
+  bottom: 5px;
+  right: 5px;
+  font-size: 8px;
+  padding: 3px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #2b2417;
+  border: 1px solid #5f462b;
+  box-shadow: 0 0 0 1px #2b2417;
+`;
+
+const Divider = styled.div`
+  width: 1px;
+  border-right: 1px solid #5f462b;
+  margin-left: 4px;
+  margin-right: 4px;
+  align-self: stretch;
 `;
 
 export const FightScreen = () => {
@@ -74,10 +91,20 @@ export const FightScreen = () => {
   const { signer } = useWallet();
   const contracts = useContracts();
   const [gameData, setGameData] = useGameData();
+  const { selectedTokenId } = gameData;
   const { data: mobStats } = useQueryMobStats();
   const [localMessage, setLocalMessage] = React.useState<string | null>(null);
   const message = gameData?.message;
   const tokenId = gameData?.selectedTokenId;
+  console.log(mobStats);
+
+  const { data: mintedCharacterData, refetch: refetchMintedCharacterData } =
+    useQueryAllMintedCharacters();
+  const selectedCharacterId = Object.entries(mintedCharacterData || {}).find(
+    ([_, character]) => character.tokenId === selectedTokenId
+  )?.[1].id;
+
+  const avatarImg = CharacterAssets[selectedCharacterId || -1]?.back;
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout> | undefined = undefined;
@@ -128,22 +155,34 @@ export const FightScreen = () => {
   };
 
   return (
-    <Container>
-      <FightScreenMock />
-      <ButtonsContainer>
-        {playerData?.abilities.map((ability, index) => {
-          return (
-            <ButtonAttack
-              onClick={() => handleAttack(index)}
-              key={ability.name}
-            >
-              {ability.name}
-            </ButtonAttack>
-          );
-        })}
-      </ButtonsContainer>
-      <MobStat>{mobStats?.[0]?.health}</MobStat>
-      <PlayerStat>{playerData?.health}</PlayerStat>
-    </Container>
+    <GameViewPort>
+      <Background />
+      <Henchman />
+      {avatarImg ? <Avatar src={avatarImg} /> : null}
+
+      <MobStatContainer>
+        <MobStat>
+          Health&ensp;
+          {mobStats?.[0]?.health}
+          <Divider />
+          Strength&ensp;{mobStats?.[0]?.strength}
+        </MobStat>
+      </MobStatContainer>
+      <PlayerStat>
+        <div>Health&ensp;{playerData?.health}</div>
+        <ButtonsContainer>
+          {playerData?.abilities.map((ability, index) => {
+            return (
+              <ButtonAttack
+                onClick={() => handleAttack(index)}
+                key={ability.name}
+              >
+                {ability.name}
+              </ButtonAttack>
+            );
+          })}
+        </ButtonsContainer>
+      </PlayerStat>
+    </GameViewPort>
   );
 };
