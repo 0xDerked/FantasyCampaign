@@ -1,10 +1,5 @@
 import * as React from "react";
 import styled from "styled-components";
-import { scale } from "../utils/scale";
-import {
-  UNSCALED_VIEWPORT_HEIGHT,
-  UNSCALED_VIEWPORT_WIDTH,
-} from "../Maze/constants";
 import { useGameData } from "../hooks/useGameData";
 import { GameModes } from "../types";
 import { ButtonAttack } from "../components/Button";
@@ -15,8 +10,8 @@ import { useContracts } from "../hooks/useContracts";
 import { AbsoluteCenterFill } from "../components/Layout";
 
 const Title = styled.h1`
-  font-size: ${scale(30)}px;
-  margin-bottom: ${scale(20)}px;
+  font-size: 20px;
+  margin-bottom: 5px;
   margin-top: 0;
   padding: 0;
 `;
