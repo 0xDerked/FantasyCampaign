@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
-import ceiling from "../assets/scaled/roofalt.png";
-import flooralt from "../assets/scaled/flooralt.png";
+import ceiling from "../assets/original/roofalt.png";
+import flooralt from "../assets/original/flooralt.png";
 import { UNSCALED_VIEWPORT_HEIGHT, UNSCALED_VIEWPORT_WIDTH } from "./constants";
 import { scale } from "../utils/scale";
 import { Image } from "../components/Image";

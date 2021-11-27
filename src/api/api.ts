@@ -111,6 +111,28 @@ export const GENERATE_TURN_CACHE_KEY = "generateTurn";
 
 // --------------------------------------------------------------------------------
 
+export const moveIsFinal = async ({
+  signer,
+  characterTokenId,
+  contracts,
+}: {
+  signer: JsonRpcSigner | undefined;
+  characterTokenId: number;
+  contracts: Contracts;
+}): Promise<boolean | null> => {
+  if (!signer) {
+    return null;
+  }
+  const numberOfTurns = await contracts.castleCampaignContract.numberOfTurns();
+  const playerTurn = await contracts.castleCampaignContract.playerTurn(
+    characterTokenId
+  );
+  return numberOfTurns.toNumber() === playerTurn.toNumber();
+};
+export const MOVE_IS_FINAL_CACHE_KEY = "moveIsFinal";
+
+// --------------------------------------------------------------------------------
+
 export const fetchSigner = async (): Promise<JsonRpcSigner> => {
   const web3Modal = new Web3Modal();
   const connection = await web3Modal.connect();
