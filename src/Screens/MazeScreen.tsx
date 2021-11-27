@@ -17,6 +17,7 @@ import {
 import { scale } from "../utils/scale";
 import { useFinalPositionCheck } from "../hooks/useFinalPositionCheck";
 import { AbsoluteFill } from "../components/Layout";
+import { useQueryMoveIsFinal } from "../api/useQueryMoveIsFinal";
 
 const CentreCrop = styled.div`
   display: flex;
@@ -28,6 +29,23 @@ const CentreCrop = styled.div`
   flex-direction: row;
   align-items: center;
   overflow: hidden;
+`;
+
+const GoToEndOfMaze = styled.div`
+  position: absolute;
+  bottom: 6px;
+  left: 6px;
+  right: 6px;
+  flex-direction: row;
+  justify-content: center;
+  padding: 3px 3px;
+  text-align: center;
+  align-items: center;
+  background-color: #2b2417;
+  border: 1px solid white;
+  box-shadow: 0 0 0 1px #2b2417;
+  z-index: 4000;
+  font-size: 8px;
 `;
 
 const NaturalView = styled.div`
@@ -42,6 +60,7 @@ export const MazeScreen = () => {
   const doors = useDoorsWithTransforms();
   useQueryAllMintedCharacters();
   useFinalPositionCheck();
+  const { data: moveIsFinal } = useQueryMoveIsFinal();
   const [gameData, setGameData] = useGameData();
 
   const wallSurfaces = walls
@@ -91,6 +110,7 @@ export const MazeScreen = () => {
           })}
         </NaturalView>
         <Map rotateMap={false} />
+        {moveIsFinal ? <GoToEndOfMaze>Head to the exit</GoToEndOfMaze> : null}
       </CentreCrop>
     </AbsoluteFill>
   );
