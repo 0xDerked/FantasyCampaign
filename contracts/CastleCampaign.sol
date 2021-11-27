@@ -151,19 +151,27 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		uint256 tokenId = requestToTokenId[requestId];
 		currentRandomSeed[tokenId] = randomness;
 
+		/*
+			The Chainlink VRF callback concept is such:
+			- Take the randomness provided and generate a turn based on predetermined probabilities 
+			- Within the turn time, use the randomnes to determine the number of mobs, what item to drop, what puzzle to render, etc.
+			- Use the randomness as a seed for that turn's combat randomness -- dodge, block, etc.
+			- A lot the turn generation is "rigged" at the moment for the proof of concept/UI development
+		*/
 		if(randomness % 100 < 101 ) {
 			//set up combat turn
-			uint256[] memory mobIdsForTurn = new uint256[](randomness%2+1);
+			uint256[] memory mobIdsForTurn = new uint256[](1);
 			for(uint256 i=0; i<mobIdsForTurn.length; i++) {
-				mobIdsForTurn[i] = 0; //we could randomly generate this from some sort of data model and spawn rate
+				//if more than 1 mob option, could use randomness to generate from a spawn rate
+				mobIdsForTurn[i] = 0;
 			}
 			_setMobsForTurn(tokenId,mobIdsForTurn,playerTurn[tokenId]);
 			turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Combat;
 			} else if(randomness % 100 > 101) {
-				//set up looting turn
+				//set up looting turn -- no random loot in POC
 				turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Loot;
 			} else {
-				//set up puzzle turn -- not triggering right now
+				//set up puzzle turn -- no random loot in POC
 				turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Puzzle;
 			}
 		emit TurnSet(tokenId);

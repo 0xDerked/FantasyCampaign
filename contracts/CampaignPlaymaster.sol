@@ -39,7 +39,7 @@ abstract contract CampaignPlaymaster {
 	//tokenId -> nonce -> Items
 	mapping(uint256 => mapping(uint256 => FantasyThings.Item[])) public campaignInventory;
 
-   FantasyThings.Item[] public CampaignItems;
+    FantasyThings.Item[] public CampaignItems;
 	mapping(uint256 => uint256[]) public lootGuaranteedItemIds;
 
 	//tokenId -> Turn Number -> Mobs Alive
@@ -59,7 +59,7 @@ abstract contract CampaignPlaymaster {
 	event CombatSequence(uint256 indexed _tokenId, uint8 indexed _damageDone);
 
 	IERC721Metadata public fantasyCharacters;
-	FantasyAttributesManager attributesManager;
+	FantasyAttributesManager public attributesManager;
 
 	constructor(uint256 _numberOfTurns, address _fantasyCharacters, address _attributesManager) {
 		numberOfTurns = _numberOfTurns;

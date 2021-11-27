@@ -58,19 +58,19 @@ const main = async () => {
 
   //   console.log("Verifier Address: ", VerifierContract.address);
 
-    const CastleCampaignFactory = new CastleCampaign__factory(owner);
-    const CastleCampaignContract = await CastleCampaignFactory.deploy(
-      FantasyCharAddress,
-      attributesAddress,
-      4,
-      verifierAddress
-    );
-    await CastleCampaignContract.deployed();
+  const CastleCampaignFactory = new CastleCampaign__factory(owner);
+  const CastleCampaignContract = await CastleCampaignFactory.deploy(
+    FantasyCharAddress,
+    attributesAddress,
+    4,
+    verifierAddress
+  );
+  await CastleCampaignContract.deployed();
 
-    console.log(
-      "Castle Campaign Contract Address: ",
-      CastleCampaignContract.address
-    );
+  console.log(
+    "Castle Campaign Contract Address: ",
+    CastleCampaignContract.address
+  );
 };
 
 main()
