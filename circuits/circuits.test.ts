@@ -214,8 +214,48 @@ describe("Circuit tests", () => {
         moves[index] = move;
       });
       const witness = await circuit.calculateWitness({ moves }, true);
-      expect(Fr.eq(Fr.e(VALID), witness[1])).toBe(true);
-      expect(Fr.eq(Fr.e(VALID), witness[2])).toBe(true);
+      const movesOk = witness[1];
+      const reachedEnd = witness[2];
+      expect(Fr.eq(Fr.e(VALID), movesOk)).toBe(true);
+      expect(Fr.eq(Fr.e(VALID), reachedEnd)).toBe(true);
+    }
+
+    // Valid and complete but walked back a step
+    {
+      const moves = Array(MAX_MOVES).fill(OUT_OF_RANGE); // Sparse array of moves
+      [
+        [0, 0],
+        [0, 1],
+        [1, 1],
+        [1, 2],
+        [0, 2],
+        [0, 3],
+        [1, 3],
+        [2, 3],
+        [2, 4],
+        [3, 4],
+        [3, 3],
+        [3, 2],
+        [3, 1],
+        [4, 1],
+        [4, 0],
+        [5, 0],
+        [6, 0],
+        [6, 1],
+        [6, 2],
+        [6, 3],
+        [5, 3],
+        [5, 4],
+        [5, 5],
+        [5, 4],
+      ].forEach((move, index) => {
+        moves[index] = move;
+      });
+      const witness = await circuit.calculateWitness({ moves }, true);
+      const movesOk = witness[1];
+      const reachedEnd = witness[2];
+      expect(Fr.eq(Fr.e(VALID), movesOk)).toBe(true);
+      expect(Fr.eq(Fr.e(VALID), reachedEnd)).toBe(false);
     }
 
     // Invalid and incomplete
@@ -230,8 +270,10 @@ describe("Circuit tests", () => {
         moves[index] = move;
       });
       const witness = await circuit.calculateWitness({ moves }, true);
-      expect(Fr.eq(Fr.e(VALID), witness[1])).toBe(false);
-      expect(Fr.eq(Fr.e(VALID), witness[2])).toBe(false);
+      const movesOk = witness[1];
+      const reachedEnd = witness[2];
+      expect(Fr.eq(Fr.e(VALID), movesOk)).toBe(false);
+      expect(Fr.eq(Fr.e(VALID), reachedEnd)).toBe(false);
     }
 
     // Tried starting at the end
@@ -244,8 +286,10 @@ describe("Circuit tests", () => {
         moves[index] = move;
       });
       const witness = await circuit.calculateWitness({ moves }, true);
-      expect(Fr.eq(Fr.e(VALID), witness[1])).toBe(false);
-      expect(Fr.eq(Fr.e(VALID), witness[2])).toBe(true);
+      const movesOk = witness[1];
+      const reachedEnd = witness[2];
+      expect(Fr.eq(Fr.e(VALID), movesOk)).toBe(false);
+      expect(Fr.eq(Fr.e(VALID), reachedEnd)).toBe(true);
     }
   });
 });

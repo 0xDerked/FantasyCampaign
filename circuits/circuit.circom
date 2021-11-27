@@ -23,8 +23,8 @@ template Game(N) {
   var nextY;
   var movesOk = 1;
   var lastMove[2];
-  signal xOk;
-  signal yOk;
+  signal xAtEnd;
+  signal yAtEnd;
   signal cX;
   signal cY;
   signal reachedEnd;
@@ -62,14 +62,14 @@ template Game(N) {
   component xEq = IsEqual();
   xEq.in[0] <-- lastMove[0];
   xEq.in[1] <-- 5;
-  xOk <-- xEq.out;
+  xAtEnd <-- xEq.out;
 
   component yEq = IsEqual();
   yEq.in[0] <-- lastMove[1];
   yEq.in[1] <-- 5;
-  yOk <-- xEq.out;
+  yAtEnd <-- yEq.out;
 
-  reachedEnd <-- xOk * yOk;
+  reachedEnd <-- xAtEnd * yAtEnd;
 
   out[0] <-- movesOk;
   out[1] <-- reachedEnd;
