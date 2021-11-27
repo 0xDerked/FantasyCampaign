@@ -25,6 +25,7 @@ export const useTriggerTurn = () => {
 
   const isAtGateTriggerPoint = col === X_FINAL && row === Y_FINAL;
   const isAtDragonTriggerPoint = col === X_FINAL && row === Y_FINAL + 1;
+  console.log(isAtGateTriggerPoint, isAtDragonTriggerPoint);
 
   useEffect(() => {
     (async () => {
@@ -32,7 +33,8 @@ export const useTriggerTurn = () => {
         return;
       }
 
-      // Check whether user can open the gate
+      // --------------------------------------------------------------------------------
+      // Check whether user can open the gat
       if (isAtGateTriggerPoint) {
         const { publicSignals, proof } = await generateProof(moves);
         const contractSaysCanUnlock = await MOCK_CONTRACT(publicSignals, proof);
@@ -44,7 +46,9 @@ export const useTriggerTurn = () => {
         return;
       }
 
+      // --------------------------------------------------------------------------------
       // Check whether user can trigger the dragon
+
       if (isAtDragonTriggerPoint && isGateOpen) {
         const { publicSignals, proof } = await generateProof(moves);
         const contractSaysCanUnlock = await MOCK_CONTRACT(publicSignals, proof);
@@ -63,7 +67,9 @@ export const useTriggerTurn = () => {
         return;
       }
 
+      // --------------------------------------------------------------------------------
       // Otherwise do a normal move
+
       if (isInTurnMode && !wasInTurnMode.current) {
         const turnType = await getTurnData({
           signer,
