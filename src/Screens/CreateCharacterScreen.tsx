@@ -1,23 +1,17 @@
 import * as React from "react";
-import { CharacterClass, GameModes } from "../types";
+import { GameModes } from "../types";
 import styled from "styled-components";
 import { useGetAvailableCharacters } from "../hooks/useGetAvailableCharacters";
-import { ButtonLarge, ButtonSecondary } from "../components/Button";
-import {
-  AbsoluteCenterFill,
-  AbsoluteFill,
-  CenterFill,
-} from "../components/Layout";
+import { ButtonLarge } from "../components/Button";
+import { AbsoluteFill } from "../components/Layout";
 import { useGameData } from "../hooks/useGameData";
 import { useWallet } from "../hooks/useWallet";
 import { createCharacter, enterCampaign } from "../api/api";
 import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
-import { StatsTable } from "../components/StatsTable";
 import { useContracts } from "../hooks/useContracts";
 import { GameViewPort } from "../Maze/EnvironmentTextures";
 import { CharacterAssets } from "../constants";
 import bgSelect from "../assets/scaled/bg_select.png";
-import bgBattle from "../assets/scaled/battle_background.png";
 import { Image } from "../components/Image";
 
 const SelectedCharacterButton = styled.button<{
@@ -29,13 +23,14 @@ const SelectedCharacterButton = styled.button<{
   outline: 0;
   background-color: transparent;
   border: none;
-  width: 51px;
+  width: 37px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
   cursor: pointer;
   font-family: inherit;
+  transform: scale(${props => (props.selected ? 1.1 : 1)});
 `;
 
 const Label = styled.div`
@@ -51,13 +46,10 @@ const CharacterIcon = styled(Image)`
   width: 100%;
 `;
 
-const CharacterIconLarge = styled(Image)`
-  width: 100%;
-`;
-
 const CharacterContainer = styled.div`
   display: flex;
   padding-top: 24px;
+  justify-content: center;
 `;
 
 const Background = styled(Image)`
@@ -66,32 +58,17 @@ const Background = styled(Image)`
   left: 0;
 `;
 
-const PreviewContainer = styled.div`
-  position: absolute;
-  top: 4px;
-  left: 5px;
-`;
-
-const StatsContainer = styled.div`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-`;
-
 const CreateButtonContainer = styled.div`
   position: absolute;
-  bottom: 10px;
-  right: 10px;
-`;
-
-const BackButtonContainer = styled.div`
-  position: absolute;
-  bottom: 10px;
-  left: 10px;
+  bottom: 5px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
 `;
 
 const Prompt = styled.div`
-  font-size: 13px;
+  font-size: 11px;
   width: 100%;
   position: absolute;
   top: 8px;
@@ -161,41 +138,6 @@ export const CreateCharacterScreen = () => {
     setSelectedCharacterId(id);
   };
 
-  if (typeof selectedCharacterId === "number" && selectedCharacter) {
-    return (
-      <GameViewPort>
-        <Background src={bgBattle} style={{ opacity: 0.3 }} />
-        <PreviewContainer>
-          <CharacterIconLarge
-            src={CharacterAssets[selectedCharacterId]!.front}
-          />
-        </PreviewContainer>
-        <BackButtonContainer>
-          <ButtonSecondary onClick={() => setSelectedCharacterId(null)}>
-            Back
-          </ButtonSecondary>
-        </BackButtonContainer>
-        <StatsContainer>
-          <StatsTable character={selectedCharacter} />
-        </StatsContainer>
-        <CreateButtonContainer>
-          {typeof selectedCharacterTokenId == "number" ? (
-            <ButtonLarge onClick={handleUseExistingCharacter}>
-              Start/Resume Campaign
-            </ButtonLarge>
-          ) : (
-            <ButtonLarge
-              onClick={handleCreateCharacter}
-              disabled={!selectedCharacterId}
-            >
-              Create New Character
-            </ButtonLarge>
-          )}
-        </CreateButtonContainer>
-      </GameViewPort>
-    );
-  }
-
   return (
     <GameViewPort>
       <Background src={bgSelect} />
@@ -214,6 +156,20 @@ export const CreateCharacterScreen = () => {
             </SelectedCharacterButton>
           ))}
         </CharacterContainer>
+        <CreateButtonContainer>
+          {typeof selectedCharacterTokenId == "number" ? (
+            <ButtonLarge onClick={handleUseExistingCharacter}>
+              Start/Resume Campaign
+            </ButtonLarge>
+          ) : (
+            <ButtonLarge
+              onClick={handleCreateCharacter}
+              disabled={!selectedCharacterId}
+            >
+              Create New Character
+            </ButtonLarge>
+          )}
+        </CreateButtonContainer>
       </AbsoluteFill>
     </GameViewPort>
   );

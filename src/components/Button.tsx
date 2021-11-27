@@ -16,7 +16,7 @@ const ButtonBase = styled.button`
 export const ButtonLarge = styled(ButtonBase)`
   background-color: black;
   border: 1px double #48865f;
-  padding: 5px;
+  padding: 2px 5px;
   color: white;
   font-size: 7px;
 `;
