@@ -9,6 +9,7 @@ import {
   wallCoords,
 } from "./mapData";
 import { useGameData } from "../hooks/useGameData";
+import { usePosition } from "../hooks/usePosition";
 
 const CELL_PX = 5;
 
@@ -52,7 +53,8 @@ const SpawnDot = styled.div`
 
 export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
   const [gameData] = useGameData();
-  const { position, isGateOpen } = gameData;
+  const { isGateOpen, moves } = gameData;
+  const position = usePosition();
   const { row, col, dir } = position;
   const By = rotateMap ? 90 * dir : 0;
   const Cx = col;

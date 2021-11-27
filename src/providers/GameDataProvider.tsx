@@ -1,18 +1,17 @@
 import * as React from "react";
-import { doorsCoords } from "../Maze/mapData";
 import { GameData, GameModes } from "../types";
 import { useEffect } from "react";
 
 const initialPosition = { col: 0, dir: 0, row: 0 };
 
 export const initialGameData: GameData = {
-  position: initialPosition,
   selectedTokenId: null,
   mode: GameModes.SplashScreen,
   message: null,
   isRollingDice: false,
   moves: [initialPosition],
   isGateOpen: false,
+  direction: initialPosition.dir,
 };
 
 export const GameDataContext = React.createContext<

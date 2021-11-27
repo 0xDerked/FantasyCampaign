@@ -1,11 +1,10 @@
 import { rotate } from "../utils/rotate";
 import { round } from "../utils/round";
-import { useGameData } from "./useGameData";
 import { wallCoords } from "../Maze/mapData";
+import { usePosition } from "./usePosition";
 
 export const useWallsWithTransforms = () => {
-  const [gameData] = useGameData();
-  const { row, col, dir } = gameData.position;
+  const { row, col, dir } = usePosition();
 
   const Rot = 90 * dir;
 

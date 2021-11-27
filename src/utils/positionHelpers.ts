@@ -4,11 +4,11 @@ import { GameData, Position, GameModes } from "../types";
 import {
   generateDoorCollisions,
   generateSpawnCollisions,
-  generateWallCollisions,
   wallsDict,
 } from "./generateCollisionMaps";
 import { doorsCoords, spawnPointCoords } from "../Maze/mapData";
 import { X_FINAL, Y_FINAL } from "../constants";
+import { getCurrentPosition } from "../hooks/usePosition";
 
 export enum Keys {
   Forward = "w",
@@ -33,13 +33,9 @@ export const rotLeft = (gameData: GameData): GameData => {
   if (gameData.mode === GameModes.TurnTrigger) {
     return gameData;
   }
-  const newPos = {
-    ...gameData.position,
-    dir: (gameData.position.dir + 3) % 4,
-  };
   return {
     ...gameData,
-    position: newPos,
+    direction: (gameData.direction + 3) % 4,
   };
 };
 
@@ -47,13 +43,9 @@ export const rotRight = (gameData: GameData): GameData => {
   if (gameData.mode === GameModes.TurnTrigger) {
     return gameData;
   }
-  const newPos = {
-    ...gameData.position,
-    dir: (gameData.position.dir + 1) % 4,
-  };
   return {
     ...gameData,
-    position: newPos,
+    direction: (gameData.direction + 1) % 4,
   };
 };
 
@@ -93,7 +85,7 @@ export const boundPosition = (
 };
 
 export const goForwards = (pos: Position, currentState: GameData): Position => {
-  const dir = pos.dir;
+  const dir = currentState.direction;
   if (dir === 0) {
     return boundPosition(pos, setRow(pos, -1), currentState);
   }
@@ -113,7 +105,7 @@ export const goBackwards = (
   pos: Position,
   currentState: GameData
 ): Position => {
-  const dir = pos.dir;
+  const dir = currentState.direction;
   if (dir === 0) {
     return boundPosition(pos, setRow(pos, 1), currentState);
   }
@@ -133,7 +125,7 @@ export const strafeRight = (
   pos: Position,
   currentState: GameData
 ): Position => {
-  const dir = pos.dir;
+  const dir = currentState.direction;
   if (dir === 0) {
     return boundPosition(pos, setCol(pos, 1), currentState);
   }
@@ -150,7 +142,7 @@ export const strafeRight = (
 };
 
 export const strafeLeft = (pos: Position, currentState: GameData): Position => {
-  const dir = pos.dir;
+  const dir = currentState.direction;
   if (dir === 0) {
     return boundPosition(pos, setCol(pos, -1), currentState);
   }
@@ -168,36 +160,41 @@ export const strafeLeft = (pos: Position, currentState: GameData): Position => {
 
 type PosFunction = (position: Position, currentState: GameData) => Position;
 export const setPos = (fn: PosFunction) => (gameData: GameData) => {
+  const pos = getCurrentPosition(gameData.moves);
+  const newPos = fn(pos, gameData);
+  const newMoves = [...gameData.moves];
+  const lastPos = newMoves[newMoves.length - 1];
+
+  // Already in turn mode so block the user exiting the spawn point
   if (gameData.mode === GameModes.TurnTrigger) {
     return gameData;
   }
-  const newPosition = fn(gameData.position, gameData);
-  if (newPosition.col === X_FINAL && newPosition.row >= Y_FINAL + 1) {
-    // Don't allow them to go past the exit
+
+  // Stop them going out of bounds
+  if (newPos.col < 0 || newPos.col > 6 || newPos.row < 0 || newPos.row > 6) {
     return gameData;
   }
+
+  // Add the new move to the list unless it's the same
+  if (newPos.col !== lastPos?.col || newPos.row !== lastPos?.row) {
+    newMoves.push(newPos);
+  }
+
   // Check if the new position runs over a spawn point
   const spawnPointsDict = generateSpawnCollisions(spawnPointCoords);
   const spawnPoint =
-    spawnPointsDict[`${round(newPosition.col)},${round(newPosition.row)}`];
+    spawnPointsDict[`${round(newPos.col)},${round(newPos.row)}`];
   if (spawnPoint === true) {
     return {
       ...gameData,
       mode: GameModes.TurnTrigger,
-      position: newPosition,
+      moves: newMoves,
     };
   }
-  const newMoves = [...gameData.moves];
-  const lastPosition = newMoves[newMoves.length - 1];
-  if (
-    newPosition.col !== lastPosition?.col ||
-    newPosition.row !== lastPosition?.row
-  ) {
-    newMoves.push(newPosition);
-  }
+
+  // Otherwise just return the new positions
   return {
     ...gameData,
-    position: newPosition,
     moves: newMoves,
   };
 };

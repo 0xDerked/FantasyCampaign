@@ -59,7 +59,6 @@ export const MazeScreen = () => {
   const doors = useDoorsWithTransforms();
   useQueryAllMintedCharacters();
   const { data: moveIsFinal } = useQueryMoveIsFinal();
-  const [gameData, setGameData] = useGameData();
 
   const wallSurfaces = walls
     .map(values => {

@@ -2,8 +2,8 @@ import * as React from "react";
 import { CSSProperties, ReactElement } from "react";
 import { circuitWalls } from "./mapData";
 import styled from "styled-components";
-import { useGameData } from "../hooks/useGameData";
 import circuitMap from "./circuitMap";
+import { usePosition } from "../hooks/usePosition";
 
 const Td = styled.td`
   border-width: 1px;
@@ -22,8 +22,7 @@ const Table = styled.table`
 `;
 
 export const CircuitMap = (): ReactElement => {
-  const [gameData] = useGameData();
-  const position = gameData.position;
+  const position = usePosition();
   return (
     <Table>
       <tbody>

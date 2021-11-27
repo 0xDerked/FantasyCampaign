@@ -10,9 +10,11 @@ import {
   strafeRight,
 } from "../utils/positionHelpers";
 import { useGameData } from "./useGameData";
+import { usePosition } from "./usePosition";
 
 export const useInterfaceEventsListeners = () => {
   const [gameData, setGameData] = useGameData();
+  const position = usePosition();
 
   const handleKeyDown = ({ key }: KeyboardEvent) => {
     switch (key) {
@@ -52,7 +54,7 @@ export const useInterfaceEventsListeners = () => {
     };
   }, []);
 
-  return gameData.position;
+  return position;
 };
 
 export const UserInterfaceListeners = () => {
