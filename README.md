@@ -2,7 +2,7 @@
 
 ![](./docs/choose-screen.png)
 
-Turn based fantasy campaign game powered by Chainlink VRF and user imagination. Uses zkSNARKs to validate that the user has completed the maze.
+Turn-based fantasy campaign game powered by Chainlink VRF and user imagination, built for the [Fall 2021 Chainlink Hackathon](https://chain.link/hackathon) in far less time than we should have allowed for! Uses zkSNARKs to validate that the user has completed the maze.
 
 Select your adventure and navigate through Draco the Dragon's dungeon, fighting minions and collecting loot controlled the whims of Draco's magical (VRF) oracle! Once you've acquired the special weapon you can open the door to his lair and, maybe, vanquish him once and for all!
 
