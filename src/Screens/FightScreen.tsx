@@ -118,6 +118,8 @@ const Padding = styled.div`
   align-self: stretch;
 `;
 
+const OK = true;
+
 export const FightScreen = () => {
   const { data: playerData } = useQueryPlayerStats();
   const { signer } = useWallet();
@@ -125,12 +127,13 @@ export const FightScreen = () => {
   const [gameData, setGameData] = useGameData();
   const { selectedTokenId, isRollingDice } = gameData;
   const { data: mobStats } = useQueryMobStats();
-  const { data: lootData } = useQueryLootStats();
+  const { data: lootItem } = useQueryLootStats();
   const message = gameData?.message;
   const tokenId = gameData?.selectedTokenId;
   const isDragon = mobStats?.[0]?.name === "Draco";
-  const lootItem = lootData?.[0];
-  const canShowLance = lootItem?.numUses === 0; // Hard code to only allow lance to be used once
+  const canShowLance = lootItem?.numUses === 1; // Hard code to only allow lance to be used once
+
+  console.log(lootItem);
 
   const { data: mintedCharacterData, refetch: refetchMintedCharacterData } =
     useQueryAllMintedCharacters();
@@ -245,7 +248,6 @@ export const FightScreen = () => {
               Use Lance
             </ButtonAttack>
           ) : null}
-          <Padding />
 
           {playerData?.abilities.map((ability, index) => {
             return (

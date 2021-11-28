@@ -35,12 +35,11 @@ const Container = styled(AbsoluteCenterFill)`
 `;
 
 export const LootScreen = () => {
-  const { data: lootData } = useQueryLootStats();
+  const { data: lootItem } = useQueryLootStats();
   const [gameData, setGameData] = useGameData();
   const { signer } = useWallet();
   const contracts = useContracts();
   const tokenId = gameData?.selectedTokenId;
-  const lootItem = lootData?.[0];
 
   const handleEndLooting = async () => {
     if (typeof tokenId === "number" && signer && contracts) {

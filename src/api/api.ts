@@ -291,18 +291,18 @@ export const getLootStats = async ({
   signer: JsonRpcSigner | undefined;
   characterTokenId: number;
   contracts: Contracts;
-}): Promise<null | Item[]> => {
+}): Promise<null | Item> => {
   if (!signer) {
     return null;
   }
   const playerNonce = await contracts.castleCampaignContract.playerNonce(
     characterTokenId
   );
-  const lootStats: Item[] =
+  const lootStats: Item =
     await contracts.castleCampaignContract.campaignInventory(
       characterTokenId,
       playerNonce,
-      characterTokenId
+      0
     );
   return lootStats;
 };
