@@ -1,7 +1,10 @@
-Turn based fantasy campaign game powered by Chainlink VRF and user imagination
+# About
 
-# Team
+![](./docs/choose-screen.png)
 
+Turn based fantasy campaign game powered by Chainlink VRF and user imagination. Uses zkSNARKs to validate that the user has completed the maze.
+
+Select your adventure and navigate through Draco the Dragon's dungeon, fighting minions and collecting loot controlled by a roll of his magical dice. Once you've acquired the special weapon you can open the door to his lair and, maybe, vanquish him once and for all!
 
 # To get it running
 
@@ -14,7 +17,7 @@ yarn web:start
 
 There's a number of other commands in the package.json which hopefully should be clear what they do from their names.
 
-# About the SNARKs
+# About the zkSNARKs
 
 **Warning! These circuits are not production ready!**
 
