@@ -249,13 +249,15 @@ export const FightScreen = () => {
 
           {playerData?.abilities.map((ability, index) => {
             return (
-              <ButtonAttack
-                onClick={() => handleAttackWithAbility(index)}
-                key={ability.name}
-                disabled={isRollingDice}
-              >
-                {ability.name}
-              </ButtonAttack>
+              <React.Fragment key={ability.name}>
+                <Padding />
+                <ButtonAttack
+                  onClick={() => handleAttackWithAbility(index)}
+                  disabled={isRollingDice}
+                >
+                  {ability.name}
+                </ButtonAttack>
+              </React.Fragment>
             );
           })}
         </ButtonsContainer>
