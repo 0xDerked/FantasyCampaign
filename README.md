@@ -4,7 +4,7 @@
 
 Turn-based fantasy campaign game powered by Chainlink VRF and user imagination, built for the [Fall 2021 Chainlink Hackathon](https://chain.link/hackathon) in far less time than we should have allowed for! Uses zkSNARKs to validate that the user has completed the maze.
 
-Select your adventure and navigate through Draco the Dragon's dungeon, fighting minions and collecting loot controlled the whims of Draco's magical (VRF) oracle! Once you've acquired the special weapon you can open the door to his lair and, maybe, vanquish him once and for all!
+Select your adventure and navigate through Draco the Dragon's dungeon, fighting minions and collecting loot controlled by the whims of Draco's magical (VRF) oracle! Once you've acquired the special weapon you can open the door to his lair and, maybe, vanquish him once and for all!
 
 You can find a recording of the game [here](./docs/movie.mp4) if you want to see what it's like in action without running it yourself.
 
@@ -76,7 +76,7 @@ Inevitable bugs from writing a game at breakneck speed in our spare time aside, 
 - Your wallet isn't set to use the right network (e.g localhost:8545 if ran locally).
 - Your wallet isn't using the local network.
 - The app stays on the oracle modal. It takes about 30 seconds for the event to be emitted that clears this modal but there's a chance something else went wrong. If it doesn't clear in 30 seconds reload the page.
-- If it _still_ doesn't clear it might be an out of gas error. Edit the localStorage `isRolingDice` to `false` and reload the page. If it happens very frequently, set the gas limit in MetaMask to a much higher value.
+- If it _still_ doesn't clear it might be an out of gas error. Edit the localStorage `isRolingDice` to `false` and reload the page. If it happens very frequently, set the gas limit in MetaMask to a much higher value. We could also explore setting the gas limits within the code as overrides in ethersjs to a value that won't run out. 
 
 If you experience any other issues, let us know!
 
