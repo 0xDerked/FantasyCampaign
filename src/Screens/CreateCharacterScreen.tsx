@@ -82,6 +82,7 @@ export const CreateCharacterScreen = () => {
   const contracts = useContracts();
   const { data: mintedCharacterData, refetch: refetchMintedCharacterData } =
     useQueryAllMintedCharacters();
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const allCharacters = useGetAvailableCharacters();
   const charactersWithLiveData = allCharacters.map(character => {
@@ -101,6 +102,7 @@ export const CreateCharacterScreen = () => {
 
   const handleCreateCharacter = async () => {
     try {
+      setIsLoading(true);
       await createCharacter({
         signer,
         characterId: selectedCharacterId,
@@ -110,13 +112,14 @@ export const CreateCharacterScreen = () => {
     } catch (e: any) {
       alert(`Error creating character: ${e.data?.message || e.message}`);
     } finally {
-      //
+      setIsLoading(false);
     }
   };
 
   const handleUseExistingCharacter = async () => {
     if (typeof selectedCharacterTokenId === "number") {
       try {
+        setIsLoading(true);
         await enterCampaign({
           signer,
           contracts,
@@ -129,6 +132,8 @@ export const CreateCharacterScreen = () => {
         });
       } catch (e: any) {
         alert(`Error starting campaign: ${e.data?.message || e.message}`);
+      } finally {
+        setIsLoading(false);
       }
     }
   };
@@ -157,14 +162,14 @@ export const CreateCharacterScreen = () => {
         </CharacterContainer>
         <CreateButtonContainer>
           {typeof selectedCharacterTokenId == "number" ? (
-            <ButtonLarge onClick={handleUseExistingCharacter}>
+            <ButtonLarge
+              onClick={handleUseExistingCharacter}
+              disabled={isLoading}
+            >
               Start/Resume Campaign
             </ButtonLarge>
           ) : (
-            <ButtonLarge
-              onClick={handleCreateCharacter}
-              disabled={!selectedCharacterId}
-            >
+            <ButtonLarge onClick={handleCreateCharacter} disabled={isLoading}>
               Create New Character
             </ButtonLarge>
           )}
