@@ -1,11 +1,9 @@
 import { rotate } from "./rotate";
 import { round } from "./round";
-import { GameData, Position, Routes } from "../types";
-import {
-  generateDoorCollisions,
-  generateSpawnCollisions,
-  generateWallCollisions,
-} from "./generateCollisionMaps";
+import { GameData, Position, GameModes } from "../types";
+import { generateDoorCollisions, wallsDict } from "./generateCollisionMaps";
+import { doorsCoords } from "../Maze/mapData";
+import { getCurrentPosition } from "../hooks/usePosition";
 
 export enum Keys {
   Forward = "w",
@@ -27,30 +25,16 @@ export const setRow = (pos: Position, delta: number) => ({
 });
 
 export const rotLeft = (gameData: GameData): GameData => {
-  if (gameData.route === Routes.Fight) {
-    return gameData;
-  }
-  const newPos = {
-    ...gameData.position,
-    dir: (gameData.position.dir + 3) % 4,
-  };
   return {
     ...gameData,
-    position: newPos,
+    direction: (gameData.direction + 3) % 4,
   };
 };
 
 export const rotRight = (gameData: GameData): GameData => {
-  if (gameData.route === Routes.Fight) {
-    return gameData;
-  }
-  const newPos = {
-    ...gameData.position,
-    dir: (gameData.position.dir + 1) % 4,
-  };
   return {
     ...gameData,
-    position: newPos,
+    direction: (gameData.direction + 1) % 4,
   };
 };
 
@@ -73,14 +57,13 @@ export const boundPosition = (
   const [x2w, y2w] = rotate(x2, y2, Cx, Cy, By);
 
   // Just check generally if there's a wall in the middle of tile and it's not open
-  const doorsDict = generateDoorCollisions(currentState.doors);
+  const doorsDict = generateDoorCollisions(doorsCoords);
   const door = doorsDict[`${round(x2)},${round(y2)}`];
-  if (typeof door !== "undefined" && door === false) {
+  if (typeof door !== "undefined" && !currentState.isGateOpen) {
     return currPosition;
   }
 
   // Make sure there's not a wall in the way
-  const wallsDict = generateWallCollisions(currentState.walls);
   if (wallsDict[`${round(x1w)},${round(y1w)},${round(x2w)},${round(y2w)}`]) {
     return currPosition;
   }
@@ -91,7 +74,7 @@ export const boundPosition = (
 };
 
 export const goForwards = (pos: Position, currentState: GameData): Position => {
-  const dir = pos.dir;
+  const dir = currentState.direction;
   if (dir === 0) {
     return boundPosition(pos, setRow(pos, -1), currentState);
   }
@@ -111,7 +94,7 @@ export const goBackwards = (
   pos: Position,
   currentState: GameData
 ): Position => {
-  const dir = pos.dir;
+  const dir = currentState.direction;
   if (dir === 0) {
     return boundPosition(pos, setRow(pos, 1), currentState);
   }
@@ -131,7 +114,7 @@ export const strafeRight = (
   pos: Position,
   currentState: GameData
 ): Position => {
-  const dir = pos.dir;
+  const dir = currentState.direction;
   if (dir === 0) {
     return boundPosition(pos, setCol(pos, 1), currentState);
   }
@@ -148,7 +131,7 @@ export const strafeRight = (
 };
 
 export const strafeLeft = (pos: Position, currentState: GameData): Position => {
-  const dir = pos.dir;
+  const dir = currentState.direction;
   if (dir === 0) {
     return boundPosition(pos, setCol(pos, -1), currentState);
   }
@@ -165,25 +148,34 @@ export const strafeLeft = (pos: Position, currentState: GameData): Position => {
 };
 
 type PosFunction = (position: Position, currentState: GameData) => Position;
-export const setPos = (fn: PosFunction) => (gameData: GameData) => {
-  if (gameData.route === Routes.Fight) {
+export const setPos = (posFunction: PosFunction) => (gameData: GameData) => {
+  const pos = getCurrentPosition(gameData.moves);
+  const newPos = posFunction(pos, gameData);
+  const newMoves = [...gameData.moves];
+  const lastPos = newMoves[newMoves.length - 1];
+
+  // Don't move if something is loading
+  if (gameData.isRollingDice) {
     return gameData;
   }
-  const newPosition = fn(gameData.position, gameData);
-  // Check if the new position runs over a spawn point
-  const spawnPointsDict = generateSpawnCollisions(gameData.spawnPoints);
-  const spawnPoint =
-    spawnPointsDict[`${round(newPosition.col)},${round(newPosition.row)}`];
-  if (typeof spawnPoint !== "undefined") {
-    return {
-      ...gameData,
-      route: Routes.Fight,
-      isFighting: true,
-      position: newPosition,
-    };
+  // Don't move if they are in combat mode
+  if (gameData.mode === GameModes.InCombat) {
+    return gameData;
   }
+
+  // Stop them going out of bounds
+  if (newPos.col < 0 || newPos.col > 6 || newPos.row < 0 || newPos.row > 6) {
+    return gameData;
+  }
+
+  // Add the new move to the list unless it's the same
+  if (newPos.col !== lastPos?.col || newPos.row !== lastPos?.row) {
+    newMoves.push(newPos);
+  }
+
+  // Otherwise just return the new positions
   return {
     ...gameData,
-    position: newPosition,
+    moves: newMoves,
   };
 };

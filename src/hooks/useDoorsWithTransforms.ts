@@ -1,14 +1,14 @@
 import { rotate } from "../utils/rotate";
 import { round } from "../utils/round";
-import { useGameData } from "./useGameData";
+import { doorsCoords } from "../Maze/mapData";
+import { usePosition } from "./usePosition";
 
 export const useDoorsWithTransforms = () => {
-  const [gameData] = useGameData();
-  const { row, col, dir } = gameData.position;
+  const { row, col, dir } = usePosition();
 
   const Rot = 90 * dir;
 
-  return gameData.doors.map(({ x1, x2, y1, y2, ...rest }) => {
+  return doorsCoords.map(({ x1, x2, y1, y2, ...rest }) => {
     // Since doors exist in the middle of tiles, a door in the next cell directly ahead
     const orow = row + 0.5;
     const ocol = col + 0.5;

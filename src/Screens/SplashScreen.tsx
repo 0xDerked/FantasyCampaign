@@ -1,26 +1,37 @@
 import * as React from "react";
 
-import { Routes } from "../types";
-import { Button } from "../components/Button";
-import { CenterFill } from "../components/Layout";
-import { useWallet } from "../hooks/useWallet";
+import { GameModes } from "../types";
+import { ButtonText } from "../components/Button";
 import { useGameData } from "../hooks/useGameData";
+import { AbsoluteCenterFill, AbsoluteFill } from "../components/Layout";
+import styled from "styled-components";
+
+import bgBattle from "../assets/scaled/battle_background.png";
+import { Image } from "../components/Image";
+
+const Background = styled(Image)`
+  position: absolute;
+  top: 0;
+  left: 0;
+`;
+
+const Title = styled.div``;
 
 export const SplashScreen = () => {
-  const { connectWallet } = useWallet();
   const [_, setGameData] = useGameData();
-  const connect = async () => {
-    try {
-      await connectWallet();
-      setGameData(gameData => ({ ...gameData, route: Routes.CreateCharacter }));
-    } catch (e: any) {
-      alert(`Something went wrong connecting wallet: ${e.message}`);
-    }
+  const connect = () => {
+    setGameData(gameData => ({
+      ...gameData,
+      mode: GameModes.SelectingCharacter,
+    }));
   };
   return (
-    <CenterFill>
-      <h1>Fantasy Campaign</h1>
-      <Button onClick={connect}>Connect Wallet</Button>
-    </CenterFill>
+    <AbsoluteFill>
+      <Background src={bgBattle} style={{ opacity: 0.3 }} />
+      <AbsoluteCenterFill>
+        <Title>Fantasy Campaign</Title>
+        <ButtonText onClick={connect}>~ Press Start ~</ButtonText>
+      </AbsoluteCenterFill>
+    </AbsoluteFill>
   );
 };

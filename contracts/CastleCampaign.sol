@@ -12,25 +12,36 @@ interface IMockVRF {
 	function requestRandomness(uint256 _num, string calldata _letters, bytes32 _requestId) external;
 }
 
+interface IVerifier {
+	 function verifyProof(
+            uint[2] memory a,
+            uint[2][2] memory b,
+            uint[2] memory c,
+            uint[2] memory input
+        ) external view returns (bool r);
+}
+
 contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignItems {
 
 	bytes32 public keyHash;
 	uint256 public fee;
 
 	mapping(bytes32 => uint256) private requestToTokenId;
+	mapping(bytes32 => bool) internal proofHashUsed;
 
+	IVerifier verifier;
 
 	IMockVRF mockVRF;
 
-	constructor(address _fantasyCharacters, address _mockVRF, address _attributesManager, uint256 _numTurns) VRFConsumerBase(
+	constructor(address _fantasyCharacters, address _mockVRF, address _attributesManager, uint256 _numTurns, address _verifier) VRFConsumerBase(
 		0x8C7382F9D8f56b33781fE506E897a4F1e2d17255, //vrfCoordinator
       0x326C977E6efc84E512bB9C30f76E30c160eD06FB //LINK token
 	) CampaignPlaymaster(_numTurns, _fantasyCharacters, _attributesManager) {
 		keyHash = 0x6e75b569a01ef56d18cab6a8e71e6600d6ce853834d4a5748b720d06f878b3a4; //oracle keyhash;
-      fee = 0.0001 * 10**18; //0.0001 LINK //link token fee; 
+      fee = 0.0001 * 10**18; //0.0001 LINK //link token fee;
 
 		mockVRF = IMockVRF(_mockVRF);
-
+		verifier = IVerifier(_verifier);
 		//set up some mobs
 		FantasyThings.Ability[] memory henchmanAbilities = new FantasyThings.Ability[](1);
 		henchmanAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Strength, 1,"Attack");
@@ -43,8 +54,6 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 
 		//push the items into the campaign
 		CampaignItems.push(iceLance);
-		CampaignItems.push(scrollOfProtection);
-		CampaignItems.push(scrollOfStrength);
 
 		//set up some guaranteed events with the mobs/puzzles/loot and turn types
 		//last turn will be a boss fight against the dragon
@@ -56,7 +65,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		//second to last turn we will find the dragonslayer ice lance
 		turnGuaranteedTypes[_numTurns - 1] = FantasyThings.TurnType.Loot;
 		uint256[] memory itemIdsForTurn = new uint256[](1);
-		itemIdsForTurn[0] = 0; 
+		itemIdsForTurn[0] = 0;
 		lootGuaranteedItemIds[_numTurns - 1] = itemIdsForTurn;
 	}
 
@@ -65,7 +74,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		require(playerTurn[_tokenId] == 0, "Campaign Previously Started");
 		FantasyThings.CharacterAttributes memory playerCopy = attributesManager.getPlayer(_tokenId);
 		FantasyThings.CampaignAttributes storage campaignPlayer = playerStatus[_tokenId][playerNonce[_tokenId]];
-		
+
 		//update the campaign attributes and character power
 
 		campaignPlayer.health = playerCopy.health;
@@ -101,11 +110,28 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		emit CampaignStarted(_tokenId);
 	}
 
+	function unlockFinalTurn(uint256 _tokenId, uint[2] memory a, uint[2][2] memory b, uint[2] memory c, uint[2] memory input)
+		external controlsCharacter(_tokenId) {
+			bytes32 proofHash = keccak256(abi.encodePacked(a,b,c,input));
+			require(!proofHashUsed[proofHash], "Stop Cheating");
+			proofHashUsed[proofHash] = true;
+			bool validProof = verifier.verifyProof(a,b,c,input);
+			uint256 currentTurn = playerTurn[_tokenId];
+			if(validProof && currentTurn == numberOfTurns) {
+				bossFightAvailable[_tokenId] = true;
+			}
+	}
+
 	function generateTurn(uint256 _tokenId) external override controlsCharacter(_tokenId) {
 		require(playerTurn[_tokenId] > 0, "Enter Campaign First");
 		require(!turnInProgress[_tokenId], "Turn in progress");
 
+		if(playerTurn[_tokenId] == numberOfTurns) {
+			require(bossFightAvailable[_tokenId], "Not avail");
+		}
+
 		turnInProgress[_tokenId] = true;
+		emit TurnStarted(_tokenId);
 
 		//generate the turn if it's not a guaranteed turn type
 		//start the turn for both guaranteed and generated turns
@@ -119,13 +145,13 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 			turnTypes[_tokenId][playerTurn[_tokenId]]  = turnGuaranteedTypes[playerTurn[_tokenId]];
 			if(turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.Combat) {
 				_setMobsForTurn(_tokenId, combatGuaranteedMobIds[playerTurn[_tokenId]], playerTurn[_tokenId]);
+				emit TurnSet(_tokenId);
 			} else if (turnGuaranteedTypes[playerTurn[_tokenId]] == FantasyThings.TurnType.Loot) {
 				_setItemsForTurn(_tokenId, lootGuaranteedItemIds[playerTurn[_tokenId]]);
+				emit TurnSet(_tokenId);
 			} else {
 				//set puzzle
 			}
-			emit TurnStarted(_tokenId);
-			emit TurnSet(_tokenId);
 		}
 	}
 
@@ -141,7 +167,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 
 		if(randomness % 100 < 101) {
 			//set up combat turn
-			uint256[] memory mobIdsForTurn = new uint256[](randomness%2+1);
+			uint256[] memory mobIdsForTurn = new uint256[](1);
 			for(uint256 i=0; i<mobIdsForTurn.length; i++) {
 				mobIdsForTurn[i] = 0; //we could randomly generate this from some sort of data model and spawn rate
 			}
@@ -154,9 +180,6 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 				//set up puzzle turn
 				turnTypes[tokenId][playerTurn[tokenId]] = FantasyThings.TurnType.Puzzle;
 			}
-		emit TurnStarted(tokenId);
 		emit TurnSet(tokenId);
 	}
-  
-
 }
