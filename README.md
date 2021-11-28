@@ -50,6 +50,8 @@ There's a number of other commands in the package.json which hopefully should be
 # Deployed Contracts
 
 - CastleCampaign [0xE24600C666ed8a277ec78915Da8a4A74fD7F86Bf](https://mumbai.polygonscan.com/address/0xE24600C666ed8a277ec78915Da8a4A74fD7F86Bf#code)
+- FantasyAttributesManager [0x2C9970A9BfC2A09B1de2B82026EfB924352Af76b](https://mumbai.polygonscan.com/address/0x2C9970A9BfC2A09B1de2B82026EfB924352Af76b#code)
+- FantasyCharacter [0x7aF62A3D82999628AD79Ba01Cc59Fd1C7189B262](https://mumbai.polygonscan.com/address/0x7aF62A3D82999628AD79Ba01Cc59Fd1C7189B262#code)
 
 # About the zkSNARKs
 
