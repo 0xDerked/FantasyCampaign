@@ -47,6 +47,10 @@ There's a number of other commands in the package.json which hopefully should be
 
 `]` - turn right
 
+# Deployed Contracts
+
+- CastleCampaign [0xE24600C666ed8a277ec78915Da8a4A74fD7F86Bf](https://mumbai.polygonscan.com/address/0xE24600C666ed8a277ec78915Da8a4A74fD7F86Bf#code)
+
 # About the zkSNARKs
 
 **Warning! There's a lot of stuff here that isn't good practice!**
