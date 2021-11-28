@@ -31,6 +31,20 @@ yarn web:start
 
 There's a number of other commands in the package.json which hopefully should be clear what they do from their names.
 
+# Controls
+
+`w` - forward
+
+`s` - backwards
+
+`a` - strafe left
+
+`d` - strafe left
+
+`[` - turn left
+
+`]` - turn right
+
 # About the zkSNARKs
 
 **Warning! These circuits are not production ready!**
