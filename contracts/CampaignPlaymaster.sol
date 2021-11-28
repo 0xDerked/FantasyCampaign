@@ -60,12 +60,7 @@ abstract contract CampaignPlaymaster {
 	event CombatSequence(uint256 indexed _tokenId, uint8 indexed _damageDone);
 
 	IERC721Metadata public fantasyCharacters;
-<<<<<<< HEAD
 	FantasyAttributesManager public attributesManager;
-=======
-	FantasyAttributesManager attributesManager;
-
->>>>>>> main
 
 	constructor(uint256 _numberOfTurns, address _fantasyCharacters, address _attributesManager) {
 		numberOfTurns = _numberOfTurns;
