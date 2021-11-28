@@ -60,10 +60,10 @@ export const createCharacter = async ({
   if (!signer) {
     return null;
   }
-  const transaction = await contracts.fantasyCharacterContract.createCharacter(
+  const tx = await contracts.fantasyCharacterContract.createCharacter(
     characterId
   );
-  await transaction.wait();
+  await tx.wait();
 };
 export const CREATE_CHARACTER_CACHE_KEY = "createCharacter";
 
@@ -87,7 +87,10 @@ export const enterCampaign = async ({
   );
   const turnNumber = turn.toNumber();
   if (turnNumber === 0) {
-    await contracts.castleCampaignContract.enterCampaign(characterTokenId);
+    const tx = await contracts.castleCampaignContract.enterCampaign(
+      characterTokenId
+    );
+    await tx.wait();
   }
 };
 export const ENTER_CAMPAIGN_CACHE_KEY = "enterCampaign";
@@ -106,7 +109,10 @@ export const generateTurn = async ({
   if (!signer) {
     return null;
   }
-  return await contracts.castleCampaignContract.generateTurn(characterTokenId);
+  const tx = await contracts.castleCampaignContract.generateTurn(
+    characterTokenId
+  );
+  await tx.wait();
 };
 export const GENERATE_TURN_CACHE_KEY = "generateTurn";
 
@@ -151,10 +157,11 @@ export const unlockFinalTurn = async ({
     return null;
   }
   const args = buildContractCallArgs(proof, publicSignals);
-  await contracts.castleCampaignContract.unlockFinalTurn(
+  const tx = await contracts.castleCampaignContract.unlockFinalTurn(
     characterTokenId,
     ...args
   );
+  await tx.wait();
 };
 export const UNLOCK_FINAL_TURN_CACHE_KEY = "unlockFinalTurn";
 
