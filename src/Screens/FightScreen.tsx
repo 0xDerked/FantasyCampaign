@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import { Image } from "../components/Image";
 import { ButtonAttack } from "../components/Button";
-import { attackWithAbility, getTurnData } from "../api/api";
+import { attackWithAbility, attackWithItem, getTurnData } from "../api/api";
 import { useWallet } from "../hooks/useWallet";
 import { useContracts } from "../hooks/useContracts";
 import { useQueryMobStats } from "../api/useQueryMobStats";
@@ -60,7 +60,11 @@ const Dragon = styled(Image).attrs(() => ({
   right: 2px;
 `;
 
-const ButtonsContainer = styled.div``;
+const ButtonsContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
 
 const MobStatContainer = styled.div`
   position: absolute;
@@ -106,12 +110,19 @@ const Divider = styled.div`
   align-self: stretch;
 `;
 
+const Padding = styled.div`
+  width: 1px;
+  margin-left: 2px;
+  margin-right: 2px;
+  align-self: stretch;
+`;
+
 export const FightScreen = () => {
   const { data: playerData } = useQueryPlayerStats();
   const { signer } = useWallet();
   const contracts = useContracts();
   const [gameData, setGameData] = useGameData();
-  const { selectedTokenId, isRollingDice, isLanceUsed } = gameData;
+  const { selectedTokenId, isRollingDice, hasUsedLance } = gameData;
   const { data: mobStats } = useQueryMobStats();
   const message = gameData?.message;
   const tokenId = gameData?.selectedTokenId;
@@ -139,7 +150,7 @@ export const FightScreen = () => {
     };
   }, [gameData, message, setGameData]);
 
-  const handleAttack = async (abilityIndex: number) => {
+  const handleAttackWithAbility = async (abilityIndex: number) => {
     if (typeof tokenId === "number" && signer && contracts) {
       try {
         const turnType = await getTurnData({
@@ -155,7 +166,6 @@ export const FightScreen = () => {
         } else {
           setGameData({
             ...gameData,
-            message: "You attack!",
             isRollingDice: true,
           });
           await attackWithAbility({
@@ -168,6 +178,43 @@ export const FightScreen = () => {
         }
       } catch (e: any) {
         alert(`Something went wrong attacking ${e.data?.message || e.message}`);
+      }
+    }
+  };
+
+  const handleAttackWithItem = async (itemIndex: number) => {
+    if (typeof tokenId === "number" && signer && contracts) {
+      try {
+        const turnType = await getTurnData({
+          signer,
+          contracts,
+          characterTokenId: tokenId,
+        });
+        if (turnType === 0) {
+          setGameData({
+            ...gameData,
+            mode: GameModes.ExploringMaze,
+          });
+        } else {
+          setGameData({
+            ...gameData,
+            isRollingDice: true,
+          });
+          await attackWithItem({
+            itemIndex: itemIndex,
+            characterTokenId: tokenId,
+            contracts,
+            signer,
+            target: 0, // Only one mob member currently
+          });
+        }
+      } catch (e: any) {
+        alert(`Something went wrong attacking ${e.data?.message || e.message}`);
+      } finally {
+        setGameData({
+          ...gameData,
+          hasUsedLance: true,
+        });
       }
     }
   };
@@ -189,10 +236,20 @@ export const FightScreen = () => {
       <PlayerStat>
         <div>Health&ensp;{playerData?.health}</div>
         <ButtonsContainer>
+          {hasUsedLance ? null : (
+            <ButtonAttack
+              onClick={() => handleAttackWithItem(0)} // Hard-coded to Lance for now
+              disabled={isRollingDice}
+            >
+              Use Lance
+            </ButtonAttack>
+          )}
+          <Padding />
+
           {playerData?.abilities.map((ability, index) => {
             return (
               <ButtonAttack
-                onClick={() => handleAttack(index)}
+                onClick={() => handleAttackWithAbility(index)}
                 key={ability.name}
                 disabled={isRollingDice}
               >
