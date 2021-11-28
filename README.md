@@ -8,6 +8,16 @@ Select your adventure and navigate through Draco the Dragon's dungeon, fighting 
 
 You can find a recording of the game [here](./docs/movie.mp4) if you want to see what it's like in action without running it yourself.
 
+# How it works
+
+First the user selects and mints a new character (as an NFT), then starts the campaign.
+
+As the user progresses through the maze they will eventually hit a spawn point. The frontend then call the smart contract to ask for new (random) turn. The contract then requests a random value from the oracle (this is shown as the "Dracon consults its oracle modal")  which itself then calls the contract after a period of time, at which point the contract emits a turn event. The frontend code responds to that event and checks what type of screen to display to the user - battle or loot.
+
+In battle mode, for each turn the user requests a random result from the contract which determines the damage to them and their enemy. Once the enemy has been defeated, the user returns to navigating a maze.
+
+If the user has acquired the magic weapon, once they get to the door the frontend checks (using a zkSNARK verifier) that they have indeed got to that point without teleporting or working through walls. If it's valid, the door to Draco's lair is opened. As the user passes through the door, the ZKP is verified in the smart contract and if that's ok they can finally battle Draco.
+
 # To get it running
 
 ```
