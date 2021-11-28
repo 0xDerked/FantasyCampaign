@@ -1,5 +1,5 @@
 import * as React from "react";
-import { GameDataContext } from "../providers/GameData";
+import { GameDataContext } from "../providers/GameDataProvider";
 
 export const useGameData = () => {
   const context = React.useContext(GameDataContext);

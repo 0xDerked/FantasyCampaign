@@ -17,6 +17,15 @@ interface IVerifier {
         ) external view returns (bool r);
 }
 
+interface IVerifier {
+	 function verifyProof(
+            uint[2] memory a,
+            uint[2][2] memory b,
+            uint[2] memory c,
+            uint[2] memory input
+        ) external view returns (bool r);
+}
+
 contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignItems {
 
 	bytes32 public keyHash;
@@ -29,11 +38,12 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 
 	constructor(address _fantasyCharacters, address _attributesManager, uint256 _numTurns, address _verifier) VRFConsumerBase(
 		0x8C7382F9D8f56b33781fE506E897a4F1e2d17255, //vrfCoordinator
-      0x326C977E6efc84E512bB9C30f76E30c160eD06FB //LINK token
+		0x326C977E6efc84E512bB9C30f76E30c160eD06FB //LINK token
 	) CampaignPlaymaster(_numTurns, _fantasyCharacters, _attributesManager) {
 		keyHash = 0x6e75b569a01ef56d18cab6a8e71e6600d6ce853834d4a5748b720d06f878b3a4; //oracle keyhash;
-      fee = 0.0001 * 10**18; //0.0001 LINK //link token fee; 
+		fee = 0.0001 * 10**18; //0.0001 LINK //link token fee;
 
+		verifier = IVerifier(_verifier);
 		//set up some mobs
 		FantasyThings.Ability[] memory henchmanAbilities = new FantasyThings.Ability[](1);
 		henchmanAbilities[0] = FantasyThings.Ability(FantasyThings.AbilityType.Strength, 1,"Attack");
@@ -57,13 +67,13 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		//second to last turn we will find the dragonslayer ice lance
 		turnGuaranteedTypes[_numTurns - 1] = FantasyThings.TurnType.Loot;
 		uint256[] memory itemIdsForTurn = new uint256[](1);
-		itemIdsForTurn[0] = 0; 
+		itemIdsForTurn[0] = 0;
 		lootGuaranteedItemIds[_numTurns - 1] = itemIdsForTurn;
 
 		verifier = IVerifier(_verifier);
 	}
 
-	function unlockFinalTurn(uint256 _tokenId, uint[2] memory a, uint[2][2] memory b, uint[2] memory c, uint[2] memory input) 
+	function unlockFinalTurn(uint256 _tokenId, uint[2] memory a, uint[2][2] memory b, uint[2] memory c, uint[2] memory input)
 		external controlsCharacter(_tokenId) {
 			bytes32 proofHash = keccak256(abi.encodePacked(a,b,c,input));
 			require(!proofHashUsed[proofHash], "Stop Cheating");
@@ -80,7 +90,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		require(playerTurn[_tokenId] == 0, "Campaign Previously Started");
 		FantasyThings.CharacterAttributes memory playerCopy = attributesManager.getPlayer(_tokenId);
 		FantasyThings.CampaignAttributes storage campaignPlayer = playerStatus[_tokenId][playerNonce[_tokenId]];
-		
+
 		//update the campaign attributes and character power
 
 		campaignPlayer.health = playerCopy.health;
@@ -116,11 +126,28 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 		emit CampaignStarted(_tokenId);
 	}
 
+	function unlockFinalTurn(uint256 _tokenId, uint[2] memory a, uint[2][2] memory b, uint[2] memory c, uint[2] memory input)
+		external controlsCharacter(_tokenId) {
+			bytes32 proofHash = keccak256(abi.encodePacked(a,b,c,input));
+			require(!proofHashUsed[proofHash], "Stop Cheating");
+			proofHashUsed[proofHash] = true;
+			bool validProof = verifier.verifyProof(a,b,c,input);
+			uint256 currentTurn = playerTurn[_tokenId];
+			if(validProof && currentTurn == numberOfTurns) {
+				bossFightAvailable[_tokenId] = true;
+			}
+	}
+
 	function generateTurn(uint256 _tokenId) external override controlsCharacter(_tokenId) {
 		require(playerTurn[_tokenId] > 0, "Enter Campaign First");
 		require(!turnInProgress[_tokenId], "Turn in progress");
 
+		if(playerTurn[_tokenId] == numberOfTurns) {
+			require(bossFightAvailable[_tokenId], "Not avail");
+		}
+
 		turnInProgress[_tokenId] = true;
+		emit TurnStarted(_tokenId);
 
 		if(playerTurn[_tokenId] == numberOfTurns) {
 			require(bossFightAvailable[_tokenId], "Not at the end of the maze!");
@@ -143,7 +170,10 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 				//puzzle
 				//emit TurnSet(_tokenId);
 			}
+<<<<<<< HEAD
 			emit TurnStarted(_tokenId);
+=======
+>>>>>>> main
 		}
 	}
 
@@ -153,7 +183,7 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 
 		/*
 			The Chainlink VRF callback concept is such:
-			- Take the randomness provided and generate a turn based on predetermined probabilities 
+			- Take the randomness provided and generate a turn based on predetermined probabilities
 			- Within the turn time, use the randomnes to determine the number of mobs, what item to drop, what puzzle to render, etc.
 			- Use the randomness as a seed for that turn's combat randomness -- dodge, block, etc.
 			- A lot the turn generation is "rigged" at the moment for the proof of concept/UI development
@@ -176,5 +206,9 @@ contract CastleCampaign is VRFConsumerBase, CampaignPlaymaster, CastleCampaignIt
 			}
 		emit TurnSet(tokenId);
 	}
-  
+<<<<<<< HEAD
+
 }
+=======
+}
+>>>>>>> main

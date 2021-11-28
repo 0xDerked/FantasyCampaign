@@ -12,9 +12,10 @@ abstract contract CampaignPlaymaster {
 	//tokenId -> Turn Number
 	mapping(uint256 => uint256) public playerTurn;
 	//tokenId -> Nonce (# of times player has played campaign)
-	mapping(uint256 => uint256) public playerNonce; 
+	mapping(uint256 => uint256) public playerNonce;
 	mapping(uint256 => uint256) internal currentRandomSeed;
 	mapping(uint256 => uint16) public baseHealth;
+	mapping(uint256 => bool) public bossFightAvailable;
 
 	//tokenId -> bool
 	mapping(uint256=>bool) public bossFightAvailable;
@@ -23,7 +24,7 @@ abstract contract CampaignPlaymaster {
 	mapping(uint256 => mapping(uint256 => FantasyThings.CampaignAttributes)) public playerStatus;
 	//tokenId -> Ability Type -> Current Power (do not need a nonce as this is overwritten at enter campaign)
 	mapping(uint256 => mapping(FantasyThings.AbilityType => uint8)) public characterPower;
-	
+
 	//tokenId -> turnType (no nonce, overwritten)
 	mapping(uint256 => FantasyThings.TurnType) public turnGuaranteedTypes;
 
@@ -59,7 +60,12 @@ abstract contract CampaignPlaymaster {
 	event CombatSequence(uint256 indexed _tokenId, uint8 indexed _damageDone);
 
 	IERC721Metadata public fantasyCharacters;
+<<<<<<< HEAD
 	FantasyAttributesManager public attributesManager;
+=======
+	FantasyAttributesManager attributesManager;
+
+>>>>>>> main
 
 	constructor(uint256 _numberOfTurns, address _fantasyCharacters, address _attributesManager) {
 		numberOfTurns = _numberOfTurns;
@@ -100,7 +106,7 @@ abstract contract CampaignPlaymaster {
 	function getCurrentCampaignStats(uint256 _tokenId) external view returns(FantasyThings.CampaignAttributes memory) {
 		return playerStatus[_tokenId][playerNonce[_tokenId]];
 	}
-	
+
 	function _setMob(uint16 _health, uint8[8] memory _stats, string memory _name, FantasyThings.Ability[] memory _abilities, uint256 _mobId) internal {
 		FantasyThings.Mob storage mob = mobAttributes[_mobId];
 		mob.strength = _stats[0];
@@ -125,18 +131,18 @@ abstract contract CampaignPlaymaster {
 		}
 		turnNumMobsAlive[_tokenId][playerTurn[_tokenId]] = _mobIds.length;
 	}
-	 
+
 	function _setItemsForTurn(uint256 _tokenId, uint256[] memory _itemIds) internal {
 		for(uint256 i=0; i< _itemIds.length; i++) {
 			campaignInventory[_tokenId][playerNonce[_tokenId]].push(CampaignItems[_itemIds[i]]);
 		}
 	}
-	
+
 	 //This is a default configuration of attack with ability, can be overwritten if want to incorporate some other mechanics
 	 function attackWithAbility (
-		uint256 _tokenId, uint256 _abilityIndex, uint256 _target) 
+		uint256 _tokenId, uint256 _abilityIndex, uint256 _target)
 		external virtual controlsCharacter(_tokenId) isCombatTurn(_tokenId) turnActive(_tokenId) {
-		
+
 		uint256 currentNonce = playerNonce[_tokenId];
 		uint256 currentTurn = playerTurn[_tokenId];
 
@@ -160,20 +166,20 @@ abstract contract CampaignPlaymaster {
 	}
 
 	function attackWithItem(
-		uint256 _tokenId, uint256 _itemId, uint256 _target) 
+		uint256 _tokenId, uint256 _itemId, uint256 _target)
 		external virtual controlsCharacter(_tokenId) isCombatTurn(_tokenId) turnActive(_tokenId) {
-		  	
+
 	  uint256 currentNonce = playerNonce[_tokenId];
 	  uint256 currentTurn = playerTurn[_tokenId];
 	  FantasyThings.Item memory attackItem = campaignInventory[_tokenId][currentNonce][_itemId];
 	  require(attackItem.item == FantasyThings.ItemType.Weapon, "Can't attack with this Item");
 	  require(attackItem.numUses > 0, "This item is expired");
 	  require(combatTurnToMobs[_tokenId][currentNonce][currentTurn][_target].health > 0, "Can't attack a dead mob");
-	  
+
 	  uint8 damageBase = attackItem.power;
 	  uint16 targetHealthStart = combatTurnToMobs[_tokenId][currentNonce][currentTurn][_target].health;
 	  uint8 damageTotal = _getDamageTotal(_tokenId, attackItem.attr, _target, damageBase);
-	  
+
 	  campaignInventory[_tokenId][playerNonce[_tokenId]][_itemId].numUses--;
 
 	  if(damageTotal >= targetHealthStart) {
@@ -197,9 +203,9 @@ abstract contract CampaignPlaymaster {
 		characterPower[_tokenId][applyItem.attr] + applyItem.power > 255 ? characterPower[_tokenId][applyItem.attr] = 255 : characterPower[_tokenId][applyItem.attr]+=applyItem.power;
 	}
 
-	function castHealAbility(uint256 _tokenId, uint256 _abilityIndex) 
+	function castHealAbility(uint256 _tokenId, uint256 _abilityIndex)
 		external virtual controlsCharacter(_tokenId) isCombatTurn(_tokenId) turnActive(_tokenId) {
-		
+
 		FantasyThings.Ability memory userAbility = attributesManager.getPlayerAbility(_tokenId, _abilityIndex);
 		require(userAbility.action == 2, "Cannot heal with this ability!");
 
@@ -208,7 +214,7 @@ abstract contract CampaignPlaymaster {
 		uint8 healingPower = characterPower[_tokenId][userAbility.abilityType];
 		uint16 currentHealth = playerStatus[_tokenId][currentNonce].health;
 
-		uint16(healingPower) + currentHealth >= baseHealth[_tokenId] ? playerStatus[_tokenId][currentNonce].health = baseHealth[_tokenId] : 
+		uint16(healingPower) + currentHealth >= baseHealth[_tokenId] ? playerStatus[_tokenId][currentNonce].health = baseHealth[_tokenId] :
 			playerStatus[_tokenId][currentNonce].health+=uint16(healingPower);
 
 		uint256 index;
@@ -244,7 +250,7 @@ abstract contract CampaignPlaymaster {
 	}
 
 	function _endTurn(uint256 _tokenId, uint256 _currentNonce) internal {
-		
+
 		turnInProgress[_tokenId] = false;
 		playerTurn[_tokenId]++;
 
@@ -255,7 +261,7 @@ abstract contract CampaignPlaymaster {
 			emit TurnCompleted(_tokenId);
 		}
 	}
-	
+
 	function _getDamageTotal(uint256 _tokenId, FantasyThings.AbilityType _attackType, uint256 _target, uint8 _damageBase) internal view returns(uint8) {
 
 		uint256 currentNonce = playerNonce[_tokenId];
@@ -332,7 +338,7 @@ abstract contract CampaignPlaymaster {
 		   baseDamage = combatTurnToMobs[_tokenId][currentNonce][currentTurn][_mobIndex].spellpower;
 			totalDamage = _getDamageToPlayerSpell(_tokenId, baseDamage);
 		}
-		
+
 		totalDamage >= playerStatus[_tokenId][currentNonce].health ? playerStatus[_tokenId][currentNonce].health = 0 : playerStatus[_tokenId][currentNonce].health -= totalDamage;
      }
 

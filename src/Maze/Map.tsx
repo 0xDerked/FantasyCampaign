@@ -2,16 +2,16 @@ import * as React from "react";
 import { ReactElement } from "react";
 import styled from "styled-components";
 import { rotate } from "../utils/rotate";
-import { spawnPointCoords } from "./mapData";
+import { doorsCoords, MAZE_WIDTH, wallCoords } from "./mapData";
 import { useGameData } from "../hooks/useGameData";
+import { usePosition } from "../hooks/usePosition";
+import { DEBUG_MODE } from "../constants";
 
-const CELL_PX = 7;
-
-const PADDING = 2;
+const CELL_PX = 5;
 
 const Container = styled.div`
-  height: ${CELL_PX * 5}px;
-  width: ${CELL_PX * 5}px;
+  height: ${CELL_PX * MAZE_WIDTH}px;
+  width: ${CELL_PX * MAZE_WIDTH}px;
   position: absolute;
   top: 2px;
   right: 2px;
@@ -49,12 +49,14 @@ const SpawnDot = styled.div`
 
 export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
   const [gameData] = useGameData();
-  const { row, col, dir } = gameData.position;
+  const { isGateOpen, moves, spawnPoints } = gameData;
+  const position = usePosition();
+  const { row, col, dir } = position;
   const By = rotateMap ? 90 * dir : 0;
   const Cx = col;
   const Cy = row;
   const OFFSET = rotateMap ? 2 : 0;
-  const rotatedWallCoords = gameData.walls.map(({ x1, x2, y1, y2, type }) => {
+  const rotatedWallCoords = wallCoords.map(({ x1, x2, y1, y2, type }) => {
     const [x1p, y1p] = rotate(x1, y1, Cx, Cy, By);
     const [x2p, y2p] = rotate(x2, y2, Cx, Cy, By);
     return {
@@ -65,7 +67,8 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
       type,
     };
   });
-  const rotatedDoorCoords = gameData.doors.map(({ x1, x2, y1, y2, open }) => {
+
+  const rotatedDoorCoords = doorsCoords.map(({ x1, x2, y1, y2 }) => {
     const [x1p, y1p] = rotate(x1, y1, Cx, Cy, By);
     const [x2p, y2p] = rotate(x2, y2, Cx, Cy, By);
     return {
@@ -73,13 +76,12 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
       y1: y1p - (rotateMap ? row : 0),
       x2: x2p - (rotateMap ? col : 0),
       y2: y2p - (rotateMap ? row : 0),
-      open,
     };
   });
   return (
     <Container>
       <svg
-        viewBox={`0 0 ${5 * CELL_PX} ${5 * CELL_PX}`}
+        viewBox={`0 0 ${MAZE_WIDTH * CELL_PX} ${MAZE_WIDTH * CELL_PX}`}
         xmlns="http://www.w3.org/2000/svg"
       >
         {rotatedWallCoords.map(({ x1, y1, x2, y2 }, i) => (
@@ -94,14 +96,14 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
             strokeLinecap={"square"}
           />
         ))}
-        {rotatedDoorCoords.map(({ x1, y1, x2, y2, open }, i) => (
+        {rotatedDoorCoords.map(({ x1, y1, x2, y2 }, i) => (
           <line
             key={JSON.stringify({ x1, y1, x2, y2, i })}
             x1={(x1 + OFFSET) * CELL_PX}
             y1={(y1 + OFFSET) * CELL_PX}
             x2={(x2 + OFFSET) * CELL_PX}
             y2={(y2 + OFFSET) * CELL_PX}
-            stroke={open ? "black" : "#7E7E7E"}
+            stroke={isGateOpen ? "black" : "#7E7E7E"}
             strokeWidth={1}
             strokeLinecap={"square"}
           />
@@ -116,17 +118,32 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
       >
         ️️️️↑
       </Avatar>
-      {spawnPointCoords.map(({ x, y }) => (
-        <SpawnPoint
-          key={JSON.stringify({ x, y })}
-          style={{
-            left: x * CELL_PX,
-            top: y * CELL_PX,
-          }}
-        >
-          <SpawnDot />
-        </SpawnPoint>
-      ))}
+      {spawnPoints
+        .filter(({ isUsed }) => !isUsed)
+        .map(({ x, y }) => (
+          <SpawnPoint
+            key={JSON.stringify({ x, y })}
+            style={{
+              left: x * CELL_PX,
+              top: y * CELL_PX,
+            }}
+          >
+            <SpawnDot />
+          </SpawnPoint>
+        ))}
+      {DEBUG_MODE
+        ? moves.map(({ row, col }, index) => (
+            <Avatar
+              key={index}
+              style={{
+                left: rotateMap ? OFFSET * CELL_PX : col * CELL_PX,
+                top: rotateMap ? OFFSET * CELL_PX : row * CELL_PX,
+              }}
+            >
+              ️️️️.
+            </Avatar>
+          ))
+        : null}
     </Container>
   );
 };

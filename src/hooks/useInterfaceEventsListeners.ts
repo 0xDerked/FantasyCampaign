@@ -10,9 +10,11 @@ import {
   strafeRight,
 } from "../utils/positionHelpers";
 import { useGameData } from "./useGameData";
+import { usePosition } from "./usePosition";
 
 export const useInterfaceEventsListeners = () => {
   const [gameData, setGameData] = useGameData();
+  const position = usePosition();
 
   const handleKeyDown = ({ key }: KeyboardEvent) => {
     switch (key) {
@@ -50,7 +52,13 @@ export const useInterfaceEventsListeners = () => {
       // Remove event listeners on cleanup
       window.removeEventListener("keydown", handleKeyDown);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return gameData.position;
+  return position;
+};
+
+export const UserInterfaceListeners = () => {
+  useInterfaceEventsListeners();
+  return null;
 };

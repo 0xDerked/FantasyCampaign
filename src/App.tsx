@@ -1,22 +1,15 @@
 import * as React from "react";
 import styled from "styled-components";
-import { ViewPort } from "./Maze/ViewPort";
-import { Map } from "./Maze/Map";
-
-import {
-  UNSCALED_VIEWPORT_HEIGHT,
-  UNSCALED_VIEWPORT_WIDTH,
-} from "./Maze/constants";
-import { useInterfaceEventsListeners } from "./hooks/useInterfaceEventsListeners";
-import { CreateCharacter } from "./Screens/CreateCharacter";
-import { WalletProvider } from "./providers/WalletProvider";
-import { SplashScreen } from "./Screens/SplashScreen";
-import { scale } from "./utils/scale";
-import { Routes } from "./types";
-import { StartCampaign } from "./Screens/StartCampaign";
-import { Fight } from "./Screens/Fight";
+import { UserInterfaceListeners } from "./hooks/useInterfaceEventsListeners";
 import { useGameData } from "./hooks/useGameData";
-import { GameDataProvider, initialGameData } from "./providers/GameData";
+import {
+  GameDataProvider,
+  initialGameData,
+} from "./providers/GameDataProvider";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { Router } from "./routes/Router";
+
+export const queryClient = new QueryClient();
 
 const GameScreenContainer = styled.div`
   display: flex;
@@ -26,7 +19,7 @@ const GameScreenContainer = styled.div`
   justify-content: center;
   position: relative;
   overflow: hidden;
-  transform: scale(3);
+  transform: scale(4);
   user-select: none;
 `;
 
@@ -40,41 +33,9 @@ const ClearStorageButton = styled.button`
   font-family: inherit;
   border: none;
   outline: none;
+  cursor: pointer;
+  opacity: 0;
 `;
-
-const Router = () => {
-  const [gameData] = useGameData();
-  switch (gameData.route) {
-    case Routes.Splash:
-      return <SplashScreen />;
-    case Routes.CreateCharacter:
-      return <CreateCharacter />;
-    case Routes.StartCampaign:
-      return <StartCampaign />;
-    case Routes.Fight:
-      return <Fight />;
-    case Routes.Maze:
-    default:
-      return (
-        <>
-          <ViewPort />
-          <Map rotateMap={false} />
-        </>
-      );
-  }
-};
-
-const ViewPortContainer = styled.div`
-  position: relative;
-  height: ${scale(UNSCALED_VIEWPORT_HEIGHT)}px;
-  width: ${scale(UNSCALED_VIEWPORT_WIDTH)}px;
-`;
-
-const Listeners = () => {
-  // useContractListeners();
-  useInterfaceEventsListeners();
-  return <div />;
-};
 
 const ClearStorage = () => {
   const [, setGameData] = useGameData();
@@ -92,15 +53,13 @@ const ClearStorage = () => {
 function App() {
   return (
     <GameDataProvider>
-      <WalletProvider>
-        <Listeners />
+      <QueryClientProvider client={queryClient}>
+        <UserInterfaceListeners />
         <GameScreenContainer>
-          <ViewPortContainer>
-            <Router />
-          </ViewPortContainer>
+          <Router />
         </GameScreenContainer>
         <ClearStorage />
-      </WalletProvider>
+      </QueryClientProvider>
     </GameDataProvider>
   );
 }

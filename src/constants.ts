@@ -1,69 +1,140 @@
-import { CharacterClass } from "./types";
+import { CharacterAttributes, CharacterClass } from "./types";
+import barbarianFront from "./assets/scaled/barbarian_select.png";
+import barbarianBack from "./assets/scaled/barbarian_back.png";
+import shamanFront from "./assets/scaled/shaman_front.png";
+import shamanBack from "./assets/scaled/shaman_back.png";
+import wizardFront from "./assets/scaled/wizard_front.png";
+import wizardBack from "./assets/scaled/wizard_back.png";
+import rangerFront from "./assets/scaled/ranger_front.png";
+import rangerBack from "./assets/scaled/ranger_back.png";
 
-export type CharacterAttributes = {
-  id: number;
-  name: string;
-  health: number;
-  strength: number;
-  armor: number;
-  block: number;
-  agility: number;
-  spellPower: number;
-  spellResistance: number;
-  healingPower: number;
-};
+export const X_FINAL = 5;
+export const Y_FINAL = 5;
 
-export type CharacterStats = Record<number, CharacterAttributes | null>;
+export const DEBUG_MODE = false;
 
-const mapStatsToDict = ([
-  id,
-  name,
-  health,
-  strength,
-  armor,
-  block,
-  agility,
-  spellPower,
-  spellResistance,
-  healingPower,
-]: [
-  number,
-  string,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number,
-  number
-]) => {
-  return {
-    id,
-    name,
-    health,
-    strength,
-    armor,
-    block,
-    agility,
-    spellPower,
-    spellResistance,
-    healingPower,
-  };
-};
-
-export const characterStats: CharacterStats = {
-  // eslint-disable-next-line prettier/prettier
-  [CharacterClass.Warlord]: mapStatsToDict([CharacterClass.Warlord, "Warlord", 100, 30, 20, 20, 20, 0, 5, 0 ]),
-  // eslint-disable-next-line prettier/prettier
-  [CharacterClass.Knight]: mapStatsToDict([CharacterClass.Knight, "Knight", 100, 20, 30, 25, 15, 0, 5, 0, ]),
-  // eslint-disable-next-line prettier/prettier
-  [CharacterClass.Wizard]: mapStatsToDict([CharacterClass.Wizard, "Wizard", 90, 5, 10, 5, 5, 30, 20, 0, ]),
-  // eslint-disable-next-line prettier/prettier
-  [CharacterClass.Shaman]: mapStatsToDict([CharacterClass.Shaman, "Shaman", 110, 10, 15, 10, 10, 20, 15, 10, ]),
+export const characterStats: Record<number, CharacterAttributes | null> = {
+  [CharacterClass.Warlord]: {
+    // abilities: [[0, 1, "Strike"]],
+    id: CharacterClass.Warlord,
+    name: "Warlord",
+    experience: 0,
+    health: 100,
+    strength: 30,
+    armor: 20,
+    physicalblock: 20,
+    agility: 20,
+    spellpower: 0,
+    spellresistance: 5,
+    healingpower: 0,
+    abilities: [
+      {
+        abilityType: 0,
+        action: 1,
+        name: "Strike",
+      },
+    ],
+  },
+  [CharacterClass.Knight]: null,
+  [CharacterClass.Wizard]: {
+    // abilities: [[0, 1, "Strike"]],
+    id: CharacterClass.Wizard,
+    name: "Wizard",
+    experience: 0,
+    health: 90,
+    strength: 5,
+    armor: 10,
+    physicalblock: 5,
+    agility: 5,
+    spellpower: 30,
+    spellresistance: 20,
+    healingpower: 0,
+    abilities: [
+      {
+        abilityType: 4,
+        action: 1,
+        name: "Fireball",
+      },
+    ],
+  },
+  [CharacterClass.Shaman]: {
+    id: CharacterClass.Shaman,
+    name: "Shaman",
+    experience: 0,
+    health: 110,
+    strength: 10,
+    armor: 15,
+    physicalblock: 10,
+    agility: 10,
+    spellpower: 20,
+    spellresistance: 15,
+    healingpower: 10,
+    abilities: [
+      {
+        abilityType: 4,
+        action: 1,
+        name: "Lightning Bolt",
+      },
+      {
+        abilityType: 6,
+        action: 2,
+        name: "Nature Heal",
+      },
+    ],
+  },
   [CharacterClass.Cleric]: null,
   [CharacterClass.Rogue]: null,
-  // eslint-disable-next-line prettier/prettier
-  [CharacterClass.Ranger]: mapStatsToDict([ CharacterClass.Ranger, "Ranger", 100, 10, 15, 10, 35, 0, 5, 0, ]),
+  [CharacterClass.Ranger]: {
+    // abilities: [[0, 1, "Strike"]],
+    id: CharacterClass.Ranger,
+    name: "Ranger",
+    experience: 0,
+    health: 100,
+    strength: 10,
+    armor: 15,
+    physicalblock: 10,
+    agility: 35,
+    spellpower: 0,
+    spellresistance: 5,
+    healingpower: 0,
+    abilities: [
+      {
+        abilityType: 3,
+        action: 1,
+        name: "Fire Bow",
+      },
+    ],
+  },
   [CharacterClass.Warlock]: null,
 };
+
+export const availableCharacterIds: number[] = [
+  CharacterClass.Warlord,
+  CharacterClass.Shaman,
+  CharacterClass.Ranger,
+  CharacterClass.Wizard,
+];
+
+export const CharacterAssets: Record<number, { front: any; back: any } | null> =
+  {
+    [CharacterClass.Warlord]: {
+      front: barbarianFront,
+      back: barbarianBack,
+    },
+    [CharacterClass.Shaman]: {
+      front: shamanFront,
+      back: shamanBack,
+    },
+    [CharacterClass.Ranger]: {
+      front: rangerFront,
+      back: rangerBack,
+    },
+    [CharacterClass.Wizard]: {
+      front: wizardFront,
+      back: wizardBack,
+    },
+    [CharacterClass.Knight]: null,
+    [CharacterClass.Cleric]: null,
+    [CharacterClass.Rogue]: null,
+    [CharacterClass.Warlock]: null,
+  };

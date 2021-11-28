@@ -11,6 +11,7 @@ module.exports = {
     "eslint:recommended",
     "plugin:react/recommended",
     "plugin:prettier/recommended",
+    "plugin:react-hooks/recommended",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -23,5 +24,6 @@ module.exports = {
     "prettier/prettier": ["error", { singleQuote: false }],
     "@typescript-eslint/no-var-requires": 0,
     "no-unused-vars": "off",
+    "react-hooks/exhaustive-deps": "warn",
   },
 };
