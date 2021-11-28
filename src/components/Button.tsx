@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { scale } from "../utils/scale";
 
 const ButtonBase = styled.button`
   appearance: none;
