@@ -10,6 +10,8 @@ You can find a recording of the game [here](./docs/movie.mp4) if you want to see
 
 # How it works
 
+See also the [Devpost page](https://devpost.com/software/fantasy-campaign) for this project.
+
 First the user selects and mints a new character (as an NFT), then starts the campaign.
 
 As the user progresses through the maze they will eventually hit a spawn point. The frontend then call the smart contract to ask for new (random) turn. The contract then requests a random value from the oracle (this is shown as the "Dracon consults its oracle modal")  which itself then calls the contract after a period of time, at which point the contract emits a turn event. The frontend code responds to that event and checks what type of screen to display to the user - battle or loot.
