@@ -22,6 +22,8 @@ import {
   isAtDragonTrigger,
   isAtGateTrigger,
 } from "../utils/generateCollisionMaps";
+import { useEffect } from "react";
+import { getTurnData } from "../api/api";
 
 const CentreCrop = styled.div`
   display: flex;

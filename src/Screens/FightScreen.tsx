@@ -129,7 +129,8 @@ export const FightScreen = () => {
   const message = gameData?.message;
   const tokenId = gameData?.selectedTokenId;
   const isDragon = mobStats?.[0]?.name === "Draco";
-  const canShowLance = !hasUsedLance && lootData;
+  const lootItem = lootData?.[0];
+  const canShowLance = !hasUsedLance && lootItem;
 
   const { data: mintedCharacterData, refetch: refetchMintedCharacterData } =
     useQueryAllMintedCharacters();
