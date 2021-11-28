@@ -111,7 +111,7 @@ export const FightScreen = () => {
   const { signer } = useWallet();
   const contracts = useContracts();
   const [gameData, setGameData] = useGameData();
-  const { selectedTokenId, isRollingDice } = gameData;
+  const { selectedTokenId, isRollingDice, isLanceUsed } = gameData;
   const { data: mobStats } = useQueryMobStats();
   const message = gameData?.message;
   const tokenId = gameData?.selectedTokenId;

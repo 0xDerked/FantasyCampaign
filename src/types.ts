@@ -21,6 +21,7 @@ export type GameData = {
   moves: Position[];
   direction: number; // up : 0, right: 1, down: 2, left: 3
   spawnPoints: SpawnPointCoords[];
+  isLanceUsed: boolean;
 };
 
 export type CharacterAbilities = {

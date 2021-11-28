@@ -16,15 +16,15 @@ There's a number of other commands in the package.json which hopefully should be
 
 # About the SNARKs
 
-**Warning! Some of this is not best practice!**
+**Warning! These circuits are not production ready!**
 
-When the user get so the end point of the maze, the SNARK circuit validates all their moves to check whether they got there legitimately. In some ways you could consider this a rollup 🤔... You can see the tests in the [circuits.test.ts](./circuits/circuits.test.ts).
+When the user get so the end point of the maze, the snarkjs prover validates all their moves to get to that point check whether they got there legitimately. In some ways you could consider this a rollup as every move is compacted to a single proof 🤔... You can what happens in the tests here: [circuits.test.ts](./circuits/circuits.test.ts).
 
-The circuits themselves are fairly rough and don't check for common attacks but should work fine as a PoC. The input is also limited to just 200 steps - if the user does more than that, validator will throw. This is to keep the performance pretty much realtime.
+The circuits themselves are fairly rough and don't check for common attacks but should work fine as a PoC. The input is also limited to just 200 steps - if the user does more than that, validator will throw. This is to keep the performance pretty much realtime on modern computers.
 
-The maze solution is public ([circuitMap.js](./src/Maze/circuitMap.js) plus the generated [getMaze.circom](./circuits/functions/getMaze.circom)) as well as being shown in the UI but you could imagine this being omitted from the repo and obfuscated from the user. Furthermore since we don't enforce the proof being submitted only once, it's possible to inspect the contract transaction history on the blockchain, extract the proof and then submit it yourself. But that's easy enough to defend against.
+The maze solution is public ([circuitMap.js](./src/Maze/circuitMap.js) plus the generated [getMaze.circom](./circuits/functions/getMaze.circom)) as well as being shown in the UI but you could imagine this being omitted from the repo and obfuscated from the user. Furthermore since we don't enforce the proof being submitted only once in the contract, it's possible to inspect the contract transaction history on the blockchain, extract the proof and then submit it yourself. But that's easy enough to defend against - for example storing the keccak256 hash of of the proof and ensuring it's only been used once. Since each generated proof is a random set of points, this hash will only ever be used once.
 
-Many of the build artefacts that are committed to the repo shouldn't be, but they are there for interest and easy collaboration.
+For reasons above and more, many of the build artefacts that are committed to the repo shouldn't be, but they are there for interest and easy collaboration.
 
 # Troubleshooting
 

@@ -14,6 +14,7 @@ export const initialGameData: GameData = {
   isGateOpen: false,
   direction: initialPosition.dir,
   spawnPoints: spawnPointCoords,
+  isLanceUsed: false,
 };
 
 export const GameDataContext = React.createContext<

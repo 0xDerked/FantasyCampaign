@@ -11,6 +11,8 @@ import rangerBack from "./assets/scaled/ranger_back.png";
 export const X_FINAL = 5;
 export const Y_FINAL = 5;
 
+export const DEBUG_MODE = false;
+
 export const characterStats: Record<number, CharacterAttributes | null> = {
   [CharacterClass.Warlord]: {
     // abilities: [[0, 1, "Strike"]],

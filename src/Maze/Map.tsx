@@ -5,6 +5,7 @@ import { rotate } from "../utils/rotate";
 import { doorsCoords, MAZE_WIDTH, wallCoords } from "./mapData";
 import { useGameData } from "../hooks/useGameData";
 import { usePosition } from "../hooks/usePosition";
+import { DEBUG_MODE } from "../constants";
 
 const CELL_PX = 5;
 
@@ -130,17 +131,19 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
             <SpawnDot />
           </SpawnPoint>
         ))}
-      {moves.map(({ row, col }, index) => (
-        <Avatar
-          key={index}
-          style={{
-            left: rotateMap ? OFFSET * CELL_PX : col * CELL_PX,
-            top: rotateMap ? OFFSET * CELL_PX : row * CELL_PX,
-          }}
-        >
-          ️️️️.
-        </Avatar>
-      ))}
+      {DEBUG_MODE
+        ? moves.map(({ row, col }, index) => (
+            <Avatar
+              key={index}
+              style={{
+                left: rotateMap ? OFFSET * CELL_PX : col * CELL_PX,
+                top: rotateMap ? OFFSET * CELL_PX : row * CELL_PX,
+              }}
+            >
+              ️️️️.
+            </Avatar>
+          ))
+        : null}
     </Container>
   );
 };
