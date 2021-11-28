@@ -73,5 +73,7 @@ If you experience any other issues, let us know!
 
 # Thanks
 
-Thanks specifically to [
+Thanks to [
 Andrija Novakovic](https://github.com/akinovak) for their ultra fast reply in the Iden3 Telegram with some sample code for getting the prover working in the browser... but also thanks to Iden3 in general for all their work.
+
+Thanks also to [Joe Shaw](https://www.thedevteam.co.uk/Knowledge-Base/DungeonMasterJavascript) for the inspiration for the "3D" engine as well as the anons who created the original pixel art.
