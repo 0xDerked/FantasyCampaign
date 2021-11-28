@@ -1,12 +1,14 @@
 import {
   DoorCoords,
   DoorsDict,
+  Position,
   SpawnPointCoords,
   SpawnPointsDict,
   WallCoords,
   WallsDict,
 } from "../types";
 import { wallCoords } from "../Maze/mapData";
+import { X_FINAL, Y_FINAL } from "../constants";
 
 export const generateDoorCollisions = (
   doorsCoords: DoorCoords[]
@@ -41,7 +43,29 @@ export const generateSpawnCollisions = (
 ): SpawnPointsDict => {
   const spawnDict: SpawnPointsDict = {};
   for (let spawnCoord of spawnCoords) {
-    spawnDict[`${spawnCoord.x},${spawnCoord.y}`] = true;
+    spawnDict[`${spawnCoord.x},${spawnCoord.y}`] = spawnCoord.isUsed;
   }
   return spawnDict;
+};
+
+export const isSpawnPointAndUnused = (
+  position: Position,
+  spawnCoords: SpawnPointCoords[]
+): boolean => {
+  const { row, col } = position;
+  for (let point of spawnCoords) {
+    const isCurrentPoint = point.y === row && point.x === col;
+    if (isCurrentPoint && !point.isUsed) {
+      return true;
+    }
+  }
+  return false;
+};
+
+export const isAtGateTrigger = (position: Position): boolean => {
+  return position.col === X_FINAL && position.row === Y_FINAL;
+};
+
+export const isAtDragonTrigger = (position: Position): boolean => {
+  return position.col === X_FINAL && position.row === Y_FINAL + 1;
 };

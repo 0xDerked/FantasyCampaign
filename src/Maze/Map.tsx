@@ -2,12 +2,7 @@ import * as React from "react";
 import { ReactElement } from "react";
 import styled from "styled-components";
 import { rotate } from "../utils/rotate";
-import {
-  doorsCoords,
-  MAZE_WIDTH,
-  spawnPointCoords,
-  wallCoords,
-} from "./mapData";
+import { doorsCoords, MAZE_WIDTH, wallCoords } from "./mapData";
 import { useGameData } from "../hooks/useGameData";
 import { usePosition } from "../hooks/usePosition";
 
@@ -53,7 +48,7 @@ const SpawnDot = styled.div`
 
 export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
   const [gameData] = useGameData();
-  const { isGateOpen, moves } = gameData;
+  const { isGateOpen, moves, spawnPoints } = gameData;
   const position = usePosition();
   const { row, col, dir } = position;
   const By = rotateMap ? 90 * dir : 0;
@@ -122,16 +117,29 @@ export const Map = ({ rotateMap }: { rotateMap: boolean }): ReactElement => {
       >
         ️️️️↑
       </Avatar>
-      {spawnPointCoords.map(({ x, y }) => (
-        <SpawnPoint
-          key={JSON.stringify({ x, y })}
+      {spawnPoints
+        .filter(({ isUsed }) => !isUsed)
+        .map(({ x, y }) => (
+          <SpawnPoint
+            key={JSON.stringify({ x, y })}
+            style={{
+              left: x * CELL_PX,
+              top: y * CELL_PX,
+            }}
+          >
+            <SpawnDot />
+          </SpawnPoint>
+        ))}
+      {moves.map(({ row, col }, index) => (
+        <Avatar
+          key={index}
           style={{
-            left: x * CELL_PX,
-            top: y * CELL_PX,
+            left: rotateMap ? OFFSET * CELL_PX : col * CELL_PX,
+            top: rotateMap ? OFFSET * CELL_PX : row * CELL_PX,
           }}
         >
-          <SpawnDot />
-        </SpawnPoint>
+          ️️️️.
+        </Avatar>
       ))}
     </Container>
   );

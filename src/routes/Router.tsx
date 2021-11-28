@@ -63,7 +63,6 @@ export const Router = () => {
         </Core>
       );
     case GameModes.ExploringMaze:
-    case GameModes.TurnTrigger:
     default:
       return (
         <Core>

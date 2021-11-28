@@ -7,7 +7,6 @@ export enum GameModes {
   SplashScreen = "SplashScreen",
   SelectingCharacter = "SelectingCharacter",
   ExploringMaze = "ExploringMaze",
-  TurnTrigger = "TurnTrigger",
   InCombat = "InCombat",
   Looting = "Looting",
   End = "End",
@@ -17,10 +16,11 @@ export type GameData = {
   selectedTokenId: number | null;
   mode: GameModes;
   message: string | null;
-  isRollingDice: boolean;
   isGateOpen: boolean;
+  isRollingDice: boolean;
   moves: Position[];
   direction: number; // up : 0, right: 1, down: 2, left: 3
+  spawnPoints: SpawnPointCoords[];
 };
 
 export type CharacterAbilities = {
@@ -106,6 +106,7 @@ export type SpawnPointCoords = {
   x: number;
   y: number;
   type: "Henchman" | "Dragon" | "Loot";
+  isUsed: boolean;
 };
 
 export type SpawnPointsDict = Record<`${number},${number}`, boolean>;

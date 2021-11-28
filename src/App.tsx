@@ -33,6 +33,8 @@ const ClearStorageButton = styled.button`
   font-family: inherit;
   border: none;
   outline: none;
+  cursor: pointer;
+  opacity: 0;
 `;
 
 const ClearStorage = () => {

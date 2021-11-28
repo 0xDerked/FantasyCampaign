@@ -8,6 +8,7 @@ import { getGameModeFromTurnType } from "../utils/getGameModeFromTurnType";
 import { useQueryMobStats } from "../api/useQueryMobStats";
 import { useQueryPlayerStats } from "../api/useQueryPlayerStats";
 import { GameModes } from "../types";
+import { usePosition } from "./usePosition";
 
 export const useContractListeners = () => {
   const [gameData, setGameData] = useGameData();
@@ -15,26 +16,31 @@ export const useContractListeners = () => {
   const { signer } = useWallet();
   const { refetch: refetchMobStats } = useQueryMobStats();
   const { refetch: refetchPlayerStats } = useQueryPlayerStats();
+  const position = usePosition();
   const { castleCampaignContract } = contracts;
-  const playerTokenId = gameData?.selectedTokenId;
-  const lastGameMode = useRef<GameModes>(gameData.mode);
+  const playerTokenId = gameData.selectedTokenId;
+  const { mode, spawnPoints } = gameData;
+  const lastGameMode = useRef<GameModes>(mode);
 
   useEffect(() => {
-    lastGameMode.current = gameData.mode;
-  }, [gameData.mode]);
+    lastGameMode.current = mode;
+  }, [mode]);
 
-  const turnSetListener = useCallback(() => {
-    console.log("turnSetListener");
-    setGameData({
-      ...gameData,
-      isRollingDice: true,
-    });
-  }, [gameData, setGameData]);
+  // --------------------------------------------------------------------------------
+
+  // const turnSetListener = useCallback(() => {
+  //   console.log("turnSetListener");
+  //   setGameData({
+  //     ...gameData,
+  //     isRollingDice: true,
+  //   });
+  // }, [gameData, setGameData]);
+
+  // --------------------------------------------------------------------------------
 
   const turnStartedListener = useCallback(
     async (tokenId: BigNumber) => {
       console.log("turnStartedListener");
-      const playerTokenId = gameData?.selectedTokenId;
       if (signer && contracts && typeof playerTokenId === "number") {
         try {
           const turnType = await getTurnData({
@@ -43,6 +49,7 @@ export const useContractListeners = () => {
             characterTokenId: playerTokenId,
           });
           const gameMode = getGameModeFromTurnType(turnType);
+          console.log(5555, gameMode);
           if (gameMode !== null) {
             setGameData({
               ...gameData,
@@ -56,21 +63,38 @@ export const useContractListeners = () => {
         }
       }
     },
-    [contracts, gameData, setGameData, signer]
+    [contracts, gameData, playerTokenId, setGameData, signer]
   );
+
+  // --------------------------------------------------------------------------------
 
   const turnCompletedListener = useCallback(
     (...args) => {
       console.log("turnCompletedListener");
+      const { row, col } = position;
+      // Clear the point
+      const newSpawnPoints = spawnPoints.map(point => {
+        const isCurrentPoint = point.y === row && point.x === col;
+        if (isCurrentPoint) {
+          return {
+            ...point,
+            isUsed: true,
+          };
+        }
+        return point;
+      });
       setGameData({
         ...gameData,
         mode: GameModes.ExploringMaze,
+        spawnPoints: newSpawnPoints,
         isRollingDice: false,
       });
       lastGameMode.current = GameModes.ExploringMaze;
     },
-    [gameData, setGameData]
+    [gameData, position, setGameData, spawnPoints]
   );
+
+  // --------------------------------------------------------------------------------
 
   const combatListener = useCallback(
     async (_, damage: number) => {
@@ -81,7 +105,6 @@ export const useContractListeners = () => {
         await refetchPlayerStats();
         setGameData({
           ...gameData,
-          message: `You dealt ${damage} damage!`,
           isRollingDice: false,
         });
       }
@@ -89,12 +112,13 @@ export const useContractListeners = () => {
     [gameData, refetchMobStats, refetchPlayerStats, setGameData]
   );
 
+  // --------------------------------------------------------------------------------
+
   const campaignEndedListener = useCallback(
     async (_, damage: number) => {
       console.log("campaignEndedListener");
       setGameData({
         ...gameData,
-        message: null,
         mode: GameModes.End,
         isRollingDice: false,
       });
@@ -103,11 +127,13 @@ export const useContractListeners = () => {
     [gameData, setGameData]
   );
 
+  // --------------------------------------------------------------------------------
+
   useEffect(() => {
     // const filterStarted = castleCampaignContract.filters.CampaignStarted(playerTokenId);
     const filterEnded =
       castleCampaignContract.filters.CampaignEnded(playerTokenId);
-    const filterTurnSet = castleCampaignContract.filters.TurnSet(playerTokenId);
+    // const filterTurnSet = castleCampaignContract.filters.TurnSet(playerTokenId);
     const filterTurnStart =
       castleCampaignContract.filters.TurnStarted(playerTokenId);
     const filterTurnCompleted =
@@ -116,7 +142,7 @@ export const useContractListeners = () => {
       castleCampaignContract.filters.CombatSequence(playerTokenId);
     // castleCampaignContract.on(filterStarted, campaignStartedListener);
     castleCampaignContract.on(filterEnded, campaignEndedListener);
-    castleCampaignContract.on(filterTurnSet, turnSetListener); // <-- turn set after the random oracle
+    // castleCampaignContract.on(filterTurnSet, turnSetListener); // <-- turn set after the random oracle
     castleCampaignContract.on(filterTurnStart, turnStartedListener); // <-- User has asked for a turn
     castleCampaignContract.on(filterTurnCompleted, turnCompletedListener);
     castleCampaignContract.on(filterCombat, combatListener);
@@ -127,10 +153,8 @@ export const useContractListeners = () => {
     campaignEndedListener,
     castleCampaignContract,
     combatListener,
-    gameData.mode,
     playerTokenId,
     turnCompletedListener,
-    turnSetListener,
     turnStartedListener,
   ]);
 };

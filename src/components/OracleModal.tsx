@@ -2,7 +2,7 @@ import * as React from "react";
 import styled from "styled-components";
 import { useGameData } from "../hooks/useGameData";
 
-export const ModalContainer = styled.div`
+export const FullScreenModal = styled.div`
   position: absolute;
   left: 10px;
   right: 10px;
@@ -25,8 +25,8 @@ export const ModalContainer = styled.div`
 export const OracleModal = () => {
   const [gameData] = useGameData();
   return gameData.isRollingDice ? (
-    <ModalContainer>
+    <FullScreenModal>
       <span>The dragon consults its oracle to determine your fate!</span>
-    </ModalContainer>
+    </FullScreenModal>
   ) : null;
 };

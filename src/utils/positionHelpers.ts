@@ -1,13 +1,8 @@
 import { rotate } from "./rotate";
 import { round } from "./round";
 import { GameData, Position, GameModes } from "../types";
-import {
-  generateDoorCollisions,
-  generateSpawnCollisions,
-  wallsDict,
-} from "./generateCollisionMaps";
-import { doorsCoords, spawnPointCoords } from "../Maze/mapData";
-import { X_FINAL, Y_FINAL } from "../constants";
+import { generateDoorCollisions, wallsDict } from "./generateCollisionMaps";
+import { doorsCoords } from "../Maze/mapData";
 import { getCurrentPosition } from "../hooks/usePosition";
 
 export enum Keys {
@@ -30,9 +25,6 @@ export const setRow = (pos: Position, delta: number) => ({
 });
 
 export const rotLeft = (gameData: GameData): GameData => {
-  if (gameData.mode === GameModes.TurnTrigger) {
-    return gameData;
-  }
   return {
     ...gameData,
     direction: (gameData.direction + 3) % 4,
@@ -40,9 +32,6 @@ export const rotLeft = (gameData: GameData): GameData => {
 };
 
 export const rotRight = (gameData: GameData): GameData => {
-  if (gameData.mode === GameModes.TurnTrigger) {
-    return gameData;
-  }
   return {
     ...gameData,
     direction: (gameData.direction + 1) % 4,
@@ -159,14 +148,18 @@ export const strafeLeft = (pos: Position, currentState: GameData): Position => {
 };
 
 type PosFunction = (position: Position, currentState: GameData) => Position;
-export const setPos = (fn: PosFunction) => (gameData: GameData) => {
+export const setPos = (posFunction: PosFunction) => (gameData: GameData) => {
   const pos = getCurrentPosition(gameData.moves);
-  const newPos = fn(pos, gameData);
+  const newPos = posFunction(pos, gameData);
   const newMoves = [...gameData.moves];
   const lastPos = newMoves[newMoves.length - 1];
 
-  // Already in turn mode so block the user exiting the spawn point
-  if (gameData.mode === GameModes.TurnTrigger) {
+  // Don't move if something is loading
+  if (gameData.isRollingDice) {
+    return gameData;
+  }
+  // Don't move if they are in combat mode
+  if (gameData.mode === GameModes.InCombat) {
     return gameData;
   }
 
@@ -178,18 +171,6 @@ export const setPos = (fn: PosFunction) => (gameData: GameData) => {
   // Add the new move to the list unless it's the same
   if (newPos.col !== lastPos?.col || newPos.row !== lastPos?.row) {
     newMoves.push(newPos);
-  }
-
-  // Check if the new position runs over a spawn point
-  const spawnPointsDict = generateSpawnCollisions(spawnPointCoords);
-  const spawnPoint =
-    spawnPointsDict[`${round(newPos.col)},${round(newPos.row)}`];
-  if (spawnPoint === true) {
-    return {
-      ...gameData,
-      mode: GameModes.TurnTrigger,
-      moves: newMoves,
-    };
   }
 
   // Otherwise just return the new positions

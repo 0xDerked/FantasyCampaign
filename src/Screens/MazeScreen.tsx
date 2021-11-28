@@ -6,7 +6,7 @@ import { WallType } from "../types";
 import { useWallsWithTransforms } from "../hooks/useWallsWithTransforms";
 import { useDoorsWithTransforms } from "../hooks/useDoorsWithTransforms";
 import { useGameData } from "../hooks/useGameData";
-import { useTriggerTurn } from "../hooks/useTriggerTurn";
+import { useHandleTriggerPoints } from "../hooks/useHandleTriggerPoints";
 import { useQueryAllMintedCharacters } from "../api/useQueryAllMintedCharacters";
 import { Map } from "../Maze/Map";
 import styled from "styled-components";
@@ -17,8 +17,11 @@ import {
 import { scale } from "../utils/scale";
 import { AbsoluteFill } from "../components/Layout";
 import { useQueryMoveIsFinal } from "../api/useQueryMoveIsFinal";
-import { X_FINAL, Y_FINAL } from "../constants";
 import { usePosition } from "../hooks/usePosition";
+import {
+  isAtDragonTrigger,
+  isAtGateTrigger,
+} from "../utils/generateCollisionMaps";
 
 const CentreCrop = styled.div`
   display: flex;
@@ -32,7 +35,7 @@ const CentreCrop = styled.div`
   overflow: hidden;
 `;
 
-const GoToEndOfMaze = styled.div`
+const Modal = styled.div`
   position: absolute;
   bottom: 6px;
   left: 6px;
@@ -56,17 +59,16 @@ const NaturalView = styled.div`
 `;
 
 export const MazeScreen = () => {
-  useTriggerTurn();
+  useHandleTriggerPoints();
   useQueryAllMintedCharacters();
   const walls = useWallsWithTransforms();
   const doors = useDoorsWithTransforms();
   const { data: isFinalTurn } = useQueryMoveIsFinal();
   const position = usePosition();
-  const { row, col } = position;
   const [gameData] = useGameData();
-  const { mode, moves, isGateOpen } = gameData;
-  const isAtGateTriggerPoint = col === X_FINAL && row === Y_FINAL;
-  const isAtDragonTriggerPoint = col === X_FINAL && row === Y_FINAL + 1;
+  const { isGateOpen, spawnPoints } = gameData;
+  const isAtGateTriggerPoint = isAtGateTrigger(position);
+  const isAtDragonTriggerPoint = isAtDragonTrigger(position);
 
   const wallSurfaces = walls
     .map(values => {
@@ -116,12 +118,10 @@ export const MazeScreen = () => {
         </NaturalView>
         <Map rotateMap={false} />
         {isAtGateTriggerPoint && !isGateOpen && !isFinalTurn ? (
-          <GoToEndOfMaze>
-            You need to find the Dragon Lance to unlock the gate!
-          </GoToEndOfMaze>
+          <Modal>You need to find the Dragon Lance to unlock the gate!</Modal>
         ) : null}
         {isFinalTurn && !isAtGateTriggerPoint && !isAtDragonTriggerPoint ? (
-          <GoToEndOfMaze>Head to the exit</GoToEndOfMaze>
+          <Modal>Head to the exit</Modal>
         ) : null}
       </CentreCrop>
     </AbsoluteFill>

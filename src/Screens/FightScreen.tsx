@@ -111,7 +111,7 @@ export const FightScreen = () => {
   const { signer } = useWallet();
   const contracts = useContracts();
   const [gameData, setGameData] = useGameData();
-  const { selectedTokenId } = gameData;
+  const { selectedTokenId, isRollingDice } = gameData;
   const { data: mobStats } = useQueryMobStats();
   const message = gameData?.message;
   const tokenId = gameData?.selectedTokenId;
@@ -194,6 +194,7 @@ export const FightScreen = () => {
               <ButtonAttack
                 onClick={() => handleAttack(index)}
                 key={ability.name}
+                disabled={isRollingDice}
               >
                 {ability.name}
               </ButtonAttack>

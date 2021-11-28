@@ -52,6 +52,7 @@ export const useInterfaceEventsListeners = () => {
       // Remove event listeners on cleanup
       window.removeEventListener("keydown", handleKeyDown);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return position;

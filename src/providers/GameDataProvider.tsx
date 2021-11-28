@@ -1,6 +1,7 @@
 import * as React from "react";
 import { GameData, GameModes } from "../types";
 import { useEffect } from "react";
+import { spawnPointCoords } from "../Maze/mapData";
 
 const initialPosition = { col: 0, dir: 0, row: 0 };
 
@@ -12,6 +13,7 @@ export const initialGameData: GameData = {
   moves: [initialPosition],
   isGateOpen: false,
   direction: initialPosition.dir,
+  spawnPoints: spawnPointCoords,
 };
 
 export const GameDataContext = React.createContext<
@@ -28,6 +30,7 @@ export const GameDataProvider: React.FC = ({ children }) => {
       parsed.message = null;
       setGameData(parsed);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     localStorage.setItem("gameData", JSON.stringify(gameData));

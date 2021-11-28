@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { GameModes } from "../types";
 import { useGameData } from "./useGameData";
 import { useQuerySigner } from "../api/useQuerySigner";
@@ -6,38 +6,45 @@ import { generateTurn, getTurnData, unlockFinalTurn } from "../api/api";
 import { useContracts } from "./useContracts";
 import { getGameModeFromTurnType } from "../utils/getGameModeFromTurnType";
 import { useQueryPlayerStats } from "../api/useQueryPlayerStats";
-import { X_FINAL, Y_FINAL } from "../constants";
 import { calculateProof, generateProof } from "../utils/calculateProof";
 import { useQueryMoveIsFinal } from "../api/useQueryMoveIsFinal";
 import { usePosition } from "./usePosition";
+import {
+  isAtDragonTrigger,
+  isAtGateTrigger,
+  isSpawnPointAndUnused,
+} from "../utils/generateCollisionMaps";
 
-export const useTriggerTurn = () => {
+export const useHandleTriggerPoints = () => {
   const { data: signer } = useQuerySigner();
   const { data: playerData } = useQueryPlayerStats();
-  const [gameData, setGameData] = useGameData();
   const { data: isFinalTurn } = useQueryMoveIsFinal();
-  const { mode, moves, isGateOpen } = gameData;
-  const tokenId = playerData?.tokenId;
+  const [gameData, setGameData] = useGameData();
   const contracts = useContracts();
   const position = usePosition();
-  const { row, col } = position;
+  const { moves, isGateOpen, isRollingDice, spawnPoints } = gameData;
+  const tokenId = playerData?.tokenId;
 
-  const isInTurnMode = mode === GameModes.TurnTrigger;
-  const wasInTurnMode = useRef<boolean | null>(null);
-
-  const isAtGateTriggerPoint = col === X_FINAL && row === Y_FINAL;
-  const isAtDragonTriggerPoint = col === X_FINAL && row === Y_FINAL + 1;
+  const wasRollingDice = useRef(isRollingDice);
+  const isAtUnusedSpawnPoint = isSpawnPointAndUnused(position, spawnPoints);
+  const isAtGateTriggerPoint = isAtGateTrigger(position);
+  const isAtDragonTriggerPoint = isAtDragonTrigger(position);
 
   useEffect(() => {
-    if (!isInTurnMode) {
-      wasInTurnMode.current = false;
-      return;
+    if (!isRollingDice) {
+      // Note: this is (mostly) only cleared by the listeners
+      wasRollingDice.current = false;
     }
-  }, [isInTurnMode]);
+  }, [isRollingDice]);
 
   useEffect(() => {
     (async () => {
       if (!signer || typeof tokenId !== "number") {
+        return;
+      }
+
+      // Don't do any async stuff if something is already happening
+      if (isRollingDice || wasRollingDice.current) {
         return;
       }
 
@@ -47,20 +54,14 @@ export const useTriggerTurn = () => {
 
       if (isAtGateTriggerPoint && !isGateOpen && isFinalTurn) {
         console.log("Maybe unlocking gate");
+        wasRollingDice.current = true;
         const { answerCorrect } = await calculateProof(moves);
         if (answerCorrect) {
           setGameData({ ...gameData, isGateOpen: true });
         } else {
           alert("Hmn... Something wrong with your steps");
         }
-        return;
-      }
-
-      // Only trigger this when the player has started turn mode
-      if (!isInTurnMode) {
-        return;
-      }
-      if (!(isInTurnMode && !wasInTurnMode.current)) {
+        wasRollingDice.current = false; // Manually clear this as we're not using the listener
         return;
       }
 
@@ -69,8 +70,10 @@ export const useTriggerTurn = () => {
 
       if (isAtDragonTriggerPoint && isGateOpen && isFinalTurn) {
         console.log("Maybe unlocking dragon");
-        const { publicSignals, proof } = await generateProof(moves);
         try {
+          wasRollingDice.current = true;
+          setGameData({ ...gameData, isRollingDice: true });
+          const { publicSignals, proof } = await generateProof(moves);
           // Send the proof to the contract to unlock the final turn.
           // Throws if the proof is invalid
           await unlockFinalTurn({
@@ -85,19 +88,20 @@ export const useTriggerTurn = () => {
             contracts,
             characterTokenId: tokenId,
           });
-          setGameData({
-            ...gameData,
-            isRollingDice: true,
-          });
-        } catch (e) {
-          // Throw means they've checked
-          alert("Hmn... how did you get here exactly? 🤔");
+        } catch (e: any) {
+          alert(`Error unlocking dragon: ${e.data?.message || e.message}`);
         }
         return;
       }
 
       // --------------------------------------------------------------------------------
-      // Otherwise do a normal move
+      // Otherwise if we're at a spawn point, generate a new turn
+
+      if (!isAtUnusedSpawnPoint) {
+        return;
+      }
+
+      console.log("Maybe triggering new turn");
 
       const turnType = await getTurnData({
         signer,
@@ -108,43 +112,43 @@ export const useTriggerTurn = () => {
         // Only generate a turn if not currently in one.
         setGameData({
           ...gameData,
-          mode: GameModes.ExploringMaze,
-          message: null,
           isRollingDice: true,
         });
+        wasRollingDice.current = true;
         await generateTurn({
           signer,
           contracts,
           characterTokenId: tokenId,
         });
-      } else {
-        // Just set the game mode as the listener won't be called
-        const gameMode = getGameModeFromTurnType(turnType);
-        if (gameMode === null) {
-          setGameData({
-            ...gameData,
-            mode: GameModes.ExploringMaze,
-            message: null,
-            isRollingDice: false,
-          });
-        } else {
-          setGameData({
-            ...gameData,
-            mode: gameMode,
-            message: null,
-            isRollingDice: false,
-          });
-        }
+        return;
       }
+      // Just set the game mode synchronously as the listener won't be called
+      const gameMode = getGameModeFromTurnType(turnType);
+      console.log("Non-zero turn type", turnType);
+      if (gameMode !== null) {
+        setGameData({
+          ...gameData,
+          mode: gameMode,
+          isRollingDice: false,
+        });
+        return;
+      }
+      // Else fall back to exploring maze
+      setGameData({
+        ...gameData,
+        mode: GameModes.ExploringMaze,
+        isRollingDice: false,
+      });
     })();
   }, [
     contracts,
     gameData,
     isAtDragonTriggerPoint,
     isAtGateTriggerPoint,
+    isRollingDice,
     isFinalTurn,
     isGateOpen,
-    isInTurnMode,
+    isAtUnusedSpawnPoint,
     moves,
     setGameData,
     signer,
