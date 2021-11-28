@@ -17,6 +17,7 @@ import battleBackground from "../assets/scaled/battle_background.png";
 import henchman from "../assets/scaled/henchman.png";
 import dragonBackground from "../assets/scaled/dragon_stage.png";
 import dragon from "../assets/scaled/dragon.png";
+import { useQueryLootStats } from "../api/useQueryLootStats";
 
 const Background = styled(Image).attrs(() => ({
   src: battleBackground,
@@ -124,9 +125,11 @@ export const FightScreen = () => {
   const [gameData, setGameData] = useGameData();
   const { selectedTokenId, isRollingDice, hasUsedLance } = gameData;
   const { data: mobStats } = useQueryMobStats();
+  const { data: lootData } = useQueryLootStats();
   const message = gameData?.message;
   const tokenId = gameData?.selectedTokenId;
   const isDragon = mobStats?.[0]?.name === "Draco";
+  const canShowLance = !hasUsedLance && lootData;
 
   const { data: mintedCharacterData, refetch: refetchMintedCharacterData } =
     useQueryAllMintedCharacters();
@@ -236,14 +239,14 @@ export const FightScreen = () => {
       <PlayerStat>
         <div>Health&ensp;{playerData?.health}</div>
         <ButtonsContainer>
-          {hasUsedLance ? null : (
+          {canShowLance ? (
             <ButtonAttack
               onClick={() => handleAttackWithItem(0)} // Hard-coded to Lance for now
               disabled={isRollingDice}
             >
               Use Lance
             </ButtonAttack>
-          )}
+          ) : null}
           <Padding />
 
           {playerData?.abilities.map((ability, index) => {
