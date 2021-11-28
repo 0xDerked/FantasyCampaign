@@ -40,6 +40,7 @@ export const LootScreen = () => {
   const { signer } = useWallet();
   const contracts = useContracts();
   const tokenId = gameData?.selectedTokenId;
+  const lootItem = lootData?.[0];
 
   const handleEndLooting = async () => {
     if (typeof tokenId === "number" && signer && contracts) {
@@ -48,12 +49,6 @@ export const LootScreen = () => {
           signer,
           contracts,
           characterTokenId: tokenId,
-        });
-        setGameData({
-          ...gameData,
-          message: null,
-          // Let the contract figure out the new user state
-          // mode: GameModes.ExploringMaze,
         });
       } catch (e: any) {
         alert(`Something went exploring loot ${e.data?.message || e.message}`);
@@ -67,7 +62,7 @@ export const LootScreen = () => {
 
   return (
     <Container>
-      <Title>You found the {lootData?.name}</Title>
+      <Title>You found the {lootItem?.name}</Title>
       <LootItem src={lance} />
       <ButtonAttack onClick={handleEndLooting}>Take Loot</ButtonAttack>
     </Container>

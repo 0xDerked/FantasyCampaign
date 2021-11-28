@@ -47,6 +47,12 @@ There's a number of other commands in the package.json which hopefully should be
 
 `]` - turn right
 
+# Deployed Contracts
+
+- CastleCampaign [0xE24600C666ed8a277ec78915Da8a4A74fD7F86Bf](https://mumbai.polygonscan.com/address/0xE24600C666ed8a277ec78915Da8a4A74fD7F86Bf#code)
+- FantasyAttributesManager [0x2C9970A9BfC2A09B1de2B82026EfB924352Af76b](https://mumbai.polygonscan.com/address/0x2C9970A9BfC2A09B1de2B82026EfB924352Af76b#code)
+- FantasyCharacter [0x7aF62A3D82999628AD79Ba01Cc59Fd1C7189B262](https://mumbai.polygonscan.com/address/0x7aF62A3D82999628AD79Ba01Cc59Fd1C7189B262#code)
+
 # About the zkSNARKs
 
 **Warning! There's a lot of stuff here that isn't good practice!**
@@ -70,6 +76,7 @@ Inevitable bugs from writing a game at breakneck speed in our spare time aside, 
 - Your wallet isn't set to use the right network (e.g localhost:8545 if ran locally).
 - Your wallet isn't using the local network.
 - The app stays on the oracle modal. It takes about 30 seconds for the event to be emitted that clears this modal but there's a chance something else went wrong. If it doesn't clear in 30 seconds reload the page.
+- If it _still_ doesn't clear it might be an out of gas error. Edit the localStorage `isRolingDice` to `false` and reload the page. If it happens very frequently, set the gas limit in MetaMask to a much higher value.
 
 If you experience any other issues, let us know!
 

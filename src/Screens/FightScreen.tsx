@@ -17,6 +17,7 @@ import battleBackground from "../assets/scaled/battle_background.png";
 import henchman from "../assets/scaled/henchman.png";
 import dragonBackground from "../assets/scaled/dragon_stage.png";
 import dragon from "../assets/scaled/dragon.png";
+import { useQueryLootStats } from "../api/useQueryLootStats";
 
 const Background = styled(Image).attrs(() => ({
   src: battleBackground,
@@ -122,11 +123,14 @@ export const FightScreen = () => {
   const { signer } = useWallet();
   const contracts = useContracts();
   const [gameData, setGameData] = useGameData();
-  const { selectedTokenId, isRollingDice, hasUsedLance } = gameData;
+  const { selectedTokenId, isRollingDice } = gameData;
   const { data: mobStats } = useQueryMobStats();
+  const { data: lootData } = useQueryLootStats();
   const message = gameData?.message;
   const tokenId = gameData?.selectedTokenId;
   const isDragon = mobStats?.[0]?.name === "Draco";
+  const lootItem = lootData?.[0];
+  const canShowLance = lootItem?.numUses === 0; // Hard code to only allow lance to be used once
 
   const { data: mintedCharacterData, refetch: refetchMintedCharacterData } =
     useQueryAllMintedCharacters();
@@ -211,10 +215,7 @@ export const FightScreen = () => {
       } catch (e: any) {
         alert(`Something went wrong attacking ${e.data?.message || e.message}`);
       } finally {
-        setGameData({
-          ...gameData,
-          hasUsedLance: true,
-        });
+        //
       }
     }
   };
@@ -236,14 +237,14 @@ export const FightScreen = () => {
       <PlayerStat>
         <div>Health&ensp;{playerData?.health}</div>
         <ButtonsContainer>
-          {hasUsedLance ? null : (
+          {canShowLance ? (
             <ButtonAttack
               onClick={() => handleAttackWithItem(0)} // Hard-coded to Lance for now
               disabled={isRollingDice}
             >
               Use Lance
             </ButtonAttack>
-          )}
+          ) : null}
           <Padding />
 
           {playerData?.abilities.map((ability, index) => {

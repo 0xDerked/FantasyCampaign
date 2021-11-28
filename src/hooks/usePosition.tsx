@@ -7,7 +7,7 @@ export const getCurrentPosition = (moves: Position[]): Position => {
 };
 
 export const usePosition = (): Position & { dir: number } => {
-  const [gameData, setGameData] = useGameData();
+  const [gameData] = useGameData();
   const { moves } = gameData;
   const direction = gameData.direction;
   const position = getCurrentPosition(moves);
