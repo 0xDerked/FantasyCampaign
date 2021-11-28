@@ -22,11 +22,13 @@ If the user has acquired the magic weapon, once they get to the door the fronten
 
 # To get it running
 
+Create a `.env` file and either copy over the values in `.env.local.template` or `.env.testnet.template` depending on which one you're using. You will also need to add `MUMBAI_RPC_URL` (e.g. `https://polygon-mumbai.infura.io/v3/asdasdasd`) and your `PRIVATE_KEY`.
+
 ```
 yarn
 yarn node:start
-yarn contracts:deploy
-yarn web:start
+yarn contracts:deploy # in another session - only run this once
+yarn web:start # in another session
 ```
 
 There's a number of other commands in the package.json which hopefully should be clear what they do from their names.
@@ -47,13 +49,13 @@ There's a number of other commands in the package.json which hopefully should be
 
 # About the zkSNARKs
 
-**Warning! These circuits are not production ready!**
+**Warning! There's a lot of stuff here that isn't good practice!**
 
-When the user gets to the gate at the end of the maze, the snarkjs prover validates all their moves to get to that point to determine whether they got there legitimately (a bit like a rollup). You can see what happens in the tests here: [circuits.test.ts](./circuits/circuits.test.ts).
+When the user gets to the gate at the end of the maze, the snarkjs validates all their moves to get to that point to determine whether they got there legitimately and not teleporting etc (a bit like a rollup). You can see examples in the tests here: [circuits.test.ts](./circuits/circuits.test.ts).
 
 The circuits themselves are fairly rough and don't check for common attacks but should work fine as a proof of concept. The input is also limited to just 200 steps - if the user does more than that, the validator will throw. This is to keep the performance pretty much realtime on modern computers.
 
-The solution to the circuit is pretty easy to find in the repo (it's even in the UI itself!) but you could imagine this being omitted from the coddebase and obfuscated from the user. Furthermore since we don't enforce the proof being submitted only once in the contract, it's possible to inspect the contract transaction history on the blockchain, extract the proof and then submit it yourself. But that's easy enough to defend against - for example storing the keccak256 hash of of the proof and ensuring it's only been used once. Since each generated proof is a random set of points, this hash will only ever be used once.
+The solution to the circuit is pretty easy to find in the repo (it's even in the UI itself!) but you could imagine this being omitted from the coddebase and obfuscated from the user. Furthermore since we don't enforce the proof being submitted only once in the contract, it's possible to inspect the contract transaction history on the blockchain, extract the proof and then re-submit it as a different user. But that's easy enough to defend against - for example storing the keccak256 hash of of the proof and ensuring it's only been used once. Since each generated proof is a random set of points, this hash will never be submitted again except maliciously.
 
 For reasons above and more, many of the build artefacts that are committed to the repo shouldn't be, but they are there for interest and easy collaboration.
 
