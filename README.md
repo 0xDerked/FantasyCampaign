@@ -6,6 +6,8 @@ Turn-based fantasy campaign game powered by Chainlink VRF and user imagination, 
 
 Select your adventure and navigate through Draco the Dragon's dungeon, fighting minions and collecting loot controlled the whims of Draco's magical (VRF) oracle! Once you've acquired the special weapon you can open the door to his lair and, maybe, vanquish him once and for all!
 
+There's a recording of the game [here](./docs/movie.mp4) if you want to see what it's like in action without running it yourself.
+
 # To get it running
 
 ```
